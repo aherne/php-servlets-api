@@ -1,8 +1,10 @@
 {
-    "name": "lucinda/PHPServletsAPI",
+    "name": "lucinda/php-servlets-api",
     "description": "A high-performance small scalable module (API) whose single responsibility is implementing MVC pattern (translating request into response)",
-    "require": {
-        "php": "^5.4 || ^7.0",
-        "phpunit/phpunit": "4.*"
-    }
+    "require": {        
+	"php": ">=5.4"
+    },
+    "require-dev": {        
+	"phpunit/phpunit": "~4.0"
+    },
 }
