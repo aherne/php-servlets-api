@@ -9,4 +9,4 @@ There are many MVC frameworks for building web applications in PHP, so writing a
 
 The conclusion of above is that **the main purpose of a WEB application, that of serving users instead of programmers, has been blissfully forgotten**. A WEB application absolutely needs to be as fast and accurate as possible: all concerns must be channeled to bring a positive user experience. In PHP, which is after all a slow scripting language, this can only be achieved through a combination of minimalism and modularity. 
 
-In light of above, PHP Servlets, built with concepts from Java Servlets API and Spring MVC in mind, it is supposed to be JUST a high performance small scalable web module (API) implementing MVC pattern.
+In light of above, PHP Servlets, built with concepts from Java Servlets API and Spring MVC in mind, it is supposed to be JUST a high performance small scalable web module (API) whose single responsibility is implementing MVC pattern.
