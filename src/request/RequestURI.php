@@ -106,9 +106,15 @@ final class RequestURI {
 		// split URL between page and extension
 		$strURL = $strURLCombined;
 		$strExtension = "";
-		if(strpos($strURLCombined,".")!==false) {
-			$strURL = substr($strURLCombined,0,strrpos($strURLCombined,"."));
-			$strExtension = strtolower(substr($strURLCombined,(strrpos($strURLCombined,".")+1)));
+		$intDotPosition = strrpos($strURLCombined,".");
+		if($intDotPosition!==false) {
+			$strURL = substr($strURLCombined,0, $intDotPosition);
+			$strExtension = strtolower(substr($strURLCombined,($intDotPosition+1)));
+			$intSlashPosition = strpos($strExtension, "/");
+			if($intSlashPosition!==false) {
+				$strURL .= substr($strExtension, $intSlashPosition);
+				$strExtension = substr($strExtension,0,$intSlashPosition);
+			}
 		}
 		$strURL = substr($strURL, (strpos($strURL, $this->strContextPath)+strlen($this->strContextPath)));
 		
