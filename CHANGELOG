@@ -63,3 +63,4 @@ SESSIONS
 // TODO: add optional format @ routes.route
 	// Vulnerability: if one allows to set extension in request, if JSON => it would show everything we send to views (show business knowledge)
 // TODO: refactor Session class (to include options @ documentation
+// TODO: check page requested discovery if context path = ""
