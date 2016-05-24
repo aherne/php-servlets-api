@@ -2,36 +2,46 @@
 /**
  * Attributes factory enveloping operations with COOKIE.
  */
-final class Cookie extends AttributesFactory {
+final class Cookie {
 	/**
-	 * Time by which current cookie expires. Can be changed at any point.
+	 * Adds/updates a cookie param.
 	 * 
-	 * @var integer $intExpirationTime
+	 * @param string $strKey
+	 * @param mixed $mixValue
+	 * @param integer $intExpiration Number of seconds until cookie expires.
 	 */
-	public static $intExpirationTime = 3600;
-	
-	/**
-	 * Builds attributes from $_COOKIE
-	 */
-	public function __construct() {
-		$this->tblAttributes = $_COOKIE;
+	public function set($strKey, $mixValue, $intExpiration) {
+		setcookie($strKey, $mixValue, time()+$intExpiration);
 	}
 	
 	/**
-	 * (non-PHPdoc)
-	 * @see Attributes::setAttribute()
+	 * Gets value of cookie param.
+	 * 
+	 * @param string $strKey
+	 * @return mixed
+	 * @throws ServletException
 	 */
-	public function setAttribute($strKey, $mixValue) {
-		parent::setAttribute($strKey, $mixValue);
-		setcookie($strKey, $mixValue, time()+self::$intExpirationTime);
+	public function get($strKey) {
+		if(!isset($_COOKIE[$strKey])) throw new ServletException("Cookie parameter not found!");
+		return $_COOKIE[$strKey];
 	}
 	
 	/**
-	 * (non-PHPdoc)
-	 * @see Attributes::removeAttribute()
+	 * Checks if cookie param exists.
+	 * 
+	 * @param string $strKey
+	 * @return boolean
 	 */
-	public function removeAttribute($strKey) {
-		parent::removeAttribute($strKey);
-		setcookie($strKey, "", time()-self::$intExpirationTime);
+	public function contains($strKey) {
+		return isset($_COOKIE[$strKey]);
+	}
+	
+	/**
+	 * Deletes cookie param.
+	 * 
+	 * @param string $strKey
+	 */
+	public function remove($strKey) {
+		setcookie($strKey, "", time()-self::DEFAULT_EXPIRATION_TIME);
 	}
 }
