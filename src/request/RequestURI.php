@@ -99,7 +99,7 @@ final class RequestURI {
 	 */
 	private function setPageInfo() {
 		if(!isset($_SERVER['SCRIPT_URL']) && !isset($_SERVER['REDIRECT_URL'])) {
-			throw new ServletException("ServletsAPI requires overriding paths in Apache!");
+			throw new ServletException("ServletsAPI requires overriding paths!");
 		}
 		$strURLCombined = (isset($_SERVER['SCRIPT_URL'])?$_SERVER['SCRIPT_URL']:$_SERVER['REDIRECT_URL']);
 		

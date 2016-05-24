@@ -1,34 +1,83 @@
 <?php
+require_once("session/SessionConfiguration.php");
+
 /**
- * Attributes factory enveloping operations with SESSION.
- */
-final class Session extends AttributesFactory {
+ * Attributes factory enveloping operations with SESSION. 
+*/
+final class Session {
 	/**
-	 * Starts session and builds attributes from $_SESSIOn
+	 * Starts session.
+	 * 
+	 * @param SessionHandlerInterface $objSessionHandler	If null, built-in session handler is used.
 	 */
-	public function __construct() {
-		// start session
-		if (session_id() == "") session_start();
-		
-		// populate
-		$this->tblAttributes = $_SESSION;
+	public function start(SessionHandlerInterface $objSessionHandler = null) {
+		if($objSessionHandler!=null) {
+			session_set_save_handler($objSessionHandler, true);
+		}
+		session_start();
 	}
 	
 	/**
-	 * (non-PHPdoc)
-	 * @see Attributes::setAttribute()
+	 * Checks if session is started.
+	 * 
+	 * @return boolean
 	 */
-	public function setAttribute($strKey, $mixValue) {
-		parent::setAttribute($strKey, $mixValue);
-		$_SESSION[$strKey] = $mixValue;
+	public function isStarted() {
+		return (session_id() != "");
 	}
 	
 	/**
-	 * (non-PHPdoc)
-	 * @see Attributes::removeAttribute()
+	 * Closes session.
 	 */
-	public function removeAttribute($strKey) {
-		parent::removeAttribute($strKey);
+	public function end() {
+		session_destroy();
+	}
+	
+	/**
+	 * Adds/updates a session param.
+	 * 
+	 * @param string $strKey
+	 * @param mixed $mixValue
+	 * @throws ServletException	If session not started.
+	 */
+	public function set($strKey, $mixValue) {
+		if(!$this->isStarted()) throw new ServletException("Session not started!");
+		$_SESSION[$strKey] = $mixParameter;
+	}
+	
+	/**
+	 * Gets session param value.
+	 * 
+	 * @param string $strKey
+	 * @return mixed
+	 * @throws ServletException	If session not started.
+	 */
+	public function get($strKey) {
+		if(!$this->isStarted()) throw new ServletException("Session not started!");
+		if(!isset($_SESSION[$strKey])) throw new ServletException("Session parameter not found!");
+		return $_SESSION[$strKey];
+	}
+	
+	/**
+	 * Checks if session param exists.
+	 * 
+	 * @param string $strKey
+	 * @return mixed
+	 * @throws ServletException	If session not started.
+	 */
+	public function contains($strKey) {
+		if(!$this->isStarted()) throw new ServletException("Session not started!");
+		return isset($_SESSION[$strKey]);
+	}
+	
+	/**
+	 * Deletes a session param.
+	 * 
+	 * @param string $strKey
+	 * @throws ServletException	If session not started.
+	 */
+	public function remove($strKey) {
+		if(!$this->isStarted()) throw new ServletException("Session not started!");
 		unset($_SESSION[$strKey]);
 	}
 }

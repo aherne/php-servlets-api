@@ -52,9 +52,9 @@ class RequestFilesParser {
 	 * @param array $v
 	 * @param array $oldArray
 	 */
-	private function parseRecursive($strName, $v, $oldArray=array()) {
+	private function parseRecursive($strName, $tblPart, $oldArray=array()) {
 		$tblOutput = $oldArray;
-		foreach($v as $key=>$value) {
+		foreach($tblPart as $key=>$value) {
 			if(is_array($value)) {
 				$tblOutput[$key] = $this->parseRecursive($strName, $value, (!empty($oldArray)?$oldArray[$key]:array()));
 			} else {
