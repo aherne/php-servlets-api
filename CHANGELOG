@@ -63,11 +63,3 @@ SESSIONS
 // TODO: add optional format @ routes.route
 	// Vulnerability: if one allows to set extension in request, if JSON => it would show everything we send to views (show business knowledge)
 // TODO: refactor Session class (to include options @ documentation
-
-
-
-    matching means git push will push all your local branches to the ones with the same name on the remote. This makes it easy to accidentally push a branch you didn't intend to.
-
-    simple means git push will push only the current branch to the one that git pull would pull from, and also checks that their names match. This is a more intuitive behavior, which is why the default is getting changed to this.
-
-	
