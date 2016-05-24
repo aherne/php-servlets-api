@@ -5,15 +5,15 @@ require_once("Controller.php");
 require_once("Application.php");
 require_once("Request.php");
 require_once("Response.php");
-require_once("Response/Wrapper.php");
-require_once("Locators/ListenerLocator.php");
-require_once("Locators/ControllerLocator.php");
-require_once("Locators/WrapperLocator.php");
-require_once("Listeners/ApplicationListener.php");
-require_once("Listeners/RequestListener.php");
-require_once("Listeners/ResponseListener.php");
-require_once("Listeners/Implemented/PageValidatorListener.php");
-require_once("Response/Implemented/ViewWrapper.php");
+require_once("response/Wrapper.php");
+require_once("locators/ListenerLocator.php");
+require_once("locators/ControllerLocator.php");
+require_once("locators/WrapperLocator.php");
+require_once("listeners/ApplicationListener.php");
+require_once("listeners/RequestListener.php");
+require_once("listeners/ResponseListener.php");
+require_once("listeners/Implemented/PageValidatorListener.php");
+require_once("response/Implemented/ViewWrapper.php");
 
 /**
  * Implements front controller MVC functionality. This is ServletsAPI focal point, integrating all components as a whole.

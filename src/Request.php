@@ -1,10 +1,10 @@
 <?php
-require_once("Request/RequestClient.php");
-require_once("Request/RequestServer.php");
-require_once("Request/RequestURI.php");
-require_once("Request/RequestUploadedFiles.php");
-require_once("Request/Session.php");
-require_once("Request/Cookie.php");
+require_once("request/RequestClient.php");
+require_once("request/RequestServer.php");
+require_once("request/RequestURI.php");
+require_once("request/RequestUploadedFiles.php");
+require_once("request/Session.php");
+require_once("request/Cookie.php");
 
 /**
  * Detects information about request from $_SERVER, $_GET, $_POST, $_FILES. Once detected, parameters are immutable.

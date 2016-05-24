@@ -18,32 +18,16 @@ AUTH_TYPE
 	When doing HTTP authentication this variable is set to the authentication type.
 	I noted that $_SERVER['AUTH_TYPE'] is only available for a page that was authenticated through a traditional external mechanism (like Apache).
 	
-==========
-============================(GREAT DESIGN: THIS IS ENVIRONMENT-UNSPECIFIC)
-Application
-	get/set DefaultCharacterEncoding
-	get/set DefaultPage
-	get/set DefaultExtension
-	get/set ControllerPath
-	get/set ListenerPath
-	get/set WrapperPath
-	get/set ViewsPath
-	get/set AutoRouting
-Listeners
-	
-Routes
-	Route
-		get/set Path
-		get/set	Controller		
-Formats
-	Format
-		get/set Extension		// mandatory
-		get/set ContentType		// mandatory
-		get/set Wrapper			// mandatory, unless wrapper @ 
 =========================(SERVERS.XML: ENVIRONMENT SPECIFIC)
 SERVERS >> DELEGATE ME!
 	database
 	caching
+		apc
+		array
+		database
+		file
+		memcache(d) 
+		redis
 	queues
 	mail
 		'driver' => env('MAIL_DRIVER', 'smtp'),
@@ -54,14 +38,6 @@ SERVERS >> DELEGATE ME!
     		'username' => env('MAIL_USERNAME'),
     		'password' => env('MAIL_PASSWORD'),
     		'sendmail' => '/usr/sbin/sendmail -bs',
-CACHING SOLUTION
-	apc
-	array
-	database
-	file
-	memcache(d) 
-	redis
-	...
 FILESYSTEMS
 	'default' => 'local'	// default filesystem disk used by framework (Supported: "local", "ftp", "s3", "rackspace")
 	'cloud' => 's3'		// default cloud filesystem disk
@@ -80,13 +56,16 @@ FILESYSTEMS
 	],
 SESSIONS
 	'driver' => env('SESSION_DRIVER', 'file'),	// Supported: "file", "cookie", "database", "apc", "memcached", "redis", "array"
-    'lifetime' => 120,				// # of minutes session can remain idle until expires
-   	'expire_on_close' => false,			// expire on browser closing
-    'encrypt' => false,				// This option allows you to easily specify that all of your session data should be encrypted before it is stored.
-	'files' => storage_path('framework/sessions'),	// When using the native session driver, we need a location where session files may be stored
-	'cookie' => 'laravel_session'			// session cookie name
-	'path' => '/'					// The session cookie path determines the path for which the cookie will be available. Typically: root path
-	'domain' => null				// domain @ cookie 
-	'secure' => false				// if true, session cookies will only be sent back to server if browser initiated a HTTPS connection. This keeps you from receiving unsigned cookies.
-	'http_only' => true				// if true, will prevent JS from accessing value of cookie / cookie will only be accessible through HTTP
-	(IF USING "database"/"redis"): "connection","table", etc
+	
+	
+// TODO: ? create DownloadWrapper<->FileWrapper, JsonWrapper, XmlWrapper, HtmlWrapper
+// TODO: ? setView/getView + setFile/getFile @ Response 
+// TODO: make Request class support NGINX
+// TODO: add optional format @ routes.route
+	// Vulnerability: if one allows to set extension in request, if JSON => it would show everything we send to views (show business knowledge)
+	
+// TODO: ? create DownloadWrapper<->FileWrapper, JsonWrapper, XmlWrapper, HtmlWrapper
+// TODO: ? setView/getView + setFile/getFile @ Response 
+// TODO: refactor Session class (to include options @ documentation
+// TODO: make Request class support NGINX
+	
