@@ -1,6 +1,6 @@
 <?php
-require_once("Response/ResponseStream.php");
-require_once("Response/ResponseStatuses.php");
+require_once("response/ResponseStream.php");
+require_once("response/ResponseStatuses.php");
 
 /**
  * Compiles information about response
@@ -170,13 +170,15 @@ final class Response extends AttributesFactory {
 		if($this->blnIsDisabled) {
 			http_response_code($this->intHTTPStatusCode);
 		} else {
-			// set content type
-			header("Content-Type: ".$this->getContentType().($this->getCharacterEncoding()?"; charset=".$this->getCharacterEncoding():""));
-			
-			// set objHeaders
-			if(sizeof($this->tblHeaders)>0) {
-				foreach($this->tblHeaders as $strName=>$strValue) {
-					header($strName.": ".$strValue);
+			if(!headers_sent()) { // PHPUnit fix
+				// set content type
+				header("Content-Type: ".$this->getContentType().($this->getCharacterEncoding()?"; charset=".$this->getCharacterEncoding():""));
+				
+				// set objHeaders
+				if(sizeof($this->tblHeaders)>0) {
+					foreach($this->tblHeaders as $strName=>$strValue) {
+						header($strName.": ".$strValue);
+					}
 				}
 			}
 			
