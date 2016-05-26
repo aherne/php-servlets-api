@@ -1,5 +1,4 @@
 TODOS:
-	- "obj"/... bullshit @ Listeners & controllers
 	? create DownloadWrapper<->FileWrapper, JsonWrapper, XmlWrapper, HtmlWrapper
 	? setView/getView + setFile/getFile @ Response 
 	make Request class support NGINX

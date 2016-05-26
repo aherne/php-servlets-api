@@ -12,7 +12,7 @@
  */
 abstract class RestController extends Controller {
 	public function run() {
-		$strMethod = strtoupper($this->objRequest->getMethod());
+		$strMethod = strtoupper($this->request->getMethod());
 		if(!method_exists($this, $strMethod)) {
 			throw new ServletException("Method not implemented: ".$strMethod);
 		}
