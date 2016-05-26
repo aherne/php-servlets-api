@@ -1,40 +1,8 @@
-REMOTE_USER
-	The authenticated user.
-	
-REDIRECT_REMOTE_USER
-	The authenticated user if the request is internally redirected.
-	
-PHP_AUTH_DIGEST
-	When doing Digest HTTP authentication this variable is set to the Authorization header sent by the client 
-	(which you should then use to make the appropriate validation).
-	
-PHP_AUTH_USER
-	When doing HTTP authentication this variable is set to the username provided by the user.
-	
-PHP_AUTH_PW
-	When doing HTTP authentication this variable is set to the password provided by the user.
-	
-AUTH_TYPE
-	When doing HTTP authentication this variable is set to the authentication type.
-	I noted that $_SERVER['AUTH_TYPE'] is only available for a page that was authenticated through a traditional external mechanism (like Apache).
-	
-
-- "obj"/... bullshit @ Listeners & controllers
-// TODO: ? create DownloadWrapper<->FileWrapper, JsonWrapper, XmlWrapper, HtmlWrapper
-// TODO: ? setView/getView + setFile/getFile @ Response 
-// TODO: make Request class support NGINX
-// TODO: add optional format @ routes.route
-	// Vulnerability: if one allows to set extension in request, if JSON => it would show everything we send to views (show business knowledge)
-// TODO: refactor Session class (to include options @ documentation
-// TODO: check page requested discovery if context path = ""
- TODO: bool setcookie  ( string $name  [, string $value  [, int $expire= 0  [, string $path  [, string $domain  [, bool $secure= false  [, bool $httponly= false  ]]]]]] )
-to safely delete a cookie (TODO)
-           setcookie ($name, "", 1);
-           setcookie ($name, false);
-           unset($_COOKIE[$name]);
- cookies: add httponly
-  if (!setcookie("MySessionID", $secureRandomSessionID, $generalTimeout, $applicationRootURLwithoutHost, NULL, NULL,true)) throw new Exception(...);
-               path: path cookie is valid for
-               domain: enforces domain
-           $r=setcookie("SECSESSID","1203j01j0s1209jw0s21jxd01h029y779g724jahsa9opk123973",time()+60*60*24*7 /*a week*/,"/","owasp.org",true,true);
-           if (!$r) die("Could not set session cookie.");
+TODOS:
+	- "obj"/... bullshit @ Listeners & controllers
+	? create DownloadWrapper<->FileWrapper, JsonWrapper, XmlWrapper, HtmlWrapper
+	? setView/getView + setFile/getFile @ Response 
+	make Request class support NGINX
+	add optional format @ routes.route
+		if one allows to set extension in request, if JSON => it would show everything we send to views (show business knowledge)
+	check page requested discovery if context path = ""
