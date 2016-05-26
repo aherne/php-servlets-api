@@ -6,9 +6,9 @@ require_once("PathParameterFinder.php");
  */
 class PageValidatorListener extends RequestListener {
 	public function run() {
-		$this->objRequest->setAttribute("page_url", $this->getValidPageURL());
-		$this->objRequest->setAttribute("page_extension", $this->getValidPageExtension());
-		$this->objRequest->setAttribute("page_content_type", $this->getValidPageContentType());
+		$this->request->setAttribute("page_url", $this->getValidPageURL());
+		$this->request->setAttribute("page_extension", $this->getValidPageExtension());
+		$this->request->setAttribute("page_content_type", $this->getValidPageContentType());
 	}
 	
 	/**
@@ -18,25 +18,25 @@ class PageValidatorListener extends RequestListener {
 	 * @return string
 	 */
 	private function getValidPageURL() {
-		$strURL = $this->objRequest->getURI()->getPagePath();
+		$strURL = $this->request->getURI()->getPagePath();
 		
 		// replace extension with default if not set
 		if($strURL=="") {
-			$strURL = $this->objApplication->getDefaultPage();
+			$strURL = $this->application->getDefaultPage();
 		}
 		
 		// validate page url
-		if(!$this->objApplication->getAutoRouting()) {
+		if(!$this->application->getAutoRouting()) {
 			// normal url
-			if($this->objApplication->hasRoute($strURL)) return $strURL;
+			if($this->application->hasRoute($strURL)) return $strURL;
 			
 			// search for path parameters
-			$tblRoutes = $this->objApplication->getRoutes();
+			$tblRoutes = $this->application->getRoutes();
 			foreach($tblRoutes as $objRoute) {
 				if(strpos($objRoute->getPath(), "{")!==false) {
 					$objPathParameterFinder = new PathParameterFinder($objRoute->getPath(), $strURL);
 					if($objPathParameterFinder->isFound()) {
-						$this->objRequest->setAttribute("path_parameters", $objPathParameterFinder->getParameters());
+						$this->request->setAttribute("path_parameters", $objPathParameterFinder->getParameters());
 						return $objPathParameterFinder->getPath();
 					}
 				}
@@ -54,15 +54,15 @@ class PageValidatorListener extends RequestListener {
 	 * @return string
 	 */
 	private function getValidPageExtension() {
-		$strExtension = $this->objRequest->getURI()->getPageExtension();
+		$strExtension = $this->request->getURI()->getPageExtension();
 		
 		// replace extension with default if not set
 		if($strExtension=="") {
-			$strExtension = $this->objApplication->getDefaultExtension();
+			$strExtension = $this->application->getDefaultExtension();
 		}
 		
 		// validate extension
-		if(!$this->objApplication->hasFormat($strExtension)) throw new ServletApplicationException("Extension ".$strExtension." not defined @ formats.format!");
+		if(!$this->application->hasFormat($strExtension)) throw new ServletApplicationException("Extension ".$strExtension." not defined @ formats.format!");
 		
 		return $strExtension;
 	}
@@ -74,6 +74,6 @@ class PageValidatorListener extends RequestListener {
 	 * @return string
 	 */
 	private function getValidPageContentType() {
-		return $this->objApplication->getFormatInfo($this->objRequest->getAttribute("page_extension"))->getContentType();
+		return $this->application->getFormatInfo($this->request->getAttribute("page_extension"))->getContentType();
 	}
 }

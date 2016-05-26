@@ -6,22 +6,22 @@ abstract class Controller implements Runnable {
 	/**
 	 * @var Application
 	 */
-	protected $objApplication;
+	protected $application;
 	/**
 	 * @var Request
 	 */
-	protected $objRequest;
+	protected $request;
 	/**
 	 * @var Response
 	 */
-	protected $objResponse;
+	protected $response;
 	
 	/**
 	 * Implements the three stages of a controller job
 	 */
 	public function __construct(Application $objApplication, Request $objRequest, Response $objResponse) {
-		$this->objApplication = $objApplication;
-		$this->objRequest = $objRequest;
-		$this->objResponse = $objResponse;
+		$this->application = $objApplication;
+		$this->request = $objRequest;
+		$this->response = $objResponse;
 	}
 }

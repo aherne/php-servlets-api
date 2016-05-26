@@ -3,9 +3,9 @@
  * Listens on response object and alters response body.
  */
 abstract class ResponseListener implements Runnable {
-	protected $objApplication;
-	protected $objRequest;
-	protected $objResponse;
+	protected $application;
+	protected $request;
+	protected $response;
 	
 	/**
 	 * @param Application $objApplication
@@ -13,8 +13,8 @@ abstract class ResponseListener implements Runnable {
 	 * @param Response $objResponse
 	 */
 	public function __construct(Application $objApplication, Request $objRequest, Response $objResponse) {
-		$this->objApplication = $objApplication;
-		$this->objRequest = $objRequest;
-		$this->objResponse = $objResponse;
+		$this->application = $objApplication;
+		$this->request = $objRequest;
+		$this->response = $objResponse;
 	}
 }
