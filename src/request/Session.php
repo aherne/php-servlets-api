@@ -1,6 +1,4 @@
 <?php
-require_once("session/SessionConfiguration.php");
-
 /**
  * Attributes factory enveloping operations with SESSION. 
 */
@@ -29,7 +27,7 @@ final class Session {
 	/**
 	 * Closes session.
 	 */
-	public function end() {
+	public function destroy() {
 		session_destroy();
 	}
 	
