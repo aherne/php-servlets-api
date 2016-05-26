@@ -9,9 +9,12 @@ final class Cookie {
 	 * @param string $strKey
 	 * @param mixed $mixValue
 	 * @param integer $intExpiration Number of seconds until cookie expires.
+	 * @param boolean $blnSecure Available only through HTTPS.
+	 * @param boolean $blnHttpOnly Accessible only through HTTP protocol (cookie not accessible via JS).
 	 */
-	public function set($strKey, $mixValue, $intExpiration) {
-		setcookie($strKey, $mixValue, time()+$intExpiration);
+	public function set($strKey, $mixValue, $intExpiration=0, $blnSecure=false, $blnHttpOnly=false) {
+		$blnAnswer = setcookie($strKey, $mixValue, ($intExpiration!=0?time()+$intExpiration:0), "", "", $blnSecure, $blnHttpOnly);
+		if(!$blnAnswer) throw new ServletException("Cookie could not be set!");
 	}
 	
 	/**
@@ -42,6 +45,8 @@ final class Cookie {
 	 * @param string $strKey
 	 */
 	public function remove($strKey) {
-		setcookie($strKey, "", time()-self::DEFAULT_EXPIRATION_TIME);
+		setcookie ($strKey, "", 1);
+		setcookie ($strKey, false);
+		unset($_COOKIE[$strKey]);
 	}
 }
