@@ -268,6 +268,7 @@ class Application extends AttributesFactory {
 		$tblTMP = (array) $this->objSimpleXMLElement->formats;
 		if(empty($tblTMP["format"])) throw new ServletApplicationException("No formats set: formats.format");
 		$tblTMP = $tblTMP["format"];
+		if(!is_array($tblTMP)) $tblTMP = array($tblTMP);
 		foreach($tblTMP as $tblInfo) {
 			if(empty($tblInfo['extension'])) throw new ServletApplicationException("Property not set: formats->format['extension']");
 			if(empty($tblInfo['content_type'])) throw new ServletApplicationException("Property not set: formats->format['content_type']");
