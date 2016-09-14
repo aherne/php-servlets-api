@@ -40,7 +40,7 @@ final class Session {
 	 */
 	public function set($strKey, $mixValue) {
 		if(!$this->isStarted()) throw new ServletException("Session not started!");
-		$_SESSION[$strKey] = $mixParameter;
+		$_SESSION[$strKey] = $mixValue;
 	}
 	
 	/**
