@@ -114,7 +114,7 @@ final class RequestURI {
 	        	   	if($intDotPosition!==false) {
 	        	       		$strURL = substr($strURLCombined,0, $intDotPosition);
 	        	       		$strExtension = strtolower(substr($strURLCombined,($intDotPosition+1)));
-	        	       		$intSlashPosition = strpos($strExtension, "/"); // this is for path parameters that follow extension
+	        	       		$intSlashPosition = strpos($strExtension, "/"); // this is when both path parameters and extension are supplied
 	        	       		if($intSlashPosition!==false) {
 	        	           		$strURL .= substr($strExtension, $intSlashPosition);
 	        	           		$strExtension = substr($strExtension,0,$intSlashPosition);
