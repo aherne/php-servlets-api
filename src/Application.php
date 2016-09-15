@@ -295,7 +295,8 @@ class Application extends AttributesFactory {
 	 * @return Format
 	 */
 	public function getFormatInfo($strExtension) {
-		return (isset($this->tblFormats[$strExtension])?$this->tblFormats[$strExtension]:array());
+		if(!isset($this->tblFormats[$strExtension])) throw new ServletApplicationException("Format not found for: ".$strExtension);
+		return $this->tblFormats[$strExtension];
 	}
 
 
