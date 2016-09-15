@@ -245,7 +245,8 @@ class Application extends AttributesFactory {
 	 * @return Route
 	 */
 	public function getRouteInfo($strURL) {
-		return (isset($this->tblRoutes[$strURL])?$this->tblRoutes[$strURL]:array());
+		if(!isset($this->tblRoutes[$strURL])) throw new ServletApplicationException("Route not found for: ".$strURL);
+		return $this->tblRoutes[$strURL];
 	}
 	
 	/**
