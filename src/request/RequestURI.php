@@ -98,37 +98,38 @@ final class RequestURI {
 	 * @throws ServletException
 	 */
 	private function setPageInfo() {
-		// get combined page & extension (if any) from request
-		$strURLCombined = "";
-		$tblPossibleHolders = array("SCRIPT_URL","REDIRECT_URL","REQUEST_URI");
+		// get page path and extension from request
+	    	$blnFound = false;
+	    	$strURL = "";
+	    	$strExtension = "";
+	    	$tblPossibleHolders = array("SCRIPT_URI","SCRIPT_URL","REDIRECT_URL","REQUEST_URI");
 		foreach($tblPossibleHolders as $strVariable) {
 			if(isset($_SERVER[$strVariable]) && strpos($_SERVER[$strVariable],"http")!==0) {
 				$strURLCombined = $_SERVER[$strVariable];
-				$intPosition = strpos($strURLCombined,"?");
-				if($intPosition!==false) {
-					$strURLCombined = substr($strURLCombined,0,$intPosition);
-				}
-				break;
-			}
+		        	$intQuestionPosition = strpos($strURLCombined,"?");
+		           	if($intQuestionPosition!==false) {
+		               		$strURLCombined = substr($strURLCombined,0,$intQuestionPosition);
+		           	}
+			       	$intDotPosition = strrpos($strURLCombined,".");
+	        	   	if($intDotPosition!==false) {
+	        	       		$strURL = substr($strURLCombined,0, $intDotPosition);
+	        	       		$strExtension = strtolower(substr($strURLCombined,($intDotPosition+1)));
+	        	       		$intSlashPosition = strpos($strExtension, "/"); // this is for path parameters that follow extension
+	        	       		if($intSlashPosition!==false) {
+	        	           		$strURL .= substr($strExtension, $intSlashPosition);
+	        	           		$strExtension = substr($strExtension,0,$intSlashPosition);
+	        	       		}
+	        	   	} else {
+	        	       		$strURL = $strURLCombined;
+	        	   	}
+	        	   	$strURL = substr($strURL, (strpos($strURL, $this->strContextPath)+strlen($this->strContextPath)));
+	        	   	$blnFound = true;
+		           	break;
+		       	}
 		}
-		if(!$strURLCombined) {
+		if(!$blnFound) {
 			throw new ServletException("ServletsAPI requires overriding paths!");
 		}
-		
-		// split URL between page and extension
-		$strURL = $strURLCombined;
-		$strExtension = "";
-		$intDotPosition = strrpos($strURLCombined,".");
-		if($intDotPosition!==false) {
-			$strURL = substr($strURLCombined,0, $intDotPosition);
-			$strExtension = strtolower(substr($strURLCombined,($intDotPosition+1)));
-			$intSlashPosition = strpos($strExtension, "/");
-			if($intSlashPosition!==false) {
-				$strURL .= substr($strExtension, $intSlashPosition);
-				$strExtension = substr($strExtension,0,$intSlashPosition);
-			}
-		}
-		$strURL = substr($strURL, (strpos($strURL, $this->strContextPath)+strlen($this->strContextPath)));
 		
 		// write url page
 		$this->setPagePath($strURL);
