@@ -98,10 +98,22 @@ final class RequestURI {
 	 * @throws ServletException
 	 */
 	private function setPageInfo() {
-		if(!isset($_SERVER['SCRIPT_URL']) && !isset($_SERVER['REDIRECT_URL'])) {
+		// get combined page & extension (if any) from request
+		$strURLCombined = "";
+		$tblPossibleHolders = array("SCRIPT_URL","REDIRECT_URL","REQUEST_URI");
+		foreach($tblPossibleHolders as $strVariable) {
+			if(isset($_SERVER[$strVariable]) && strpos($_SERVER[$strVariable],"http")!==0) {
+				$strURLCombined = $_SERVER[$strVariable];
+				$intPosition = strpos($strURLCombined,"?");
+				if($intPosition!==false) {
+					$strURLCombined = substr($strURLCombined,0,$intPosition);
+				}
+				break;
+			}
+		}
+		if(!$strURLCombined) {
 			throw new ServletException("ServletsAPI requires overriding paths!");
 		}
-		$strURLCombined = (isset($_SERVER['SCRIPT_URL'])?$_SERVER['SCRIPT_URL']:$_SERVER['REDIRECT_URL']);
 		
 		// split URL between page and extension
 		$strURL = $strURLCombined;
