@@ -292,7 +292,7 @@ class Application extends AttributesFactory {
 	 * Gets file format info based on argument path.
 	 *
 	 * @param string $strExtension
-	 * @return Route
+	 * @return Format
 	 */
 	public function getFormatInfo($strExtension) {
 		return (isset($this->tblFormats[$strExtension])?$this->tblFormats[$strExtension]:array());
