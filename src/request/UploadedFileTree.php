@@ -5,7 +5,7 @@ require_once("RequestFilesParser.php");
 /**
  * Encapsulates information of files sent via multipart forms into UploadedFile objects.
  */
-final class RequestUploadedFiles {
+final class UploadedFileTree {
 	protected $tblAttributes =  array();
 		
 	public function __construct() {
