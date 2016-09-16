@@ -141,26 +141,12 @@ final class Response extends AttributesFactory {
 	}
 	
 	/**
-	 * Builds a response into output buffer and writes it to output stream.
+	 * Checks if response is disabled.
 	 * 
-	 * @param string $strWrapperClass
-	 * @throws ServletException
+	 * @return boolean
 	 */
-	public function build($strWrapperClass) {
-		// If stream has already been written to OR response was disabled, do not build
-		if($this->objOutputStream->get() || $this->blnIsDisabled) {
-			return; 
-		}
-		
-		// find and run wrapper class
-		ob_start();
-		$objRunnable = new $strWrapperClass($this);
-		$objRunnable->run();
-		$strContents = ob_get_contents();
-		ob_end_clean();
-		
-		// write string to output stream
-		$this->objOutputStream->write($strContents);
+	public function isDisabled() {
+	    	return $this->blnIsDisabled;
 	}
 	
 	/**
