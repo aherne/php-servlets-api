@@ -2,7 +2,7 @@
 require_once("request/RequestClient.php");
 require_once("request/RequestServer.php");
 require_once("request/RequestURI.php");
-require_once("request/RequestUploadedFiles.php");
+require_once("request/UploadedFileTree.php");
 require_once("request/Session.php");
 require_once("request/Cookie.php");
 
@@ -127,7 +127,7 @@ final class Request extends AttributesFactory {
 	 * 			array("a"=>array("name"=>array("b"=>array("c"=>"myName")),...) 
 	 */
 	private function setUploadedFiles() {
-		$objFiles = new RequestUploadedFiles();
+		$objFiles = new UploadedFileTree();
 		$this->tblUploadedFiles = $objFiles->toArray();
 	}
 	
