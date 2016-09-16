@@ -47,4 +47,11 @@ final class ResponseStream {
 	public function set($contents) {
 		$this->contents = $contents;
 	}
+	
+	/**
+	 * Checks if stream is empty.
+	 */
+	public function isEmpty() {
+	    	return empty($this->contents);
+	}
 }
