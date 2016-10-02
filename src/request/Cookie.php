@@ -1,4 +1,6 @@
 <?php
+require_once("CookieSecurityOptions.php");
+
 /**
  * Attributes factory enveloping operations with COOKIE.
  */
@@ -8,12 +10,15 @@ final class Cookie {
 	 * 
 	 * @param string $strKey
 	 * @param mixed $mixValue
-	 * @param integer $intExpiration Number of seconds until cookie expires.
-	 * @param boolean $blnSecure Available only through HTTPS.
-	 * @param boolean $blnHttpOnly Accessible only through HTTP protocol (cookie not accessible via JS).
+	 * @param CookieSecurityOptions $objSecurityOptions
 	 */
-	public function set($strKey, $mixValue, $intExpiration=0, $blnSecure=false, $blnHttpOnly=false) {
-		$blnAnswer = setcookie($strKey, $mixValue, ($intExpiration!=0?time()+$intExpiration:0), "", "", $blnSecure, $blnHttpOnly);
+	public function set($strKey, $mixValue, CookieSecurityOptions $objSecurityOptions=null) {
+		$blnAnswer = false;
+		if($objSecurityOptions) {
+			$blnAnswer = setcookie($strKey, $mixValue, $objSecurityOptions->getExpiredTime(), $objSecurityOptions->getPath(), $objSecurityOptions->getDomain(), $objSecurityOptions->isSecuredByHTTPS(), $objSecurityOptions->isSecuredByHTTPheaders());
+		} else {
+			$blnAnswer = setcookie($strKey, $mixValue);
+		}
 		if(!$blnAnswer) throw new ServletException("Cookie could not be set!");
 	}
 	
