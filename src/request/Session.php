@@ -1,4 +1,6 @@
 <?php
+require_once("SessionSecurityOptions.php");
+
 /**
  * Attributes factory enveloping operations with SESSION. 
 */
@@ -6,9 +8,10 @@ final class Session {
 	/**
 	 * Starts session.
 	 * 
+	 * @param SessionSecurityOptions $objSessionSecurityOptions Added here to hint where to inject.
 	 * @param SessionHandlerInterface $objSessionHandler	If null, built-in session handler is used.
 	 */
-	public function start(SessionHandlerInterface $objSessionHandler = null) {
+	public function start(SessionSecurityOptions $objSessionSecurityOptions = null, SessionHandlerInterface $objSessionHandler = null) {
 		if($objSessionHandler!=null) {
 			session_set_save_handler($objSessionHandler, true);
 		}
