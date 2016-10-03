@@ -122,7 +122,9 @@ final class RequestURI {
 	        	   	} else {
 	        	       		$strURL = $strURLCombined;
 	        	   	}
-	        	   	$strURL = substr($strURL, (strpos($strURL, $this->strContextPath)+strlen($this->strContextPath)));
+	        	   	if($this->strContextPath) {
+	        	       		$strURL = substr($strURL, (strpos($strURL, $this->strContextPath)+strlen($this->strContextPath)));
+	        	   	}
 	        	   	$blnFound = true;
 		           	break;
 		       	}
