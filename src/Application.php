@@ -194,7 +194,9 @@ class Application extends AttributesFactory {
 	 * Sets user-defined listeners. Maps to listeners:listener list @ XML.
 	 */
 	private function setListeners() {
-		$tblTMP = (array) $this->objSimpleXMLElement->listeners->listener;
+		$tblTMP = (array) $this->objSimpleXMLElement->listeners;
+		if(empty($tblTMP["listener"])) return;
+		$tblTMP = $tblTMP["listener"];
 		foreach($tblTMP as $tblInfo) {
 			if(empty($tblInfo['class'])) throw new ServletApplicationException("Property not set: listeners->listener['class']");
 			$this->tblListeners[] = (string) $tblInfo['class'];
