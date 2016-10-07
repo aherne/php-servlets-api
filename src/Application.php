@@ -312,4 +312,13 @@ class Application extends AttributesFactory {
 	public function hasFormat($strExtension) {
 		return isset($this->tblFormats[$strExtension]);
 	}
+	
+	/**
+	 * Gets a pointer to XML file reader.
+	 * 
+	 * @return SimpleXMLElement
+	 */
+	public function getXML() {
+	    return $this->objSimpleXMLElement;
+	}
 }
