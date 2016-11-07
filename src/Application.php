@@ -197,6 +197,7 @@ class Application extends AttributesFactory {
 		$tblTMP = (array) $this->objSimpleXMLElement->listeners;
 		if(empty($tblTMP["listener"])) return;
 		$tblTMP = $tblTMP["listener"];
+		if(!is_array($tblTMP)) $tblTMP = array($tblTMP);
 		foreach($tblTMP as $tblInfo) {
 			if(empty($tblInfo['class'])) throw new ServletApplicationException("Property not set: listeners->listener['class']");
 			$this->tblListeners[] = (string) $tblInfo['class'];
@@ -222,6 +223,7 @@ class Application extends AttributesFactory {
 		$tblTMP = (array) $this->objSimpleXMLElement->routes;
 		if(empty($tblTMP["route"])) throw new ServletApplicationException("No routes set: routes.route");
 		$tblTMP = $tblTMP["route"];
+		if(!is_array($tblTMP)) $tblTMP = array($tblTMP);
 		foreach($tblTMP as $tblInfo) {
 			if(empty($tblInfo['url'])) throw new ServletApplicationException("Property not set: routes->route['url']");
 			if(empty($tblInfo['class'])) throw new ServletApplicationException("Property not set: routes->route['class']");
