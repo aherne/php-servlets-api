@@ -32,12 +32,14 @@ final class ControllerLocator {
 		if(!$objApplication->getAutoRouting()) {
 			$strClass = $objApplication->getRouteInfo($strURL)->getController();
 		} else {
-			$strClass = str_replace(" ","",ucwords(str_replace("/"," ",strtolower($strURL))))."Controller";
+			$strClass = str_replace(" ","",ucwords(str_replace(array("/","-")," ",strtolower($strURL))))."Controller";
 		}
 	
 		// loads controller class
 		$strFile = $strFolder."/".$strClass.".php";
-		if(!file_exists($strFile)) throw new ServletException("Controller not found on disk: ".$strFile);
+		if(!file_exists($strFile)) {
+			return; // it is allowed to have no controller / request
+		}
 		require_once($strFile);
 	
 		// instances controller class
