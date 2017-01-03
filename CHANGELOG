@@ -1,7 +1,3 @@
 TODOS:
-	? create DownloadWrapper<->FileWrapper, JsonWrapper, XmlWrapper, HtmlWrapper
-	? setView/getView + setFile/getFile @ Response 
 	make Request class support NGINX
-	add optional format @ routes.route
-		if one allows to set extension in request, if JSON => it would show everything we send to views (show business knowledge)
-	check page requested discovery if context path = ""
+	add optional "format" @ routes.route
