@@ -1,6 +1,4 @@
 <?php
-require_once("PathParameterFinder.php");
-
 /**
  * Validates page request according to url, extension and content type
  */
@@ -33,11 +31,11 @@ class PageValidatorListener extends RequestListener {
 			// search for path parameters
 			$tblRoutes = $this->application->getRoutes();
 			foreach($tblRoutes as $objRoute) {
-				if(strpos($objRoute->getPath(), "{")!==false) {
-					$objPathParameterFinder = new PathParameterFinder($objRoute->getPath(), $strURL);
-					if($objPathParameterFinder->isFound()) {
-						$this->request->setAttribute("path_parameters", $objPathParameterFinder->getParameters());
-						return $objPathParameterFinder->getPath();
+				if(strpos($objRoute->getPath(), "(")!==false) {
+					$tblParameters = array();
+					if(preg_match_all("/^".$objRoute->getPath()."$/", $strURL, $tblParameters)==1) {
+						$this->request->setAttribute("path_parameters", $tblParameters[1]);
+						return $objRoute->getPath();
 					}
 				}
 			}
