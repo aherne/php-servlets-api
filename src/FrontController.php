@@ -57,10 +57,8 @@ final class FrontController {
 		// locates and runs page controller
 		$objControllerLocator = new ControllerLocator($objApplication, $objRequest->getAttribute("page_url"));
 		$strClassName  = $objControllerLocator->getClassName();
-		if($strClassName) {
-			$objRunnable = new $strClassName($objApplication, $objRequest, $objResponse);
-			$objRunnable->run();
-		}
+		$objRunnable = new $strClassName($objApplication, $objRequest, $objResponse);
+		$objRunnable->run();
 		
 		// locates a wrapper for view type and builds response
 		if($objResponse->getOutputStream()->isEmpty() && !$objResponse->isDisabled()) {
