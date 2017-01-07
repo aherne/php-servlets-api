@@ -38,7 +38,7 @@ final class ControllerLocator {
 		// loads controller class
 		$strFile = $strFolder."/".$strClass.".php";
 		if(!file_exists($strFile)) {
-			return; // it is allowed to have no controller / request
+			throw new ServletException("Controller not found: ".$strFile);; // it is allowed to have no controller / request
 		}
 		require_once($strFile);
 	
