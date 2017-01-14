@@ -98,7 +98,7 @@ final class Response extends AttributesFactory {
 	}
 	
 	/**
-	 * Sets view's absolute path.
+	 * Forwards response to a file (aka "view")
 	 * 
 	 * @param string $strViewPath
 	 */
