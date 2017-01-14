@@ -14,7 +14,7 @@ final class ControllerLocator {
 	}
 
 	/**
-	 * Sets controller class name.
+	 * Sets controller class name. Falls back to ViewController if controller file 
 	 * 
 	 * @param Application $objApplication
 	 * @param string $strPagePath
@@ -37,16 +37,20 @@ final class ControllerLocator {
 	
 		// loads controller class
 		$strFile = $strFolder."/".$strClass.".php";
-		if(!file_exists($strFile)) {
-			throw new ServletException("Controller not found: ".$strFile);; // it is allowed to have no controller / request
-		}
-		require_once($strFile);
+		if(file_exists($strFile)) {
+			require_once($strFile);
 	
-		// instances controller class
-		if(!class_exists($strClass)) throw new ServletException("Controller class not found: ".$strClass);
-		
-		// checks if it is a subclass of Controller
-		if(!is_subclass_of($strClass, "Controller")) throw new ServletException($strClass." must be a subclass of Controller");
+			// instances controller class
+			if(!class_exists($strClass)) throw new ServletException("Controller class not found: ".$strClass);
+			
+			// checks if it is a subclass of Controller
+			if(!is_subclass_of($strClass, "Controller")) throw new ServletException($strClass." must be a subclass of Controller");
+		} else {
+			// once a controller was specifically set but its file is not found, an error has occurred
+			if(!$objApplication->getAutoRouting() && $strClass)  throw new ServletException("Controller file not found: ".$strFile);
+			// if a controller wasn't specifically set but its file is not found, use default ViewController
+			$strClass = "ViewController";
+		}
 			
 		$this->strClassName = $strClass;
 	}
