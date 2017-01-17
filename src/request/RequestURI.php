@@ -99,38 +99,30 @@ final class RequestURI {
 	 */
 	private function setPageInfo() {
 		// get page path and extension from request
-	    	$blnFound = false;
-	    	$strURL = "";
-	    	$strExtension = "";
-	    	$tblPossibleHolders = array("SCRIPT_URI","SCRIPT_URL","REDIRECT_URL","REQUEST_URI");
-		foreach($tblPossibleHolders as $strVariable) {
-			if(isset($_SERVER[$strVariable]) && strpos($_SERVER[$strVariable],"http")!==0) {
-				$strURLCombined = $_SERVER[$strVariable];
-		        	$intQuestionPosition = strpos($strURLCombined,"?");
-		           	if($intQuestionPosition!==false) {
-		               		$strURLCombined = substr($strURLCombined,0,$intQuestionPosition);
-		           	}
-			       	$intDotPosition = strrpos($strURLCombined,".");
-	        	   	if($intDotPosition!==false) {
-	        	       		$strURL = substr($strURLCombined,0, $intDotPosition);
-	        	       		$strExtension = strtolower(substr($strURLCombined,($intDotPosition+1)));
-	        	       		$intSlashPosition = strpos($strExtension, "/"); // this is when both path parameters and extension are supplied
-	        	       		if($intSlashPosition!==false) {
-	        	           		$strURL .= substr($strExtension, $intSlashPosition);
-	        	           		$strExtension = substr($strExtension,0,$intSlashPosition);
-	        	       		}
-	        	   	} else {
-	        	       		$strURL = $strURLCombined;
-	        	   	}
-	        	   	if($this->strContextPath) {
-	        	       		$strURL = substr($strURL, (strpos($strURL, $this->strContextPath)+strlen($this->strContextPath)));
-	        	   	}
-	        	   	$blnFound = true;
-		           	break;
-		       	}
+	    $strURL = "";
+	    $strExtension = "";
+	    if(!isset($_SERVER["REQUEST_URI"])) throw new ServletException("ServletsAPI requires overriding paths!");
+	    
+	    // split it into page and extension
+		$strURLCombined = $_SERVER["REQUEST_URI"];
+		$intQuestionPosition = strpos($strURLCombined,"?");
+		if($intQuestionPosition!==false) {
+			$strURLCombined = substr($strURLCombined,0,$intQuestionPosition);
 		}
-		if(!$blnFound) {
-			throw new ServletException("ServletsAPI requires overriding paths!");
+		$intDotPosition = strrpos($strURLCombined,".");
+		if($intDotPosition!==false) {
+			$strURL = substr($strURLCombined,0, $intDotPosition);
+			$strExtension = strtolower(substr($strURLCombined,($intDotPosition+1)));
+			$intSlashPosition = strpos($strExtension, "/"); // this is when both path parameters and extension are supplied
+			if($intSlashPosition!==false) {
+				$strURL .= substr($strExtension, $intSlashPosition);
+				$strExtension = substr($strExtension,0,$intSlashPosition);
+			}
+		} else {
+			$strURL = $strURLCombined;
+		}
+		if($this->strContextPath) {
+			$strURL = substr($strURL, (strpos($strURL, $this->strContextPath)+strlen($this->strContextPath)));
 		}
 		
 		// write url page
