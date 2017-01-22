@@ -1,3 +1,3 @@
 TODOS:
-	make Request class support NGINX
-	add optional "format" @ routes.route
+	test on NGINX
+	make PageValidatorListener support named path parameters: users/{name}-all instead of REGEX such as users\/(.*)+-all

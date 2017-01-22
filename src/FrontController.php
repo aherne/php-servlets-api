@@ -63,19 +63,19 @@ final class FrontController {
 		
 		// locates a wrapper for view type and builds response
 		if($objResponse->getOutputStream()->isEmpty() && !$objResponse->isDisabled()) {
-		    	// locates and instances wrapper
-    			$objWrapperLocator = new WrapperLocator($objApplication, $objResponse->getContentType());
-    			$strClassName  = $objWrapperLocator->getClassName();
-    			$objRunnable = new $strClassName($objResponse);
+			// locates and instances wrapper
+			$objWrapperLocator = new WrapperLocator($objApplication, $objResponse->getContentType());
+			$strClassName  = $objWrapperLocator->getClassName();
+			$objRunnable = new $strClassName($objResponse);
     		
-    			// builds response
-    			ob_start();
+			// builds response
+			ob_start();
 			$objRunnable->run();
-		    	$strContents = ob_get_contents();
-		    	ob_end_clean();
+			$strContents = ob_get_contents();
+			ob_end_clean();
 		    
-		    	// writes response to output stream
-		    	$objResponse->getOutputStream()->write($strContents);
+			// writes response to output stream
+			$objResponse->getOutputStream()->write($strContents);
 		}
 		
 		// operates custom changes on response object.
