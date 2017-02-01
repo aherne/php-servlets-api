@@ -32,8 +32,9 @@ class PageValidatorListener extends RequestListener {
 			$tblRoutes = $this->application->getRoutes();
 			foreach($tblRoutes as $objRoute) {
 				if(strpos($objRoute->getPath(), "(")!==false) {
+					$pattern = "/^".str_replace(array("/","(*)"),array("\/","([^\/]+)"),$objRoute->getPath())."$/";
 					$tblParameters = array();
-					if(preg_match_all("/^".$objRoute->getPath()."$/", $strURL, $tblParameters)==1) {
+					if(preg_match_all($pattern, $strURL, $tblParameters)==1) {
 						$this->request->setAttribute("path_parameters", $tblParameters[1]);
 						return $objRoute->getPath();
 					}
