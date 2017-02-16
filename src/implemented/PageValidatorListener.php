@@ -31,11 +31,16 @@ class PageValidatorListener extends RequestListener {
 			// search for path parameters
 			$tblRoutes = $this->application->getRoutes();
 			foreach($tblRoutes as $objRoute) {
-				if(strpos($objRoute->getPath(), "(")!==false) {
+				if(strpos($objRoute->getPath(), "(")!==false) {					
 					$pattern = "/^".str_replace(array("/","(*)","(d)","(w)"),array("\/","([^\/]+)","([0-9]+)","([a-zA-Z0-9]+)"),$objRoute->getPath())."$/";
 					$tblParameters = array();
 					if(preg_match_all($pattern, $strURL, $tblParameters)==1) {
-						$this->request->setAttribute("path_parameters", $tblParameters[1]);
+						$tblPathParameters = array();
+						foreach($tblParameters as $i=>$item) {
+							if($i==0) continue;
+							$tblPathParameters[]=$item[0];
+						}
+						$this->request->setAttribute("path_parameters", $tblPathParameters);
 						return $objRoute->getPath();
 					}
 				}
