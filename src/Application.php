@@ -1,5 +1,5 @@
 <?php
-require_once("exceptions/ServletApplicationException.php");
+require_once("exceptions/ApplicationException.php");
 require_once("AttributesFactory.php");
 require_once("application/Route.php");
 require_once("application/Format.php");
@@ -21,7 +21,7 @@ class Application extends AttributesFactory {
 	 * @param string $strURL XML file url
 	 */
 	public function __construct($strURL) {
-		if(!file_exists($strURL)) throw new ServletApplicationException("XML configuration file not found!");
+		if(!file_exists($strURL)) throw new ApplicationException("XML configuration file not found!");
 		$this->objSimpleXMLElement = simplexml_load_file($strURL);
 		
 		$this->setDefaultPage();
@@ -61,7 +61,7 @@ class Application extends AttributesFactory {
 	 */
 	private function setDefaultPage() {
 		$this->strDefaultPage = (string) $this->objSimpleXMLElement->application->default_page;
-		if(!$this->strDefaultPage) throw new ServletApplicationException("Parameter is mandatory: application.default_page");		
+		if(!$this->strDefaultPage) throw new ApplicationException("XML tag is mandatory: application.default_page");		
 	}
 
 	/**
@@ -78,7 +78,7 @@ class Application extends AttributesFactory {
 	 */
 	private function setDefaultExtension() {
 		$this->strDefaultExtension = (string) $this->objSimpleXMLElement->application->default_extension;
-		if(!$this->strDefaultExtension) throw new ServletApplicationException("Parameter is mandatory: application.default_extension");
+		if(!$this->strDefaultExtension) throw new ApplicationException("XML tag is mandatory: application.default_extension");
 	}
 
 	/**
@@ -199,7 +199,7 @@ class Application extends AttributesFactory {
 		$tblTMP = $tblTMP["listener"];
 		if(!is_array($tblTMP)) $tblTMP = array($tblTMP);
 		foreach($tblTMP as $tblInfo) {
-			if(empty($tblInfo['class'])) throw new ServletApplicationException("Property not set: listeners->listener['class']");
+			if(empty($tblInfo['class'])) throw new ApplicationException("XML property is mandatory: listeners.listener['class']");
 			$this->tblListeners[] = (string) $tblInfo['class'];
 		}
 	}
@@ -221,16 +221,16 @@ class Application extends AttributesFactory {
 	 */
 	private function setRoutes() {
 		$tblTMP = (array) $this->objSimpleXMLElement->routes;
-		if(empty($tblTMP["route"])) throw new ServletApplicationException("No routes set: routes.route");
+		if(empty($tblTMP["route"])) throw new ApplicationException("XML tag is mandatory: routes.route");
 		$tblTMP = $tblTMP["route"];
 		if(!is_array($tblTMP)) $tblTMP = array($tblTMP);
 		foreach($tblTMP as $tblInfo) {
-			if(empty($tblInfo['url'])) throw new ServletApplicationException("Property not set: routes->route['url']");
-			if(empty($tblInfo['class'])) throw new ServletApplicationException("Property not set: routes->route['class']");
+			if(empty($tblInfo['url'])) throw new ApplicationException("XML property is mandatory: routes.route['url']");
+			if(empty($tblInfo['class'])) throw new ApplicationException("XML property is mandatory: routes.route['class']");
 			$strUrl = (string) $tblInfo['url'];
 			$this->tblRoutes[$strUrl] = new Route($strUrl, (string) $tblInfo['class']);
 		}
-		if(empty($this->tblRoutes)) throw new ServletApplicationException("No routes set: routes.route");
+		if(empty($this->tblRoutes)) throw new ApplicationException("XML tag cannot be empty: routes");
 	}
 	
 	/**
@@ -249,7 +249,7 @@ class Application extends AttributesFactory {
 	 * @return Route
 	 */
 	public function getRouteInfo($strURL) {
-		if(!isset($this->tblRoutes[$strURL])) throw new ServletApplicationException("Route not found for: ".$strURL);
+		if(!isset($this->tblRoutes[$strURL])) throw new ServletException("Route could not be matched in routes.route tag @ XML: ".$strURL);
 		return $this->tblRoutes[$strURL];
 	}
 	
@@ -271,16 +271,16 @@ class Application extends AttributesFactory {
 	 */
 	private function setFormats() {
 		$tblTMP = (array) $this->objSimpleXMLElement->formats;
-		if(empty($tblTMP["format"])) throw new ServletApplicationException("No formats set: formats.format");
+		if(empty($tblTMP["format"])) throw new ApplicationException("XML tag is mandatory: formats.format");
 		$tblTMP = $tblTMP["format"];
 		if(!is_array($tblTMP)) $tblTMP = array($tblTMP);
 		foreach($tblTMP as $tblInfo) {
-			if(empty($tblInfo['extension'])) throw new ServletApplicationException("Property not set: formats->format['extension']");
-			if(empty($tblInfo['content_type'])) throw new ServletApplicationException("Property not set: formats->format['content_type']");
+			if(empty($tblInfo['extension'])) throw new ApplicationException("XML property is mandatory: formats->format['extension']");
+			if(empty($tblInfo['content_type'])) throw new ApplicationException("XML property is mandatory: formats->format['content_type']");
 			$strExtension = (string) $tblInfo['extension'];
 			$this->tblFormats[$strExtension] = new Format($strExtension, (string) $tblInfo['content_type'], (isset($tblInfo['class'])?(string) $tblInfo['class']:""));
 		}
-		if(empty($this->tblFormats)) throw new ServletApplicationException("No formats set: formats.format");
+		if(empty($this->tblFormats)) throw new ApplicationException("XML tag cannot be empty: formats");
 	}
 
 
@@ -300,7 +300,7 @@ class Application extends AttributesFactory {
 	 * @return Format
 	 */
 	public function getFormatInfo($strExtension) {
-		if(!isset($this->tblFormats[$strExtension])) throw new ServletApplicationException("Format not found for: ".$strExtension);
+		if(!isset($this->tblFormats[$strExtension])) throw new ServletException("Format could not be matched in formats.format tag @ XML: ".$strExtension);
 		return $this->tblFormats[$strExtension];
 	}
 

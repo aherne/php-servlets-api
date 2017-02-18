@@ -31,7 +31,7 @@ class ApplicationTest extends PHPUnit_Framework_TestCase {
 	}
 
 	/**
-	 * @expectedException     ServletApplicationException
+	 * @expectedException     ApplicationException
 	 */
 	public function testException() {
 		new Application("bad.xml");

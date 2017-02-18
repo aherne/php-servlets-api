@@ -1,4 +1,6 @@
 <?php
+use OAuth2\ServerException;
+
 /**
  * Validates page request according to url, extension and content type
  */
@@ -45,7 +47,7 @@ class PageValidatorListener extends RequestListener {
 					}
 				}
 			}
-			throw new ServletApplicationException("Route could not be located: ".$strURL);
+			throw new ServletException("Route could not be matched to routes.route tag @ XML: ".$strURL);
 		}
 		
 		return $strURL;
@@ -66,7 +68,7 @@ class PageValidatorListener extends RequestListener {
 		}
 		
 		// validate extension
-		if(!$this->application->hasFormat($strExtension)) throw new ServletApplicationException("Extension ".$strExtension." not defined @ formats.format!");
+		if(!$this->application->hasFormat($strExtension)) throw new ServletException("Extension could not be matched to formats.format tag @ XML: ".$strExtension);
 		
 		return $strExtension;
 	}
