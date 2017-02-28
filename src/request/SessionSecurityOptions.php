@@ -11,7 +11,6 @@ final class SessionSecurityOptions {
 	 * Set path that is going to be used when storing sessions.
 	 * 
 	 * @param string $strPath
-	 * @throws ServletException
 	 */
 	public function setSavePath($strPath) {
 		ini_set("session.save_path",$strPath);

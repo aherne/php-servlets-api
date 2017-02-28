@@ -247,9 +247,10 @@ class Application extends AttributesFactory {
 	 * 
 	 * @param string $strURL
 	 * @return Route
+	 * @throws PathNotFoundException In case route could not be matched in XML.
 	 */
 	public function getRouteInfo($strURL) {
-		if(!isset($this->tblRoutes[$strURL])) throw new ServletException("Route could not be matched in routes.route tag @ XML: ".$strURL);
+		if(!isset($this->tblRoutes[$strURL])) throw new PathNotFoundException("Route could not be matched in routes.route tag @ XML: ".$strURL);
 		return $this->tblRoutes[$strURL];
 	}
 	
@@ -298,9 +299,10 @@ class Application extends AttributesFactory {
 	 *
 	 * @param string $strExtension
 	 * @return Format
+	 * @throws FormatNotFoundException In case format could not be matched in XML.
 	 */
 	public function getFormatInfo($strExtension) {
-		if(!isset($this->tblFormats[$strExtension])) throw new ServletException("Format could not be matched in formats.format tag @ XML: ".$strExtension);
+		if(!isset($this->tblFormats[$strExtension])) throw new FormatNotFoundException("Format could not be matched in formats.format tag @ XML: ".$strExtension);
 		return $this->tblFormats[$strExtension];
 	}
 

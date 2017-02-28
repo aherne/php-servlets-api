@@ -25,7 +25,6 @@ class AttributesFactory {
 	 * 
 	 * @param string $strKey
 	 * @param mixed $mixValue
-	 * @throws ServletException
 	 */
 	public function setAttribute($strKey, $mixValue) {
 		$this->tblAttributes[$strKey] = $mixValue;

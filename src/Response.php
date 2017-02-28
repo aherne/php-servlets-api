@@ -22,7 +22,6 @@ final class Response extends AttributesFactory {
 	 * Changes response content type.
 	 * 
 	 * @param string $strContentType
-	 * @throws ServletException
 	 * @return void
 	 */
 	public function setContentType($strContentType) {
