@@ -25,11 +25,10 @@ final class UploadedFileTree {
 			if (is_array($v)) {
 				$ret[$k] = $this->makeObjects($v);
 			} else {
-				$uploadedFile = new UploadedFile($array);
-				if($uploadedFile->getName()===null) { // no file was uploaded
-					return null;
+				if($array["error"]!=UPLOAD_ERR_NO_FILE) {
+					return new UploadedFile($array);
 				} else {
-					return $uploadedFile;
+					return null; // having no file uploaded is a non-error situation
 				}
 			}
 		}
