@@ -25,7 +25,12 @@ final class UploadedFileTree {
 			if (is_array($v)) {
 				$ret[$k] = $this->makeObjects($v);
 			} else {
-				return new UploadedFile($array);
+				$uploadedFile = new UploadedFile($array);
+				if($uploadedFile->getName()===null) {
+					return null;
+				} else {
+					return $uploadedFile;
+				}
 			}
 		}
 		return $ret;
