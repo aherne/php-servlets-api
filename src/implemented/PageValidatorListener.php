@@ -1,6 +1,4 @@
 <?php
-use OAuth2\ServerException;
-
 /**
  * Validates page request according to url, extension and content type
  */
@@ -14,7 +12,7 @@ class PageValidatorListener extends RequestListener {
 	/**
 	 * Detects page URL requested by client (or implies by default based on DD). When necessary, extracts path parameters from it.
 	 *
-	 * @throws ServletException
+	 * @throws PathNotFoundException
 	 * @return string
 	 */
 	private function getValidPageURL() {
@@ -47,7 +45,7 @@ class PageValidatorListener extends RequestListener {
 					}
 				}
 			}
-			throw new ServletException("Route could not be matched to routes.route tag @ XML: ".$strURL);
+			throw new PathNotFoundException("Route could not be matched to routes.route tag @ XML: ".$strURL);
 		}
 		
 		return $strURL;
@@ -56,7 +54,7 @@ class PageValidatorListener extends RequestListener {
 	/**
 	 * Detects page extension requested by client (or implies by default based on DD).
 	 *
-	 * @throws ServletException
+	 * @throws FormatNotFoundException
 	 * @return string
 	 */
 	private function getValidPageExtension() {
@@ -68,7 +66,7 @@ class PageValidatorListener extends RequestListener {
 		}
 		
 		// validate extension
-		if(!$this->application->hasFormat($strExtension)) throw new ServletException("Extension could not be matched to formats.format tag @ XML: ".$strExtension);
+		if(!$this->application->hasFormat($strExtension)) throw new FormatNotFoundException("Extension could not be matched to formats.format tag @ XML: ".$strExtension);
 		
 		return $strExtension;
 	}
