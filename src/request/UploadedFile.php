@@ -21,7 +21,8 @@ final class UploadedFile {
 					throw new FileUploadException("The uploaded file was only partially uploaded: ".$tblValues['name']);
 					break;
 				case UPLOAD_ERR_NO_FILE:
-					throw new FileUploadException("No file was uploaded: ".$tblValues['name']);
+					// it is allowed to opload no file 
+					return;
 					break;
 				case UPLOAD_ERR_NO_TMP_DIR:
 					throw new FileUploadException("Missing a temporary folder!");
