@@ -1,2 +1,0 @@
-TODOS: test on NGINX
-DONE: make PageValidatorListener support named path parameters: users/{name}-all instead of REGEX such as users\/(.*)+-all
