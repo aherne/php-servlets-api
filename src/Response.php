@@ -92,6 +92,7 @@ final class Response extends AttributesFactory {
 	 * @return void
 	 */
 	public static function sendRedirect($strLocation) {
+		header("HTTP/1.1 301 Moved Permanently"); 
 		header('Location: '.$strLocation);
 		exit();
 	}

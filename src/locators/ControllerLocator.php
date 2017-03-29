@@ -37,21 +37,12 @@ final class ControllerLocator {
 	
 		// loads controller class
 		$strFile = $strFolder."/".$strClass.".php";
-		if(file_exists($strFile)) {
-			require_once($strFile);
-	
-			// instances controller class
-			if(!class_exists($strClass)) throw new ServletException("Controller class not found: ".$strClass);
-			
-			// checks if it is a subclass of Controller
-			if(!is_subclass_of($strClass, "Controller")) throw new ServletException($strClass." must be a subclass of Controller");
-		} else {
-			// once a controller was specifically set but its file is not found, an error has occurred
-			if(!$objApplication->getAutoRouting() && $strClass)  throw new ServletException("Controller file not found: ".$strFile);
-			// if a controller wasn't specifically set but its file is not found, use default ViewController
-			$strClass = "ViewController";
-		}
-			
+		if(!file_exists($strFile)) throw new ServletException("Controller not found: ".$strClass);
+		require_once($strFile);
+
+		// validates and sets controller class
+		if(!class_exists($strClass)) throw new ServletException("Controller class not found: ".$strClass);
+		if(!is_subclass_of($strClass, "Controller")) throw new ServletException($strClass." must be a subclass of Controller");
 		$this->strClassName = $strClass;
 	}
 
