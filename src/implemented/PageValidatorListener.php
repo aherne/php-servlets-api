@@ -3,9 +3,11 @@
  * Validates page request according to url, extension and content type
  */
 class PageValidatorListener extends RequestListener {
+	private $fakeExtension="";
+	
 	public function run() {
-		$this->request->setAttribute("page_url", $this->getValidPageURL());
 		$this->request->setAttribute("page_extension", $this->getValidPageExtension());
+		$this->request->setAttribute("page_url", $this->getValidPageURL());
 		$this->request->setAttribute("page_content_type", $this->getValidPageContentType());
 	}
 	
@@ -16,7 +18,7 @@ class PageValidatorListener extends RequestListener {
 	 * @return string
 	 */
 	private function getValidPageURL() {
-		$strURL = $this->request->getURI()->getPagePath();
+		$strURL = $this->request->getURI()->getPagePath().($this->fakeExtension?".".$this->fakeExtension:"");
 		
 		// replace extension with default if not set
 		if($strURL=="") {
@@ -66,7 +68,10 @@ class PageValidatorListener extends RequestListener {
 		}
 		
 		// validate extension
-		if(!$this->application->hasFormat($strExtension)) throw new FormatNotFoundException("Extension could not be matched to formats.format tag @ XML: ".$strExtension);
+		if(!$this->application->hasFormat($strExtension)) {
+			$this->fakeExtension = $strExtension;
+			$strExtension = $this->application->getDefaultExtension();
+		}
 		
 		return $strExtension;
 	}
