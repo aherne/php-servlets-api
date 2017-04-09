@@ -86,14 +86,14 @@ final class Response extends AttributesFactory {
 	}
 	
 	/**
-	 * Exits to a new location.
-	 * 
+	 * Redirects to a new location.
+	 *
 	 * @param string $strLocation
+	 * @param boolean $blnPermanent
 	 * @return void
 	 */
-	public static function sendRedirect($strLocation) {
-		header("HTTP/1.1 301 Moved Permanently"); 
-		header('Location: '.$strLocation);
+	public static function sendRedirect($strLocation, $blnPermanent=true) {
+		header('Location: '.$strLocation, true, $blnPermanent?301:302);
 		exit();
 	}
 	
