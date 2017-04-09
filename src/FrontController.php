@@ -12,7 +12,6 @@ require_once("locators/WrapperLocator.php");
 require_once("listeners/ApplicationListener.php");
 require_once("listeners/RequestListener.php");
 require_once("listeners/ResponseListener.php");
-require_once("implemented/PageValidatorListener.php");
 require_once("implemented/ViewController.php");
 require_once("implemented/ViewWrapper.php");
 
@@ -43,9 +42,10 @@ final class FrontController {
 		
 		// sets request object
 		$objRequest = new Request();
+		$objRequest->getURI()->validate($objApplication); // validates requested page
 		
-		// operates custom changes of request object. Appends PageValidatorListener!
-		$tblListeners = array_merge(array("PageValidatorListener"), $objListenerLocator->getClassNames("RequestListener"));
+		// operates custom changes on request object.
+		$tblListeners = $objListenerLocator->getClassNames("RequestListener");
 		foreach($tblListeners as $strClassName) {
 			$objRunnable = new $strClassName($objApplication, $objRequest);
 			$objRunnable->run();
@@ -53,10 +53,10 @@ final class FrontController {
 		
 		// sets response object
 		$objResponse = new Response();
-		$objResponse->setContentType($objRequest->getAttribute("page_content_type"));
+		$objResponse->setContentType($objRequest->getURI()->getValid()->getContentType());
 		
 		// locates and runs page controller
-		$objControllerLocator = new ControllerLocator($objApplication, $objRequest->getAttribute("page_url"));
+		$objControllerLocator = new ControllerLocator($objApplication, $objRequest->getURI()->getValid()->getPage());
 		$strClassName  = $objControllerLocator->getClassName();
 		$objRunnable = new $strClassName($objApplication, $objRequest, $objResponse);
 		$objRunnable->run();
