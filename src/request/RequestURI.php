@@ -8,7 +8,6 @@ final class RequestURI {
 	private $strHost;
 	private $strContextPath;
 	private $strPage;
-	private $strExtension;
 	private $strQueryString;
 	private $tblParameters;
 	
@@ -17,7 +16,7 @@ final class RequestURI {
 		$this->setProtocol();
 		$this->setHost();
 		$this->setContextPath();
-		$this->setPageInfo();
+		$this->setPage();
 		$this->setQueryString();
 		$this->setParameters();
 	}
@@ -93,11 +92,11 @@ final class RequestURI {
 	}
 	
 	/**
-	 * Extracts page name and extension parts from requested URL.
+	 * Extracts page from requested URL.
 	 *
 	 * @throws ServletException
 	 */
-	private function setPageInfo() {
+	private function setPage() {
 		// get page path and extension from request
 	    $strURL = "";
 	    $strExtension = "";
@@ -109,70 +108,16 @@ final class RequestURI {
 		if($intQuestionPosition!==false) {
 			$strURLCombined = substr($strURLCombined,0,$intQuestionPosition);
 		}
-		$intDotPosition = strrpos($strURLCombined,".");
-		if($intDotPosition!==false) {
-			$strURL = substr($strURLCombined,0, $intDotPosition);
-			$strExtension = strtolower(substr($strURLCombined,($intDotPosition+1)));
-			$intSlashPosition = strpos($strExtension, "/"); // this is when both path parameters and extension are supplied
-			if($intSlashPosition!==false) {
-				$strURL .= substr($strExtension, $intSlashPosition);
-				$strExtension = substr($strExtension,0,$intSlashPosition);
-			}
-		} else {
-			$strURL = $strURLCombined;
-		}
-		if($this->strContextPath) {
-			$strURL = substr($strURL, (strpos($strURL, $this->strContextPath)+strlen($this->strContextPath)));
-		}
-		
-		// write url page
-		$this->setPagePath($strURL);
-	
-		// write url extension
-		$this->setPageExtension($strExtension);
+		$this->strPage = ($strURLCombined?substr($strURLCombined,1):""); // remove trailing slash
 	}
 	
 	/**
-	 * Sets page path from requested URL.
+	 * Gets page requested path.
 	 *
 	 * @return string
 	 */
-	private function setPagePath($strURL) {
-		if($strURL!="/") {
-			$this->strPage = (strpos($strURL,"/")===0?substr($strURL,1):$strURL);
-		} else {
-			$this->strPage = "";
-		}
-	}
-	
-	/**
-	 * Gets page path from requested URL.
-	 *
-	 * @example "mypage" when url is "http://www.test.com/servlets/mypage.html?a=b&c=d"
-	 * @return string
-	 */
-	public function getPagePath() {
+	public function getPage() {
 		return $this->strPage;
-	}
-	
-	/**
-	 * Sets page extension part of requested URL.
-	 * - If extension is not supplied,  it is replaced with default extension defined in XML as application.default_extension.
-	 *
-	 * @param string $strExtension
-	 */
-	private function setPageExtension($strExtension) {
-		$this->strExtension = $strExtension;
-	}
-	
-	/**
-	 * Gets page extension from requested URL.
-	 *
-	 * @example "json" when url is "http://www.test.com/servlets/mypage.json?a=b&c=d"
-	 * @return string
-	 */
-	public function getPageExtension() {
-		return $this->strExtension;
 	}
 	
 	/**
@@ -195,7 +140,7 @@ final class RequestURI {
 	/**
 	 * Sets parameters sent by client from PHP superglobal $_GET.
 	 */
-	public function setParameters() {
+	private function setParameters() {
 		$this->tblParameters = $_GET;
 	}
 	

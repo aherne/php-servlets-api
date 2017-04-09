@@ -3,12 +3,48 @@
  * Validates page request according to url, extension and content type
  */
 class PageValidatorListener extends RequestListener {
-	private $fakeExtension="";
+	private $strValidExtension="";
 	
 	public function run() {
 		$this->request->setAttribute("page_extension", $this->getValidPageExtension());
-		$this->request->setAttribute("page_url", $this->getValidPageURL());
 		$this->request->setAttribute("page_content_type", $this->getValidPageContentType());
+		$this->request->setAttribute("page_url", $this->getValidPageURL());
+	}
+	
+	/**
+	 * Detects page extension requested by client (or implies by default based on DD).
+	 *
+	 * @throws FormatNotFoundException
+	 * @return string
+	 */
+	private function getValidPageExtension() {
+		$page = $this->request->getURI()->getPage();
+		$position = strrpos($page, ".");
+		
+		// replace extension with default if not set
+		$strExtension = "";
+		if($position!==false) {
+			$strExtension = substr($page,$position+1);
+		}
+		
+		// validate extension
+		if(!$this->application->hasFormat($strExtension)) {
+			$strExtension = $this->application->getDefaultExtension();
+		} else {
+			$this->strValidExtension = $strExtension;
+		}
+		
+		return $strExtension;
+	}
+	
+	/**
+	 * Detects page content type requested by client (or implies by default based on DD).
+	 *
+	 * @throws ServletException
+	 * @return string
+	 */
+	private function getValidPageContentType() {
+		return $this->application->getFormatInfo($this->request->getAttribute("page_extension"))->getContentType();
 	}
 	
 	/**
@@ -18,8 +54,7 @@ class PageValidatorListener extends RequestListener {
 	 * @return string
 	 */
 	private function getValidPageURL() {
-		$strURL = $this->request->getURI()->getPagePath().($this->fakeExtension?".".$this->fakeExtension:"");
-		
+		$strURL = (!$this->strValidExtension?$this->request->getURI()->getPage():substr($this->request->getURI()->getPage(),0,-strlen($this->strValidExtension)-1));
 		// replace extension with default if not set
 		if($strURL=="") {
 			$strURL = $this->application->getDefaultPage();
@@ -51,38 +86,5 @@ class PageValidatorListener extends RequestListener {
 		}
 		
 		return $strURL;
-	}
-	
-	/**
-	 * Detects page extension requested by client (or implies by default based on DD).
-	 *
-	 * @throws FormatNotFoundException
-	 * @return string
-	 */
-	private function getValidPageExtension() {
-		$strExtension = $this->request->getURI()->getPageExtension();
-		
-		// replace extension with default if not set
-		if($strExtension=="") {
-			$strExtension = $this->application->getDefaultExtension();
-		}
-		
-		// validate extension
-		if(!$this->application->hasFormat($strExtension)) {
-			$this->fakeExtension = $strExtension;
-			$strExtension = $this->application->getDefaultExtension();
-		}
-		
-		return $strExtension;
-	}
-	
-	/**
-	 * Detects page content type requested by client (or implies by default based on DD).
-	 *
-	 * @throws ServletException
-	 * @return string
-	 */
-	private function getValidPageContentType() {
-		return $this->application->getFormatInfo($this->request->getAttribute("page_extension"))->getContentType();
 	}
 }
