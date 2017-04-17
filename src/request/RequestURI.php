@@ -100,12 +100,9 @@ final class RequestURI {
 	 * @throws ServletException
 	 */
 	private function setPage() {
-		// get page path and extension from request
-	    $strURL = "";
-	    $strExtension = "";
-	    if(!isset($_SERVER["REQUEST_URI"])) throw new ServletException("ServletsAPI requires overriding paths!");
+		if(!isset($_SERVER["REQUEST_URI"])) throw new ServletException("ServletsAPI requires overriding paths!");
 	    
-	    // remove query string
+		// remove query string
 		$strURLCombined = substr($_SERVER["REQUEST_URI"],strlen($this->strContextPath));
 		$intQuestionPosition = strpos($strURLCombined,"?");
 		if($intQuestionPosition!==false) {
