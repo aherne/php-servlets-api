@@ -108,7 +108,7 @@ final class RequestURI {
 		if($intQuestionPosition!==false) {
 			$strURLCombined = substr($strURLCombined,0,$intQuestionPosition);
 		}
-		$this->strPage = ($strURLCombined?substr($strURLCombined,1):""); // remove trailing 
+		$this->strPage = (strpos($strURLCombined,"/")===0?substr($strURLCombined,1):$strURLCombined); // remove trailing slash
 	}
 	
 	/**
