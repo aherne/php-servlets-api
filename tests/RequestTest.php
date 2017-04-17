@@ -35,8 +35,7 @@ class RequestTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals("localhost", $objRequest->getServer()->getName());
 		$this->assertEquals("/servlets/", $objRequest->getURI()->getContextPath());
 		$this->assertEquals("www.test.com", $objRequest->getURI()->getHost());
-		$this->assertEquals("html", $objRequest->getURI()->getPageExtension());
-		$this->assertEquals("test", $objRequest->getURI()->getPagePath());
+		$this->assertEquals("test.html", $objRequest->getURI()->getPage());
 		$this->assertEquals(array("a"=>"b", "c"=>"d"), $objRequest->getURI()->getParameters());
 		$this->assertEquals("http", $objRequest->getURI()->getProtocol());
 		$this->assertEquals("a=b&c=d", $objRequest->getURI()->getQueryString());

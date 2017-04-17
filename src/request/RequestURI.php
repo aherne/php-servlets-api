@@ -106,12 +106,12 @@ final class RequestURI {
 	    if(!isset($_SERVER["REQUEST_URI"])) throw new ServletException("ServletsAPI requires overriding paths!");
 	    
 	    // remove query string
-		$strURLCombined = $_SERVER["REQUEST_URI"];
+		$strURLCombined = substr($_SERVER["REQUEST_URI"],strlen($this->strContextPath));
 		$intQuestionPosition = strpos($strURLCombined,"?");
 		if($intQuestionPosition!==false) {
 			$strURLCombined = substr($strURLCombined,0,$intQuestionPosition);
 		}
-		$this->strPage = ($strURLCombined?substr($strURLCombined,1):""); // remove trailing slash
+		$this->strPage = ($strURLCombined?substr($strURLCombined,1):""); // remove trailing 
 	}
 	
 	/**
