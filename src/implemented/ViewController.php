@@ -7,6 +7,6 @@
 class ViewController extends Controller {
 	public function run() {
 		if(!$this->application->getViewsPath()) throw new ServletException("View path hasn't been set!");
-		$this->response->setView($this->application->getViewsPath()."/".$this->request->getURI()->getValid()->getPage());
+		$this->response->setView($this->application->getViewsPath()."/".$this->request->getValidator()->getPage());
 	}
 }
