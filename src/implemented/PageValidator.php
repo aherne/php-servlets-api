@@ -2,9 +2,8 @@
 /**
  * Single responsibility in validating requested page based on configuration.xml encapsulated by Application object
  */
-class PageValidator {
+class PageValidator implements RequestValidator {
 	private $strPage;
-	private $strExtension;
 	private $strContentType;
 	private $tblPathParameters=array();
 	
@@ -25,7 +24,6 @@ class PageValidator {
 				$stripExtension = true;
 			}
 		}
-		$this->strExtension = $extension;
 		
 		// validate content type
 		$this->strContentType = $application->getFormatInfo($extension)->getContentType();
@@ -67,15 +65,6 @@ class PageValidator {
 	 */
 	public function getContentType() {
 		return $this->strContentType;
-	}
-	
-	/**
-	 * Gets requested extension.
-	 * 
-	 * @return string
-	 */
-	public function getExtension() {
-		return $this->strExtension;
 	}
 	
 	/**

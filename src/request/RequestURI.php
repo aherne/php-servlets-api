@@ -1,5 +1,4 @@
 <?php
-require_once("PageValidator.php");
 /**
  * Encapsulates information about URI client requested.
  */
@@ -11,8 +10,6 @@ final class RequestURI {
 	private $strPage;
 	private $strQueryString;
 	private $tblParameters;
-	
-	private $validator;
 	
 	public function __construct() {
 		$this->setURL();
@@ -150,23 +147,5 @@ final class RequestURI {
 	 */
 	public function getParameters() {
 		return $this->tblParameters;
-	}
-	
-	/**
-	 * Validates page requested based on Application object contents.
-	 * 
-	 * @param Application $application
-	 */
-	public function validate(Application $application) {
-		$this->validator = new PageValidator($this->strPage, $application);
-	}
-	
-	/**
-	 * Gets an instance of page validation results.
-	 * 
-	 * @return PageValidator
-	 */
-	public function getValid() {
-		return $this->validator;
 	}
 }

@@ -5,6 +5,7 @@ require_once("request/RequestURI.php");
 require_once("request/UploadedFileTree.php");
 require_once("request/Session.php");
 require_once("request/Cookie.php");
+require_once("request/RequestValidator.php");
 
 /**
  * Detects information about request from $_SERVER, $_GET, $_POST, $_FILES. Once detected, parameters are immutable.
@@ -20,6 +21,8 @@ final class Request extends AttributesFactory {
 	private $tblHeaders;
 	private $tblParameters;
 	private $tblUploadedFiles;
+	
+	private $validator;
 	
 	/**
 	 * Detects all aspects of a request.
@@ -203,4 +206,28 @@ final class Request extends AttributesFactory {
 	public function getInputStream() {
 		return file_get_contents("php://input");
 	} 
+	
+	/**
+	 * Sets class able to process request and extract information about:
+	 * - actual page requested
+	 * - content type requested
+	 * - path parameters present in request
+	 * 
+	 * @param RequestValidator $validator
+	 */
+	public function setValidator(RequestValidator $validator) {
+		$this->validator = $validator;
+	}
+	
+	/**
+	 * Gets class to extract information about:
+	 * - actual page requested
+	 * - content type requested
+	 * - path parameters present in request
+	 * 
+	 * @return RequestValidator
+	 */
+	public function getValidator() {
+		return $this->validator;
+	}
 }

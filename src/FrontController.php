@@ -14,6 +14,7 @@ require_once("listeners/RequestListener.php");
 require_once("listeners/ResponseListener.php");
 require_once("implemented/ViewController.php");
 require_once("implemented/ViewWrapper.php");
+require_once("implemented/PageValidator.php");
 
 /**
  * Implements front controller MVC functionality. This is ServletsAPI focal point, integrating all components as a whole.
@@ -42,7 +43,7 @@ final class FrontController {
 		
 		// sets request object
 		$objRequest = new Request();
-		$objRequest->getURI()->validate($objApplication); // validates requested page
+		$objRequest->setValidator(new PageValidator($objRequest->getURI()->getPage(), $objApplication));
 		
 		// operates custom changes on request object.
 		$tblListeners = $objListenerLocator->getClassNames("RequestListener");
@@ -53,10 +54,11 @@ final class FrontController {
 		
 		// sets response object
 		$objResponse = new Response();
-		$objResponse->setContentType($objRequest->getURI()->getValid()->getContentType());
+		$objResponse->setContentType($objRequest->getValidator()->getContentType());
+		$objResponse->setCharacterEncoding($objApplication->getDefaultCharacterEncoding());
 		
 		// locates and runs page controller
-		$objControllerLocator = new ControllerLocator($objApplication, $objRequest->getURI()->getValid()->getPage());
+		$objControllerLocator = new ControllerLocator($objApplication, $objRequest->getValidator()->getPage());
 		$strClassName  = $objControllerLocator->getClassName();
 		$objRunnable = new $strClassName($objApplication, $objRequest, $objResponse);
 		$objRunnable->run();
