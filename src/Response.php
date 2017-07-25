@@ -90,9 +90,15 @@ final class Response extends AttributesFactory {
 	 *
 	 * @param string $strLocation
 	 * @param boolean $blnPermanent
+	 * @param boolean $preventCaching
 	 * @return void
 	 */
-	public static function sendRedirect($strLocation, $blnPermanent=true) {
+	public static function sendRedirect($strLocation, $blnPermanent=true, $preventCaching=false) {
+		if($preventCaching) {
+			header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
+			header("Pragma: no-cache");
+			header("Expires: 0");
+		}
 		header('Location: '.$strLocation, true, $blnPermanent?301:302);
 		exit();
 	}
