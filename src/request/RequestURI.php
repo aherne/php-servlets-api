@@ -3,75 +3,16 @@
  * Encapsulates information about URI client requested.
  */
 final class RequestURI {
-	private $strURL;
-	private $strProtocol;
-	private $strHost;
 	private $strContextPath;
 	private $strPage;
 	private $strQueryString;
 	private $tblParameters;
 	
 	public function __construct() {
-		$this->setURL();
-		$this->setProtocol();
-		$this->setHost();
 		$this->setContextPath();
 		$this->setPage();
 		$this->setQueryString();
 		$this->setParameters();
-	}
-	
-	/**
-	 * Sets requested URL.
-	 *
-	 * @return void
-	 */
-	private function setURL() {
-		$this->strURL = (isset($_SERVER['HTTPS'])?"https":"http")."://".$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-	}
-	
-	/**
-	 * Gets requested URL.
-	 *
-	 * @example "http://www.test.com/servlets/test.html?a=b&c=d"
-	 * @return string
-	 */
-	public function getURL() {
-		return $this->strURL;
-	}
-	
-	/**
-	 * Sets protocol from requested URL.
-	 */
-	private function setProtocol() {
-		$this->strProtocol = (isset($_SERVER['HTTPS'])?"https":"http");
-	}
-	
-	/**
-	 * Gets protocol from requested URL.
-	 *
-	 * @example "http" when url is "http://www.test.com/servlets/test.html?a=b&c=d"
-	 * @return string
-	 */
-	public function getProtocol() {
-		return $this->strProtocol;
-	}
-	
-	/**
-	 * Sets host name from requested URL.
-	 */
-	private function setHost() {
-		$this->strHost = $_SERVER['HTTP_HOST'];
-	}
-	
-	/**
-	 * Gets host name from requested URL.
-	 *
-	 * @example "www.test.com" when url is "http://www.test.com/servlets/test.html?a=b&c=d"
-	 * @return string
-	 */
-	public function getHost() {
-		return $this->strHost;
 	}
 	
 	/**
