@@ -6,11 +6,15 @@ final class RequestServer {
 	private $strName;
 	private $strIP;
 	private $intPort;
+	private $strEmail;
+	private $strSoftware;
 	
 	public function __construct() {
 		$this->setIP();
 		$this->setName();
 		$this->setPort();
+		$this->setEmail();
+		$this->setSoftware();
 	}
 	
 	/**
@@ -61,5 +65,37 @@ final class RequestServer {
 	 */
 	public function getPort() {
 		return $this->intPort;
+	}
+	
+	/**
+	 * Sets server admin email.
+	 */
+	private function setEmail() {
+		$this->strEmail = $_SERVER["SERVER_ADMIN"];
+	}
+	
+	/**
+	 * Gets server admin email.
+	 * 
+	 * @return string
+	 */
+	public function getEmail() {
+		return $this->strEmail;
+	}
+	
+	/**
+	 * Sets software web server is using.
+	 */
+	private function setSoftware() {
+		$this->strSoftware = $_SERVER["SERVER_SOFTWARE"];
+	}
+	
+	/**
+	 * Gets software web server is using.
+	 * 
+	 * @return string
+	 */
+	public function getSoftware() {
+		return $this->strSoftware;
 	}
 }

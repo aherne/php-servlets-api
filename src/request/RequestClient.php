@@ -3,25 +3,34 @@
  * Encapsulates information about client that made the request.
  */
 final class RequestClient {
+	private $strName;
 	private $strIP;
 	private $intPort;
 	
 	public function __construct() {
+		$this->setName();
 		$this->setIP();
 		$this->setPort();
 	}
+	
+	/**
+	 * Sets host name.
+	 */
+	public function setName() {
+		$this->strIP = (isset($_SERVER["REMOTE_HOST"])?$_SERVER["REMOTE_HOST"]:"");
+	}
 
 	/**
-	 * Gets  host name.
+	 * Gets host name.
 	 *
 	 * @return string
 	 */
 	public function getName() {
-		return @gethostbyaddr($_SERVER["REMOTE_ADDR"]);
+		return $this->strName;
 	}
 	
 	/**
-	 * Sets  IP address.
+	 * Sets IP address.
 	 */
 	private function setIP() {
 		$this->strIP = $_SERVER["REMOTE_ADDR"];
@@ -29,7 +38,7 @@ final class RequestClient {
 	}
 	
 	/**
-	 * Gets  IP address
+	 * Gets IP address
 	 *
 	 * @return string
 	 */

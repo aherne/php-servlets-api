@@ -15,6 +15,7 @@ final class Request extends AttributesFactory {
 	private $objServer;
 	private $objURI;
 	private $strMethod;
+	private $strProtocol;
 	
 	private $objCookie;
 	private $objSession;
@@ -31,6 +32,7 @@ final class Request extends AttributesFactory {
 		$this->setClient();
 		$this->setServer();
 		$this->setMethod();
+		$this->setProtocol();
 		$this->setURI();
 		// set params
 		$this->setCookie();
@@ -88,10 +90,7 @@ final class Request extends AttributesFactory {
 	 * Sets headers sent by client.
 	 */
 	private function setHeaders() {
-		foreach($_SERVER as $strKey=>$strValue) {
-			if(strpos($strKey, "HTTP_")!==0) continue;
-			$this->tblHeaders[str_replace("HTTP_","",$strKey)]=$strValue;
-		}
+		$this->tblHeaders = getallheaders();
 	}
 	
 	/**
@@ -196,6 +195,23 @@ final class Request extends AttributesFactory {
 	 */
 	public function getMethod() {
 		return $this->strMethod;
+	}
+	
+	/**
+	 * Sets protocol for which URI was requested.
+	 */
+	private function setProtocol() {
+		$this->strProtocol = (!empty($_SERVER['HTTPS'])?"https":"http");
+	}
+	
+	/**
+	 * Gets protocol for which URI was requested.
+	 *
+	 * @example https
+	 * @return string
+	 */
+	public function getProtocol() {
+		return $this->strProtocol;
 	}
 	
 	/**
