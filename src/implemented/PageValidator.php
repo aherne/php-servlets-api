@@ -87,28 +87,24 @@ class PageValidator implements RequestValidator {
 	}
 	
 	/**
-	 * Gets requested validated page
-	 * 
-	 * @return string
+	 * {@inheritDoc}
+	 * @see RequestValidator::getPage()
 	 */
 	public function getPage() {
 		return $this->strPage;
 	}
 	
 	/**
-	 * Gets value of path parameter
-	 *
-	 * @param string $name
-	 * @return string|null Null if parameter doesn't exist, string otherwise.
+	 * {@inheritDoc}
+	 * @see RequestValidator::getPathParameter()
 	 */
 	public function getPathParameter($name) {
 		return (isset($this->tblPathParameters[$name])?$this->tblPathParameters[$name]:null);
 	}
 	
 	/**
-	 * Gets all path parameters
-	 *
-	 * @return array[string:string]
+	 * {@inheritDoc}
+	 * @see RequestValidator::getPathParameters()
 	 */
 	public function getPathParameters() {
 		return $this->tblPathParameters;
