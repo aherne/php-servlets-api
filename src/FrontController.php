@@ -53,9 +53,7 @@ final class FrontController {
 		}
 		
 		// sets response object
-		$objResponse = new Response();
-		$objResponse->setContentType($objRequest->getValidator()->getContentType());
-		$objResponse->setCharacterEncoding($objApplication->getDefaultCharacterEncoding());
+		$objResponse = new Response($objRequest->getValidator()->getContentType());
 		
 		// locates and runs page controller
 		$objControllerLocator = new ControllerLocator($objApplication, $objRequest->getValidator()->getPage());
