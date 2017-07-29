@@ -9,16 +9,18 @@
  * @author aherne
  */
 class Format {
-	private $strExtension, $strContentType, $strWrapperClass;
+	private $strExtension, $strContentType, $strWrapperClass, $strCharacterEncoding;
 
 	/**
 	 * @param string $strExtension
 	 * @param string $strContentType
+	 * @param string $strCharacterEncoding
 	 * @param string $strWrapperClass
 	 */
-	public function __construct($strExtension, $strContentType, $strWrapperClass="") {
+	public function __construct($strExtension, $strContentType, $strCharacterEncoding="", $strWrapperClass="") {
 		$this->strExtension = $strExtension;
 		$this->strContentType = $strContentType;
+		$this->strCharacterEncoding= $strCharacterEncoding;
 		$this->strWrapperClass = $strWrapperClass;
 	}
 
@@ -41,9 +43,18 @@ class Format {
 	public function getContentType() {
 		return $this->strContentType;
 	}
+	
+	/**
+	 * Gets character encoding (charset)
+	 *
+	 * @return string
+	 */
+	public function getCharacterEncoding() {
+		return $this->strCharacterEncoding;
+	}
 
 	/**
-	 * Gets wrapper class name based on file format.
+	 * Gets view resolver class name based on file format.
 	 * 
 	 * @return string
 	 * @example JsonWrapper

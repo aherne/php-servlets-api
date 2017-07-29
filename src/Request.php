@@ -2,7 +2,6 @@
 require_once("request/RequestClient.php");
 require_once("request/RequestServer.php");
 require_once("request/RequestURI.php");
-require_once("request/RequestParameters.php");
 require_once("request/UploadedFileTree.php");
 require_once("request/Session.php");
 require_once("request/Cookie.php");
@@ -20,8 +19,8 @@ final class Request extends AttributesFactory {
 	
 	private $objCookie;
 	private $objSession;
-	private $objHeaders;
-	private $objPostParameters;
+	private $tblHeaders;
+	private $tblParameters;
 	private $tblUploadedFiles;
 	
 	private $validator;
@@ -97,32 +96,52 @@ final class Request extends AttributesFactory {
 				$headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
 			}
 		} 
-		$this->objHeaders = new RequestParameters($headers);
+		$this->tblHeaders = $headers;
 	}
 	
 	/**
-	 * Gets headers originally sent by client.
+	 * Gets value of HTTP request header.
 	 * 
-	 * @return RequestParameters
+	 * @param string $name
+	 * @return string|null Null if header doesn't exist, string otherwise.
+	 */
+	public function getHeader($name) {
+		return (isset($this->tblHeaders[$name])?$this->tblHeaders[$name]:null);
+	}
+	
+	/**
+	 * Gets all HTTP headers received
+	 * 
+	 * @return array[string:string]
 	 */
 	public function getHeaders() {
-		return $this->objHeaders;
+		return $this->tblHeaders;
 	}
 
 	/**
 	 * Sets parameters posted by client, based on PHP superglobal $_POST.
 	 */
 	private function setParameters() {
-		$this->objParameters = new RequestParameters($_POST);
+		$this->tblParameters = $_POST;
 	}
 	
 	/**
-	 * Gets parameters received via a POST request.
+	 * Gets value of POST parameter
 	 * 
-	 * @return RequestParameters
+	 * @param string $name
+	 * @return mixed|null Null if parameter doesn't exist, mixed otherwise.
+	 */
+	public function getParameter($name) {
+		return (isset($this->tblParameters[$name])?$this->tblParameters[$name]:null);
+	}
+	
+	/**
+	 * Gets all POST parameters received
+	 * 
+	 * @return array
 	 */
 	public function getParameters() {
-		return $this->objParameters;
+		return $this->tblParameters;
 	}
 	
 	/**

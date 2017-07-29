@@ -12,7 +12,7 @@ class Application extends AttributesFactory {
 	 * @var SimpleXMLElement
 	 */
 	private $objSimpleXMLElement;
-	private	$strDefaultCharacterEncoding, $strDefaultPage, $strDefaultExtension, $strControllerPath, $strListenerPath, $strWrapperPath, $strViewsPath, $strPublicPath, $blnAutoRouting;
+	private	$strDefaultPage, $strDefaultExtension, $strControllerPath, $strListenerPath, $strWrapperPath, $strViewsPath, $strPublicPath, $blnAutoRouting;
 	private $tblListeners = array(), $tblRoutes = array(), $tblFormats = array();
 	
 	/**
@@ -26,7 +26,6 @@ class Application extends AttributesFactory {
 		
 		$this->setDefaultPage();
 		$this->setDefaultExtension();
-		$this->setDefaultCharacterEncoding();
 		$this->setControllersPath();
 		$this->setListenersPath();
 		$this->setWrappersPath();
@@ -38,22 +37,6 @@ class Application extends AttributesFactory {
 			$this->setRoutes();
 		}		
 		$this->setFormats();
-	}
-	
-	/**
-	 * Sets default character encoding. Maps to application.default_character_encoding @ XML.
-	 */
-	private function setDefaultCharacterEncoding() {
-		$this->strDefaultCharacterEncoding = (string) $this->objSimpleXMLElement->application->default_character_encoding;
-	}
-	
-	/**
-	 * Gets default character encoding.
-	 * 
-	 * @return string
-	 */
-	public function getDefaultCharacterEncoding() {
-		return $this->strDefaultCharacterEncoding;
 	}
 
 	/**
@@ -279,7 +262,11 @@ class Application extends AttributesFactory {
 			if(empty($tblInfo['extension'])) throw new ApplicationException("XML property is mandatory: formats->format['extension']");
 			if(empty($tblInfo['content_type'])) throw new ApplicationException("XML property is mandatory: formats->format['content_type']");
 			$strExtension = (string) $tblInfo['extension'];
-			$this->tblFormats[$strExtension] = new Format($strExtension, (string) $tblInfo['content_type'], (isset($tblInfo['class'])?(string) $tblInfo['class']:""));
+			$this->tblFormats[$strExtension] = new Format(
+					$strExtension, 
+					(string) $tblInfo['content_type'],
+					(isset($tblInfo['charset'])?(string) $tblInfo['charset']:""), 
+					(isset($tblInfo['class'])?(string) $tblInfo['class']:""));
 		}
 		if(empty($this->tblFormats)) throw new ApplicationException("XML tag cannot be empty: formats");
 	}

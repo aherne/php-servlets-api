@@ -13,7 +13,7 @@ class PageValidator implements RequestValidator {
 	 * @throws PathNotFoundException
 	 */
 	public function __construct($page, Application $application) {
-		// validate extension
+		// split page into extension & page
 		$stripExtension = false;
 		$extension = $application->getDefaultExtension();
 		$position = strrpos($page, ".");
@@ -25,11 +25,17 @@ class PageValidator implements RequestValidator {
 			}
 		}
 		
-		// validate content type
-		$this->strContentType = $application->getFormatInfo($extension)->getContentType();
-		
-		// validate page
-		$strURL = (!$stripExtension?$page:substr($page,0,-strlen($extension)-1));
+		// set values
+		$this->setContentType($application, $extension);
+		$this->setPage($application, (!$stripExtension?$page:substr($page,0,-strlen($extension)-1)));
+	}
+	
+	private function setContentType(Application $application, $extension) {
+		$format = $application->getFormatInfo($extension);
+		$this->strContentType = $format->getContentType().($format->getCharacterEncoding()?"; charset=".$format->getCharacterEncoding():"");
+	}
+	
+	private function setPage(Application $application, $strURL) {
 		if($strURL=="") {
 			$strURL = $application->getDefaultPage();
 		}
