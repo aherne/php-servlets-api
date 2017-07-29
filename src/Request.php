@@ -2,6 +2,7 @@
 require_once("request/RequestClient.php");
 require_once("request/RequestServer.php");
 require_once("request/RequestURI.php");
+require_once("request/RequestParameters.php");
 require_once("request/UploadedFileTree.php");
 require_once("request/Session.php");
 require_once("request/Cookie.php");
@@ -19,8 +20,8 @@ final class Request extends AttributesFactory {
 	
 	private $objCookie;
 	private $objSession;
-	private $tblHeaders;
-	private $tblParameters;
+	private $objHeaders;
+	private $objPostParameters;
 	private $tblUploadedFiles;
 	
 	private $validator;
@@ -90,32 +91,38 @@ final class Request extends AttributesFactory {
 	 * Sets headers sent by client.
 	 */
 	private function setHeaders() {
-		$this->tblHeaders = getallheaders();
+		$headers = array();
+		foreach($_SERVER as $name => $value){
+			if(strpos($name, "HTTP_") === 0){
+				$headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+			}
+		} 
+		$this->objHeaders = new RequestParameters($headers);
 	}
 	
 	/**
 	 * Gets headers originally sent by client.
 	 * 
-	 * @return array
+	 * @return RequestParameters
 	 */
 	public function getHeaders() {
-		return $this->tblHeaders;
+		return $this->objHeaders;
 	}
 
 	/**
 	 * Sets parameters posted by client, based on PHP superglobal $_POST.
 	 */
 	private function setParameters() {
-		$this->tblParameters = $_POST;
+		$this->objParameters = new RequestParameters($_POST);
 	}
 	
 	/**
 	 * Gets parameters received via a POST request.
 	 * 
-	 * @return array
+	 * @return RequestParameters
 	 */
 	public function getParameters() {
-		return $this->tblParameters;
+		return $this->objParameters;
 	}
 	
 	/**

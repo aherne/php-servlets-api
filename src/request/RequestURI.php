@@ -1,4 +1,6 @@
 <?php
+require_once("RequestParameters.php");
+
 /**
  * Encapsulates information about URI client requested.
  */
@@ -6,7 +8,7 @@ final class RequestURI {
 	private $strContextPath;
 	private $strPage;
 	private $strQueryString;
-	private $tblParameters;
+	private $objParameters;
 	
 	public function __construct() {
 		$this->setContextPath();
@@ -80,13 +82,15 @@ final class RequestURI {
 	 * Sets parameters sent by client from PHP superglobal $_GET.
 	 */
 	private function setParameters() {
-		$this->tblParameters = $_GET;
+		$this->objParameters = new RequestParameters($_GET);
 	}
 	
 	/**
 	 * Gets parameters originally sent by client in query string
+	 * 
+	 * @return RequestParameters
 	 */
 	public function getParameters() {
-		return $this->tblParameters;
+		return $this->objParameters;
 	}
 }
