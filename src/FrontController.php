@@ -64,7 +64,7 @@ final class FrontController {
 		// locates a wrapper for view type and builds response
 		if($objResponse->getOutputStream()->isEmpty() && !$objResponse->isDisabled()) {
 			// locates and instances wrapper
-			$objWrapperLocator = new WrapperLocator($objApplication, $objResponse->getContentType());
+			$objWrapperLocator = new WrapperLocator($objApplication, $objResponse->headers()->get("Content-Type"));
 			$strClassName  = $objWrapperLocator->getClassName();
 			$objRunnable = new $strClassName($objResponse);
     		
