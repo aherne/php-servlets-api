@@ -8,15 +8,16 @@
  * @author aherne
  */
 class Route {
-	private $strPath, $strControllerClass;
+	private $strPath, $strControllerClass, $strViewFile;
 	
 	/**
 	 * @param string $strPath
 	 * @param string $strControllerClass
 	 */
-	public function __construct($strPath, $strControllerClass) {
+	public function __construct($strPath, $strControllerClass, $strViewFile) {
 		$this->strPath = $strPath;
 		$this->strControllerClass = $strControllerClass;
+		$this->strViewFile = $strViewFile;
 	}
 	
 	/**
@@ -38,5 +39,15 @@ class Route {
 	 */
 	public function getController() {
 		return $this->strControllerClass;
+	}
+	
+	/**
+	 * Gets view path.
+	 * 
+	 * @return string
+	 * @example asd/fgh.html
+	 */
+	public function getView() {
+		return $this->strView;
 	}
 }

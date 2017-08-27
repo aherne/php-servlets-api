@@ -54,12 +54,17 @@ final class FrontController {
 		
 		// sets response object
 		$objResponse = new Response($objRequest->getValidator()->getContentType());
+		if(!$objApplication->getAutoRouting() && $objApplication->getRouteInfo($objRequest->getValidator()->getPage())->getView()) {
+			$objResponse->setView($objApplication->getViewsPath()."/".$objApplication->getRouteInfo($objRequest->getValidator()->getPage())->getView());
+		}
 		
 		// locates and runs page controller
 		$objControllerLocator = new ControllerLocator($objApplication, $objRequest->getValidator()->getPage());
 		$strClassName  = $objControllerLocator->getClassName();
-		$objRunnable = new $strClassName($objApplication, $objRequest, $objResponse);
-		$objRunnable->run();
+		if($strClassName) {
+			$objRunnable = new $strClassName($objApplication, $objRequest, $objResponse);
+			$objRunnable->run();
+		}
 		
 		// locates a wrapper for view type and builds response
 		if($objResponse->getOutputStream()->isEmpty() && !$objResponse->isDisabled()) {

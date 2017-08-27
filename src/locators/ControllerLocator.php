@@ -31,6 +31,7 @@ final class ControllerLocator {
 		$strClass = "";
 		if(!$objApplication->getAutoRouting()) {
 			$strClass = $objApplication->getRouteInfo($strURL)->getController();
+			if(!$strClass) return;
 		} else {
 			$strClass = str_replace(" ","",ucwords(str_replace(array("/","-")," ",strtolower($strURL))))."Controller";
 		}
