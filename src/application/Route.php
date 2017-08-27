@@ -48,6 +48,6 @@ class Route {
 	 * @example asd/fgh.html
 	 */
 	public function getView() {
-		return $this->strView;
+		return $this->strViewFile;
 	}
 }
