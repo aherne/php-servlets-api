@@ -12,7 +12,6 @@ require_once("locators/WrapperLocator.php");
 require_once("listeners/ApplicationListener.php");
 require_once("listeners/RequestListener.php");
 require_once("listeners/ResponseListener.php");
-require_once("implemented/ViewController.php");
 require_once("implemented/ViewWrapper.php");
 require_once("implemented/PageValidator.php");
 
