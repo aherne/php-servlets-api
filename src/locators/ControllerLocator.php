@@ -14,7 +14,7 @@ final class ControllerLocator {
 	}
 
 	/**
-	 * Sets controller class name. Falls back to ViewController if controller file 
+	 * Sets controller class name. 
 	 * 
 	 * @param Application $objApplication
 	 * @param string $strPagePath
