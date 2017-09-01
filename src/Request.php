@@ -81,6 +81,7 @@ final class Request extends AttributesFactory {
 
 	/**
 	 * Gets information about URI client requested (host, page, url, etc).
+	 * @return RequestURI
 	 */
 	public function getURI() {
 		return $this->objURI;
@@ -184,6 +185,8 @@ final class Request extends AttributesFactory {
 
 	/**
 	 * Gets pointer to cookie (to be used in gettin/setting cookie params)
+	 *
+	 * @return Cookie
 	 */
 	public function getCookie() {
 		return $this->objCookie;
@@ -199,6 +202,8 @@ final class Request extends AttributesFactory {
 
 	/**
 	 * Gets pointer to cookie (to be used in gettin/setting session params)
+	 *
+	 * @return Session
 	 */
 	public function getSession() {
 		return $this->objSession;
