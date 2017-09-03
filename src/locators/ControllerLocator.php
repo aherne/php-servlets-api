@@ -28,16 +28,25 @@ final class ControllerLocator {
 		$strURL = $strPagePath;
 	
 		// get controller class name
+		$strFile = "";
 		$strClass = "";
 		if(!$objApplication->getAutoRouting()) {
-			$strClass = $objApplication->getRouteInfo($strURL)->getController();
-			if(!$strClass) return;
+			$strPath = $objApplication->getRouteInfo($strURL)->getController();
+			if(!$strPath) return;
+			$strFile = $strFolder."/".$strPath.".php";
+			$slashPosition = strrpos($strPath,"/");
+			if($slashPosition!==false) {
+				$strClass = substr($strPath,$slashPosition+1);
+				if(!$strClass) throw new ServletException("Invalid controller set for route: ".$strURL);
+			} else {
+				$strClass = $strPath;
+			}
 		} else {
 			$strClass = str_replace(" ","",ucwords(str_replace(array("/","-")," ",strtolower($strURL))))."Controller";
+			$strFile = $strFolder."/".$strClass.".php";
 		}
-	
-		// loads controller class
-		$strFile = $strFolder."/".$strClass.".php";
+		
+		// loads controller file
 		if(!file_exists($strFile)) throw new ServletException("Controller not found: ".$strClass);
 		require_once($strFile);
 
