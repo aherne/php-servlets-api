@@ -2,21 +2,23 @@
 /**
  * Encapsulates route information:
  * - url: relative path requested
- * - class: controller class name (by convention same as file name)
+ * - cpntroller: path to controller (relative to application/controllers folder)
+ * - view: path to view (relative to application/views folder)
+ * 
  * Utility @ Application class.
  * 
  * @author aherne
  */
 class Route {
-	private $strPath, $strControllerClass, $strViewFile;
+	private $strPath, $strControllerFile, $strViewFile;
 	
 	/**
 	 * @param string $strPath
-	 * @param string $strControllerClass
+	 * @param string $strControllerFile
 	 */
-	public function __construct($strPath, $strControllerClass, $strViewFile) {
+	public function __construct($strPath, $strControllerFile, $strViewFile) {
 		$this->strPath = $strPath;
-		$this->strControllerClass = $strControllerClass;
+		$this->strControllerFile = $strControllerFile;
 		$this->strViewFile = $strViewFile;
 	}
 	
@@ -38,7 +40,7 @@ class Route {
 	 * @example TestController
 	 */
 	public function getController() {
-		return $this->strControllerClass;
+		return $this->strControllerFile;
 	}
 	
 	/**
