@@ -31,7 +31,7 @@ final class WrapperLocator {
 			$tblFormats = $objApplication->getFormats();			
 			foreach($tblFormats as $objFormat) {
 				$strWrapperClass = $objFormat->getWrapper();
-				if($objFormat->getContentType() == $strContentType && $strWrapperClass) {
+				if(strpos($strContentType, $objFormat->getContentType()) === 0 && $strWrapperClass) {
 					$strWrapperLocation = $objApplication->getWrappersPath()."/".$strWrapperClass.".php";
 					if(!file_exists($strWrapperLocation)) throw new ServletException("Wrapper not found: ".$strWrapperLocation);
 					require_once($strWrapperLocation);
