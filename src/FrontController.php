@@ -54,7 +54,7 @@ final class FrontController {
 		// sets response object
 		$objResponse = new Response($objRequest->getValidator()->getContentType());
 		if(!$objApplication->getAutoRouting() && $objApplication->getRouteInfo($objRequest->getValidator()->getPage())->getView()) {
-			$objResponse->setView($objApplication->getViewsPath()."/".$objApplication->getRouteInfo($objRequest->getValidator()->getPage())->getView());
+			$objResponse->setView($objApplication->getRouteInfo($objRequest->getValidator()->getPage())->getView());
 		}
 		
 		// locates and runs page controller
