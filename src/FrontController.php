@@ -70,6 +70,9 @@ final class FrontController {
 			// locates and instances wrapper
 			$objWrapperLocator = new WrapperLocator($objApplication, $objResponse->headers()->get("Content-Type"));
 			$strClassName  = $objWrapperLocator->getClassName();
+			if($strClassName == WrapperLocator::DEFAULT_WRAPPER) {
+				$objResponse->setView($objApplication->getViewsPath()."/".$objResponse->getView());
+			}
 			$objRunnable = new $strClassName($objResponse);
     		
 			// builds response
