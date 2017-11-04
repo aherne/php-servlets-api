@@ -87,7 +87,7 @@ final class FrontController {
 				$objResponse->getOutputStream()->write($strContents);
 			}
 		
-			// operates custom changes on response object if response is not disabled.
+			// operates custom changes on response object
 			$tblListeners = $objListenerLocator->getClassNames("ResponseListener");
 			foreach($tblListeners as $strClassName) {
 				$objRunnable = new $strClassName($objApplication, $objRequest, $objResponse);
