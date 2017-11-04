@@ -65,31 +65,34 @@ final class FrontController {
 			$objRunnable->run();
 		}
 		
-		// locates a wrapper for view type and builds response
-		if($objResponse->getOutputStream()->isEmpty() && !$objResponse->isDisabled()) {
-			// locates and instances wrapper
-			$objWrapperLocator = new WrapperLocator($objApplication, $objResponse->headers()->get("Content-Type"));
-			$strClassName  = $objWrapperLocator->getClassName();
-			if($strClassName == WrapperLocator::DEFAULT_WRAPPER) {
-				$objResponse->setView($objApplication->getViewsPath()."/".$objResponse->getView());
+		// if response is not disabled, produce a view
+		if(!$objResponse->isDisabled()) {
+			// locates a wrapper for view type and builds response
+			if($objResponse->getOutputStream()->isEmpty()) {
+				// locates and instances wrapper
+				$objWrapperLocator = new WrapperLocator($objApplication, $objResponse->headers()->get("Content-Type"));
+				$strClassName  = $objWrapperLocator->getClassName();
+				if($strClassName == WrapperLocator::DEFAULT_WRAPPER) {
+					$objResponse->setView($objApplication->getViewsPath()."/".$objResponse->getView());
+				}
+				$objRunnable = new $strClassName($objResponse);
+	    		
+				// builds response
+				ob_start();
+				$objRunnable->run();
+				$strContents = ob_get_contents();
+				ob_end_clean();
+			    
+				// writes response to output stream
+				$objResponse->getOutputStream()->write($strContents);
 			}
-			$objRunnable = new $strClassName($objResponse);
-    		
-			// builds response
-			ob_start();
-			$objRunnable->run();
-			$strContents = ob_get_contents();
-			ob_end_clean();
-		    
-			// writes response to output stream
-			$objResponse->getOutputStream()->write($strContents);
-		}
 		
-		// operates custom changes on response object.
-		$tblListeners = $objListenerLocator->getClassNames("ResponseListener");
-		foreach($tblListeners as $strClassName) {
-			$objRunnable = new $strClassName($objApplication, $objRequest, $objResponse);
-			$objRunnable->run();
+			// operates custom changes on response object if response is not disabled.
+			$tblListeners = $objListenerLocator->getClassNames("ResponseListener");
+			foreach($tblListeners as $strClassName) {
+				$objRunnable = new $strClassName($objApplication, $objRequest, $objResponse);
+				$objRunnable->run();
+			}
 		}
 							
 		// commits response
