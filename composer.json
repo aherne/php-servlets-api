@@ -3,13 +3,12 @@
     "type": "library",
     "description": "High performance MVC API built in style of Java Servlets & Spring MVC",
     "keywords": ["mvc","servlets","event listeners","view resolvers"],
-    "homepage": "https://github.com/aherne/php-servlets-api",
+    "homepage": "http://www.lucinda-framework.com/servlets",
     "license": "MIT",
     "authors": [
         {
             "name": "Lucian Popescu",
             "email": "lucian.gabriel.popescu@gmail.com",
-            "homepage": "http://seld.be",
             "role": "Developer"
         }
     ]
