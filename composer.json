@@ -1,7 +1,7 @@
 {
     "name": "lucinda/servlets",
     "type": "library",
-    "description": "High performance MVC API built in style of Java Servlets & Spring MVC",
+    "description": "High performance MVC API inspired by Java Servlets & Spring MVC",
     "keywords": ["mvc","servlets","event listeners","view resolvers"],
     "homepage": "http://www.lucinda-framework.com/servlets",
     "license": "MIT",
