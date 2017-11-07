@@ -11,6 +11,5 @@ The conclusion of above is that **the main purpose of a WEB application, that of
 
 In light of above, PHP Servlets, built with concepts from Java Servlets API and Spring MVC in mind, it is supposed to be JUST a high performance small scalable web module (API) whose single responsibility is implementing MVC pattern.
 
-Full documentation available:
-
+Read more:<br />
 http://www.lucinda-framework.com/servlets
