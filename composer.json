@@ -1,0 +1,16 @@
+{
+    "name": "lucinda/servlets",
+    "type": "library",
+    "description": "Logging for PHP 5.3",
+    "keywords": ["mvc","servlets","event listeners","view resolvers"],
+    "homepage": "https://github.com/aherne/php-servlets-api",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Lucian Popescu",
+            "email": "lucian.gabriel.popescu@gmail.com",
+            "homepage": "http://seld.be",
+            "role": "Developer"
+        }
+    ]
+}
