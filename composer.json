@@ -1,5 +1,5 @@
 {
-    "name": "lucinda/servlets",
+    "name": "lucinda/mvc",
     "type": "library",
     "description": "High performance MVC API inspired by Java Servlets & Spring MVC",
     "keywords": ["mvc","servlets","event listeners","view resolvers"],
