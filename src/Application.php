@@ -209,7 +209,6 @@ class Application extends AttributesFactory {
 		if(!is_array($tblTMP)) $tblTMP = array($tblTMP);
 		foreach($tblTMP as $tblInfo) {
 			if(empty($tblInfo['url'])) throw new ApplicationException("XML property is mandatory: routes.route['url']");
-			if(empty($tblInfo['controller']) && empty($tblInfo['view'])) throw new ApplicationException("At least one of XML properties is mandatory: routes.route['controller'] or routes.route['view']");
 			$strUrl = (string) $tblInfo['url'];
 			$this->tblRoutes[$strUrl] = new Route($strUrl, (string) $tblInfo['controller'], (string) $tblInfo['view']);
 		}
