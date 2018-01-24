@@ -120,14 +120,29 @@ final class Request extends AttributesFactory {
 	}
 
 	/**
-	 * Sets parameters posted by client, based on PHP superglobal $_POST.
+	 * Sets parameters sent by client in accordance to HTTP request method.
 	 */
 	private function setParameters() {
-		$this->tblParameters = $_POST;
+		switch($_SERVER["REQUEST_METHOD"]) {
+			case "GET":
+				$this->tblParameters = $_GET;
+				break;		
+			case "POST":
+				$this->tblParameters = $_POST;
+				break;		
+			case "PUT":
+			case "DELETE":
+				parse_str(file_get_contents("php://input"),$post_vars);
+				$this->tblParameters = $post_vars;
+				break;
+			default:
+				$this->tblParameters = array();
+				break;
+		}		
 	}
 	
 	/**
-	 * Gets value of POST parameter
+	 * Gets value of parameter sent by client in accordance to HTTP request method based on its name.
 	 * 
 	 * @param string $name
 	 * @return mixed|null Null if parameter doesn't exist, mixed otherwise.
@@ -137,7 +152,7 @@ final class Request extends AttributesFactory {
 	}
 	
 	/**
-	 * Gets all POST parameters received
+	 * Gets all parameters sent by client in accordance to HTTP request method.
 	 * 
 	 * @return array
 	 */
