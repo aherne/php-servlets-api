@@ -10,16 +10,19 @@
  * @author aherne
  */
 class Route {
-	private $strPath, $strControllerFile, $strViewFile;
+	private $strPath, $strControllerFile, $strViewFile, $strFormat;
 	
 	/**
 	 * @param string $strPath
 	 * @param string $strControllerFile
+     * @param string $strViewFile
+     * @param string $strFormat
 	 */
-	public function __construct($strPath, $strControllerFile, $strViewFile) {
+	public function __construct($strPath, $strControllerFile, $strViewFile, $strFormat) {
 		$this->strPath = $strPath;
 		$this->strControllerFile = $strControllerFile;
 		$this->strViewFile = $strViewFile;
+        $this->strFormat = $strFormat;
 	}
 	
 	/**
@@ -52,4 +55,14 @@ class Route {
 	public function getView() {
 		return $this->strViewFile;
 	}
+
+    /**
+     * Gets response format.
+     *
+     * @return string
+     * @example json
+     */
+    public function getFormat() {
+        return $this->strFormat;
+    }
 }
