@@ -54,7 +54,12 @@ class PageValidator implements RequestValidator {
 					}
 				}
 				if(!$blnMatchFound) throw new PathNotFoundException("Route could not be matched to routes.route tag @ XML: ".$strURL);
-			}
+			} else {
+                $objRoute = $application->getRouteInfo($strURL);
+			    if($objRoute->getFormat()) {
+                    $extension = $objRoute->getFormat();
+                }
+            }
 		}
 		$this->strPage = $strURL;
 
