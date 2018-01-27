@@ -1,6 +1,6 @@
 # PHPServletsAPI
 
-This is a standalone MVC API translating requests into responses using MVC pattern and also serving as engine behind Lucinda Framework. It was designed on following principles:
+This is a standalone MVC API inspired by Java Servlets & Spring MVC, translating requests into responses using MVC pattern, serving as engine behind Lucinda Framework and designed on following principles:
 
 - Simplicity: no needless abstraction, not a line of code more than needed. Code must be streamlined.
 - Performance: all expenses were made to optimize for speed without sacrificing anything in strong design.
