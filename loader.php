@@ -5,3 +5,4 @@ require_once("src/exceptions/ApplicationException.php");
 require_once("src/exceptions/FileUploadException.php");
 require_once("src/exceptions/PathNotFoundException.php");
 require_once("src/exceptions/FormatNotFoundException.php");
+require_once("src/implemented/RestController.php");

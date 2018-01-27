@@ -11,55 +11,25 @@ class PageValidator implements RequestValidator {
 	 * @param string $page 
 	 * @param Application $application
 	 * @throws PathNotFoundException
+     * @throws FormatNotFoundException
 	 */
 	public function __construct($page, Application $application) {
-		// split page into extension & page
-		$extension = $application->getDefaultExtension();
-		$position = strrpos($page, ".");
-		if($position) {
-			$pageExtension = substr($page,$position+1);
-			if($application->hasFormat($pageExtension)) {
-				$extension = $pageExtension;
-				$page = substr($page,0,-strlen($pageExtension)-1);
-			}
-		}
-		
-		// set values
-		$this->setContentType($application, $extension);
-		$this->setPage($application, $page);
+        $this->validate($application, $page);
 	}
 	
 	/**
-	 * Sets requested content type
-	 * 
-	 * @param Application $application
-	 * @param string $extension
-	 */
-	private function setContentType(Application $application, $extension) {
-		$format = $application->getFormatInfo($extension);
-		$this->strContentType = $format->getContentType().($format->getCharacterEncoding()?"; charset=".$format->getCharacterEncoding():"");
-	}
-	
-	/**
-	 * Gets requested content type.
-	 *
-	 * @return string
-	 */
-	public function getContentType() {
-		return $this->strContentType;
-	}
-	
-	/**
-	 * Sets requested page & path parameters.
+	 * Detects requested page, format & path parameters by matching routes/formats in xml to requested route.
 	 * 
 	 * @param Application $application
 	 * @param string $strURL
 	 * @throws PathNotFoundException
+     * @throws FormatNotFoundException
 	 */
-	private function setPage(Application $application, $strURL) {
+	private function validate(Application $application, $strURL) {
 		if($strURL=="") {
 			$strURL = $application->getDefaultPage();
 		}
+		$extension = $application->getDefaultExtension();
 		if(!$application->getAutoRouting()) {
 			if(!$application->hasRoute($strURL)) {
 				$blnMatchFound = false;
@@ -74,6 +44,9 @@ class PageValidator implements RequestValidator {
 								if($i==0) continue;
 								$this->tblPathParameters[$names[$i-1]]=$item[0];
 							}
+							if($objRoute->getFormat()) {
+							    $extension = $objRoute->getFormat();
+                            }
 							$strURL = $objRoute->getPath();
 							$blnMatchFound = true;
 							break;
@@ -81,9 +54,17 @@ class PageValidator implements RequestValidator {
 					}
 				}
 				if(!$blnMatchFound) throw new PathNotFoundException("Route could not be matched to routes.route tag @ XML: ".$strURL);
-			}
+			} else {
+                $objRoute = $application->getRouteInfo($strURL);
+			    if($objRoute->getFormat()) {
+                    $extension = $objRoute->getFormat();
+                }
+            }
 		}
 		$this->strPage = $strURL;
+
+        $format = $application->getFormatInfo($extension);
+        $this->strContentType = $format->getContentType().($format->getCharacterEncoding()?"; charset=".$format->getCharacterEncoding():"");
 	}
 	
 	/**
@@ -109,4 +90,12 @@ class PageValidator implements RequestValidator {
 	public function getPathParameters() {
 		return $this->tblPathParameters;
 	}
+
+    /**
+     * {@inheritDoc}
+     * @see RequestValidator::getPathParameters()
+     */
+    public function getContentType() {
+        return $this->strContentType;
+    }
 }

@@ -198,8 +198,10 @@ class Application extends AttributesFactory {
 
 	/**
 	 * Sets user-defined routes that link to controllers. Maps to routes:route list @ XML. Each route item has two fields:
-	 * - url: relative path requested
-	 * - class: controller class name (by convention same as file name)
+	 * - url: (mandatory)relative path requested
+	 * - controller: controller class name, incl path (by convention same as file name)
+     * - view: view file path, without extension
+     * - extension: route-specific response format
 	 * NOTICE: Only executed when auto_routing=0 
 	 */
 	private function setRoutes() {
@@ -210,7 +212,7 @@ class Application extends AttributesFactory {
 		foreach($tblTMP as $tblInfo) {
 			if(empty($tblInfo['url'])) throw new ApplicationException("XML property is mandatory: routes.route['url']");
 			$strUrl = (string) $tblInfo['url'];
-			$this->tblRoutes[$strUrl] = new Route($strUrl, (string) $tblInfo['controller'], (string) $tblInfo['view']);
+			$this->tblRoutes[$strUrl] = new Route($strUrl, (string) $tblInfo['controller'], (string) $tblInfo['view'], (string) $tblInfo['extension']);
 		}
 		if(empty($this->tblRoutes)) throw new ApplicationException("XML tag cannot be empty: routes");
 	}
