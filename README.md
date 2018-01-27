@@ -1,15 +1,15 @@
 # PHPServletsAPI
 
-There are many MVC frameworks for building web applications in PHP, so writing a new one doesn’t make sense on a first glance. However, looking at existing solutions (such as Laravel, Zend, Symfony), following problems are evident:
+This is a standalone MVC API translating requests into responses using MVC pattern and also serving as engine behind Lucinda Framework. It was designed on following principles:
 
-1. they are too complicated: they require a lot of learning and even after one manages to learn them, they are still hard to work with, because of complicated (and more often than not unintuitive) patterns one has to obey whenever writing a new component. 
-2. they are coupled: internal components are not detachable, libraries that have nothing to do with MVC concerns are bundled in distribution (Zend DB, for example), and coupled with MVC part. This makes them impossible to optimize and use except as a whole.
-3. they are overprogrammed: they always do much more than needed. *Their purpose is just to speed up development time*, but whenever that doesn't go hand in hand with spareness and modularity, users of application suffer (from low performance) while programmers rejoice.
-4. they are VERY slow, as a consequence of points above. The issue of performance (CPU time & memory consumption) is always ignored in favor of popularity (user base), good documentation, reliability and supposed "speed of development" (which only applies for their experienced followers).
+- Simplicity: no needless abstraction, not a line of code more than needed. Code must be streamlined.
+- Performance: all expenses were made to optimize for speed without sacrificing anything in strong design.
+- Reusability: each component is designed to be independently reusable, with the exception of those that are component’s helpers (such as Locators for FrontController).
+- Completeness: whatever non-abstract class API defines encapsulates all possible behavior on that topic, thus is final and non-extendible.
+- Loose coupling: encapsulation of behavior in separate classes (Strategy Design Pattern). All classes designed for a single purpose.
+- Independence: API depends on nothing but PHP 5+. You are no longer forced to bundle other libraries in order to make it work.
 
-The conclusion of above is that **the main purpose of a WEB application, that of serving users instead of programmers, has been blissfully forgotten**. A WEB application absolutely needs to be as fast and accurate as possible: all concerns must be channeled to bring a positive user experience. In PHP, which is after all a slow scripting language, this can only be achieved through a combination of minimalism and modularity. 
+The main point was building a solution that is extremely fast (as close to php raw as possible), extremely simple to use, but at the same time full featured and with easily extensible architecture, allowing seamless integration with libraries following same programming principles of minimalism and single-purpose design. 
 
-In light of above, PHP Servlets, built with concepts from Java Servlets API and Spring MVC in mind, it is supposed to be JUST a high performance small scalable web module (API) whose single responsibility is implementing MVC pattern.
-
-Read more here:<br />
+More information here:<br/>
 http://www.lucinda-framework.com/servlets
