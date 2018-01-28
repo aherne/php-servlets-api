@@ -8,14 +8,14 @@ final class ResponseStream {
 	 * - string content (eg: html, xml, json)
 	 * - binary content (eg: jpeg)
 	 * 
-	 * @var binary|string $contents
+	 * @var string $contents
 	 */
 	private $contents;
 	
 	/**
 	 * Returns information saved to stream.
 	 * 
-	 * @return binary|string
+	 * @return string
 	 */
 	public function get() {
 		return $this->contents;
@@ -42,7 +42,7 @@ final class ResponseStream {
 	/**
 	 * Sets stream directly.
 	 * 
-	 * @param binary|string $contents
+	 * @param string $contents
 	 */
 	public function set($contents) {
 		$this->contents = $contents;

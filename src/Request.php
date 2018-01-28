@@ -263,7 +263,7 @@ final class Request extends AttributesFactory {
 	/**
 	 * Gets input stream contents.
 	 * 
-	 * @return binary
+	 * @return string
 	 */
 	public function getInputStream() {
 		return file_get_contents("php://input");
