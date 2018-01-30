@@ -19,16 +19,14 @@ require_once("implemented/PageValidator.php");
  * Implements front controller MVC functionality. This is ServletsAPI focal point, integrating all components as a whole.
  */
 final class FrontController {	
-	const DEFAULT_DOCUMENT_DESCRIPTOR = "configuration.xml";
-	
 	/**
 	 * Performs all steps described in class documentation
 	 * 
 	 * @throws ServletException
 	 */
-	public function __construct() {
-		// get configuration object
-		$objApplication = new Application(defined("DOCUMENT_DESCRIPTOR")?DOCUMENT_DESCRIPTOR:self::DEFAULT_DOCUMENT_DESCRIPTOR);
+	public function __construct($strDocumentDescriptor="configuration.xml") {
+		// sets application object
+		$objApplication = new Application($strDocumentDescriptor);
 		
 		// instances Listener locator
 		$objListenerLocator = new ListenerLocator($objApplication);
