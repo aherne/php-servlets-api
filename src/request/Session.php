@@ -42,7 +42,7 @@ final class Session {
 	 * @throws ServletException	If session not started.
 	 */
 	public function set($strKey, $mixValue) {
-		if(!$this->isStarted()) throw new ServletException("Session not started!");
+		if(!isset($_SESSION)) throw new ServletException("Session not started!");
 		$_SESSION[$strKey] = $mixValue;
 	}
 	
@@ -54,8 +54,7 @@ final class Session {
 	 * @throws ServletException	If session not started.
 	 */
 	public function get($strKey) {
-		if(!$this->isStarted()) throw new ServletException("Session not started!");
-		if(!isset($_SESSION[$strKey])) throw new ServletException("Session parameter not found!");
+		if(!isset($_SESSION)) throw new ServletException("Session not started!");
 		return $_SESSION[$strKey];
 	}
 	
@@ -67,7 +66,7 @@ final class Session {
 	 * @throws ServletException	If session not started.
 	 */
 	public function contains($strKey) {
-		if(!$this->isStarted()) throw new ServletException("Session not started!");
+		if(!isset($_SESSION)) throw new ServletException("Session not started!");
 		return isset($_SESSION[$strKey]);
 	}
 	
@@ -78,7 +77,7 @@ final class Session {
 	 * @throws ServletException	If session not started.
 	 */
 	public function remove($strKey) {
-		if(!$this->isStarted()) throw new ServletException("Session not started!");
+		if(!isset($_SESSION)) throw new ServletException("Session not started!");
 		unset($_SESSION[$strKey]);
 	}
 }

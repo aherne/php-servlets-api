@@ -27,10 +27,8 @@ final class Cookie {
 	 * 
 	 * @param string $strKey
 	 * @return mixed
-	 * @throws ServletException
 	 */
 	public function get($strKey) {
-		if(!isset($_COOKIE[$strKey])) throw new ServletException("Cookie parameter not found!");
 		return $_COOKIE[$strKey];
 	}
 	
