@@ -3,10 +3,6 @@
  * Encapsulates session security settings on top of php.ini.
  */
 final class SessionSecurityOptions {
-	private $strPath;
-	private $strName;
-	private $intExpiredTime;
-	
 	/**
 	 * Set path that is going to be used when storing sessions.
 	 * 
