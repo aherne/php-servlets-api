@@ -12,7 +12,7 @@ class Application extends AttributesFactory {
 	 * @var SimpleXMLElement
 	 */
 	private $simpleXMLElement;
-	private	$defaultPage, $defaultExtension, $controllerPath, $listenerPath, $wrapperPath, $viewsPath, $publicPath, $autoRouting;
+	private	$defaultPage, $defaultExtension, $controllerPath, $listenerPath, $wrapperPath, $viewsPath, $publicPath, $autoRouting, $version;
 	private $listeners = array(), $routes = array(), $formats = array();
 	
 	/**
@@ -32,6 +32,7 @@ class Application extends AttributesFactory {
 		$this->setViewsPath();
 		$this->setPublicPath();
 		$this->setAutoRouting();
+		$this->setVersion();
 		$this->setListeners();
 		if(!$this->autoRouting) {
 			$this->setRoutes();
@@ -171,6 +172,24 @@ class Application extends AttributesFactory {
 	 */
 	public function getAutoRouting() {		
 		return $this->autoRouting;
+	}
+	
+	/**
+	 * Sets application version. Value should be sent to views and used to force refresh of JS/CSS files on clients' browsers. Example:
+	 * http://www.example.com/foo/bar.js?ver=APPLICATION_VERSION 
+	 */
+	private function setVersion() {
+	    $this->version = (int) $this->simpleXMLElement->application->version;
+	}
+	
+	/**
+	 * Gets value of application version. Value, if exists, should be sent to views and used to force refresh of JS/CSS files on clients' browsers. Example:
+	 * http://www.example.com/foo/bar.js?ver=1.2.0 
+	 * 
+	 * @return string
+	 */
+	public function getVersion() {
+	    return $this->version;
 	}
 	
 	/**
