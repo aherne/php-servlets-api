@@ -179,7 +179,7 @@ class Application extends AttributesFactory {
 	 * http://www.example.com/foo/bar.js?ver=APPLICATION_VERSION 
 	 */
 	private function setVersion() {
-	    $this->version = (int) $this->simpleXMLElement->application->version;
+	    $this->version = (string) $this->simpleXMLElement->application->version;
 	}
 	
 	/**
