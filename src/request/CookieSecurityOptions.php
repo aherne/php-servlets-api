@@ -3,19 +3,19 @@
  * Encapsulates session security settings on top of php.ini.
  */
 final class CookieSecurityOptions {
-	private $intExpiredTime = 0;
-	private $blnIsHTTPSOnly = false;
-	private $blnIsHTTPHeadersOnly = false;
-	private $strPath = "";
-	private $strDomain = "";
+	private $expiredTime = 0;
+	private $isHTTPSOnly = false;
+	private $isHTTPHeadersOnly = false;
+	private $path = "";
+	private $domain = "";
 		
 	/**
 	 * Sets session cookie's expiration time.
 	 * 
-	 * @param integer $intSeconds
+	 * @param integer $seconds
 	 */
-	public function setExpiredTime($intSeconds) {
-		$this->intExpiredTime = time() + $intSeconds;
+	public function setExpiredTime($seconds) {
+		$this->expiredTime = time() + $seconds;
 	}
 	
 	/**
@@ -24,16 +24,16 @@ final class CookieSecurityOptions {
 	 * @return integer
 	 */
 	public function getExpiredTime() {
-		return $this->intExpiredTime;
+		return $this->expiredTime;
 	}
 	
 	/**
 	 * Toggles restricting sessions to HTTPS only. If ON: HTTP cookies will not be accepted by server.
 	 * 
-	 * @param boolean $blnValue
+	 * @param boolean $value
 	 */
-	public function setSecuredByHTTPS($blnValue=false) {
-		$this->blnIsHTTPS = (boolean) $blnValue;
+	public function setSecuredByHTTPS($value=false) {
+		$this->isHTTPS = (boolean) $value;
 	}
 	
 	/**
@@ -42,15 +42,15 @@ final class CookieSecurityOptions {
 	 * @return boolean
 	 */
 	public function isSecuredByHTTPS() {
-		return $this->blnIsHTTPS;
+		return $this->isHTTPS;
 	}
 	
 	/**
 	 * Toggles restricting cookies to HTTP headers only. If ON: cookies not sent via HTTP headers will be ignored by server.
-	 * @param boolean $blnValue
+	 * @param boolean $value
 	 */
-	public function setSecuredByHTTPheaders($blnValue=false) {
-		$this->blnIsHTTPHeadersOnly = (boolean) $blnValue;
+	public function setSecuredByHTTPheaders($value=false) {
+		$this->isHTTPHeadersOnly = (boolean) $value;
 	}
 	
 	/**
@@ -59,16 +59,16 @@ final class CookieSecurityOptions {
 	 * @return boolean
 	 */
 	public function isSecuredByHTTPheaders() {
-		return $this->blnIsHTTPHeadersOnly;
+		return $this->isHTTPHeadersOnly;
 	}
 	
 	/**
 	 * Sets the path on the server in which the cookie will be available on.
 	 * 
-	 * @param string $strPath
+	 * @param string $path
 	 */
-	public function setPath($strPath = "") {
-		$this->strPath = $strPath;
+	public function setPath($path = "") {
+		$this->path = $path;
 	}
 	
 	/**
@@ -77,16 +77,16 @@ final class CookieSecurityOptions {
 	 * @return string
 	 */
 	public function getPath() {
-		return $this->strPath;
+		return $this->path;
 	}
 	
 	/**
 	 * Sets the (sub)domain that the cookie is available to.
 	 * 
-	 * @param string $strDomain
+	 * @param string $domain
 	 */
-	public function setDomain($strDomain = "") {
-		$this->strDomain = $strDomain;
+	public function setDomain($domain = "") {
+		$this->domain = $domain;
 	}
 
 	/**
@@ -95,6 +95,6 @@ final class CookieSecurityOptions {
 	 * @return string
 	 */
 	public function getDomain() {
-		return $this->strDomain;
+		return $this->domain;
 	}
 }

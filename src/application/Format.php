@@ -9,19 +9,19 @@
  * @author aherne
  */
 class Format {
-	private $strExtension, $strContentType, $strWrapperClass, $strCharacterEncoding;
+	private $extension, $contentType, $wrapperClass, $characterEncoding;
 
 	/**
-	 * @param string $strExtension
-	 * @param string $strContentType
-	 * @param string $strCharacterEncoding
-	 * @param string $strWrapperClass
+	 * @param string $extension
+	 * @param string $contentType
+	 * @param string $characterEncoding
+	 * @param string $wrapperClass
 	 */
-	public function __construct($strExtension, $strContentType, $strCharacterEncoding="", $strWrapperClass="") {
-		$this->strExtension = $strExtension;
-		$this->strContentType = $strContentType;
-		$this->strCharacterEncoding= $strCharacterEncoding;
-		$this->strWrapperClass = $strWrapperClass;
+	public function __construct($extension, $contentType, $characterEncoding="", $wrapperClass="") {
+		$this->extension = $extension;
+		$this->contentType = $contentType;
+		$this->characterEncoding= $characterEncoding;
+		$this->wrapperClass = $wrapperClass;
 	}
 
 	/**
@@ -31,7 +31,7 @@ class Format {
 	 * @example json
 	 */
 	public function getExtension() {
-		return $this->strExtension;
+		return $this->extension;
 	}
 
 	/**
@@ -41,7 +41,7 @@ class Format {
 	 * @example application/json
 	 */
 	public function getContentType() {
-		return $this->strContentType;
+		return $this->contentType;
 	}
 	
 	/**
@@ -50,7 +50,7 @@ class Format {
 	 * @return string
 	 */
 	public function getCharacterEncoding() {
-		return $this->strCharacterEncoding;
+		return $this->characterEncoding;
 	}
 
 	/**
@@ -60,6 +60,6 @@ class Format {
 	 * @example JsonWrapper
 	 */
 	public function getWrapper() {
-		return $this->strWrapperClass;
+		return $this->wrapperClass;
 	}
 }

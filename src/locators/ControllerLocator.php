@@ -3,57 +3,57 @@
  * Locates controller based on page requested by client and values set in DD.
  */
 final class ControllerLocator {
-	private $strClassName;
+	private $className;
 	
 	/**
-	 * @param Application $objApplication
-	 * @param string $strPagePath
+	 * @param Application $application
+	 * @param string $pagePath
 	 */
-	public function __construct(Application $objApplication, $strPagePath) {
-		$this->setClassName($objApplication, $strPagePath);
+	public function __construct(Application $application, $pagePath) {
+		$this->setClassName($application, $pagePath);
 	}
 
 	/**
 	 * Sets controller class name. 
 	 * 
-	 * @param Application $objApplication
-	 * @param string $strPagePath
+	 * @param Application $application
+	 * @param string $pagePath
 	 * @throws ServletException
 	 */
-	private function setClassName(Application $objApplication, $strPagePath) {
+	private function setClassName(Application $application, $pagePath) {
 		// get controller class folder
-		$strFolder = $objApplication->getControllersPath();
+		$folder = $application->getControllersPath();
 	
 		// gets page url
-		$strURL = $strPagePath;
+		$uRL = $pagePath;
 	
 		// get controller class name
-		$strFile = "";
-		$strClass = "";
-		if(!$objApplication->getAutoRouting()) {
-			$strPath = $objApplication->getRouteInfo($strURL)->getController();
-			if(!$strPath) return;
-			$strFile = $strFolder."/".$strPath.".php";
-			$slashPosition = strrpos($strPath,"/");
+		$file = "";
+		$class = "";
+		if(!$application->getAutoRouting()) {
+			$path = $application->getRouteInfo($uRL)->getController();
+			if(!$path) return;
+			$file = $folder."/".$path.".php";
+			$slashPosition = strrpos($path,"/");
 			if($slashPosition!==false) {
-				$strClass = substr($strPath,$slashPosition+1);
-				if(!$strClass) throw new ServletException("Invalid controller set for route: ".$strURL);
+				$class = substr($path,$slashPosition+1);
+				if(!$class) throw new ServletException("Invalid controller set for route: ".$uRL);
 			} else {
-				$strClass = $strPath;
+				$class = $path;
 			}
 		} else {
-			$strClass = str_replace(" ","",ucwords(str_replace(array("/","-")," ",strtolower($strURL))))."Controller";
-			$strFile = $strFolder."/".$strClass.".php";
+			$class = str_replace(" ","",ucwords(str_replace(array("/","-")," ",strtolower($uRL))))."Controller";
+			$file = $folder."/".$class.".php";
 		}
 		
 		// loads controller file
-		if(!file_exists($strFile)) throw new ServletException("Controller not found: ".$strClass);
-		require_once($strFile);
+		if(!file_exists($file)) throw new ServletException("Controller not found: ".$class);
+		require_once($file);
 
 		// validates and sets controller class
-		if(!class_exists($strClass)) throw new ServletException("Controller class not found: ".$strClass);
-		if(!is_subclass_of($strClass, "Controller")) throw new ServletException($strClass." must be a subclass of Controller");
-		$this->strClassName = $strClass;
+		if(!class_exists($class)) throw new ServletException("Controller class not found: ".$class);
+		if(!is_subclass_of($class, "Controller")) throw new ServletException($class." must be a subclass of Controller");
+		$this->className = $class;
 	}
 
 	/**
@@ -62,6 +62,6 @@ final class ControllerLocator {
 	 * @return string
 	 */
 	public function getClassName() {
-		return $this->strClassName;
+		return $this->className;
 	}
 }

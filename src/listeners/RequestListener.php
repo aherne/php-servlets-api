@@ -7,11 +7,11 @@ abstract class RequestListener implements Runnable {
 	protected $request;
 	
 	/**
-	 * @param Application $objApplication
-	 * @param Request $objRequest
+	 * @param Application $application
+	 * @param Request $request
 	 */
-	public function __construct(Application $objApplication, Request $objRequest) {
-		$this->application = $objApplication;
-		$this->request = $objRequest;
+	public function __construct(Application $application, Request $request) {
+		$this->application = $application;
+		$this->request = $request;
 	}
 }

@@ -4,12 +4,12 @@
  */
 class ViewWrapper extends Wrapper {
 	public function run() {
-		$mixView = $this->objResponse->getView();
-		if($mixView) {
-			$_VIEW = $this->objResponse->toArray();
-			$mixView .= ".php";
-			if(!file_exists($mixView)) throw new ServletException("View file not found: ".$mixView);
-			require_once($mixView);
+		$view = $this->response->getView();
+		if($view) {
+			$_VIEW = $this->response->toArray();
+			$view .= ".php";
+			if(!file_exists($view)) throw new ServletException("View file not found: ".$view);
+			require_once($view);
 		}
 	}
 }

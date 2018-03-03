@@ -22,7 +22,7 @@
  * 2=>array("name"=>"b.jpg",...)));
  */
 class RequestFilesParser {
-	private $tblContents;
+	private $contents;
 
 	public function __construct() {
 		$this->setResult();
@@ -36,10 +36,10 @@ class RequestFilesParser {
 			foreach($v1 as $name=>$value) {
 				if(is_array($value)) {
 					foreach($value as $k2=>$v2) {
-						$this->tblContents[$k1][$k2] = $this->parseRecursive($name, $v2, (isset($this->tblContents[$k1][$k2])?$this->tblContents[$k1][$k2]:array()));
+						$this->contents[$k1][$k2] = $this->parseRecursive($name, $v2, (isset($this->contents[$k1][$k2])?$this->contents[$k1][$k2]:array()));
 					}
 				} else {
-					$this->tblContents[$k1][$name] = $value;
+					$this->contents[$k1][$name] = $value;
 				}
 			}
 		}
@@ -48,20 +48,20 @@ class RequestFilesParser {
 	/**
 	 * Recursively setResult() helper algorithm that merges information recursively.
 	 * 
-	 * @param string $strName
+	 * @param string $name
 	 * @param array $v
 	 * @param array $oldArray
 	 */
-	private function parseRecursive($strName, $tblPart, $oldArray=array()) {
-		$tblOutput = $oldArray;
-		foreach($tblPart as $key=>$value) {
+	private function parseRecursive($name, $part, $oldArray=array()) {
+		$output = $oldArray;
+		foreach($part as $key=>$value) {
 			if(is_array($value)) {
-				$tblOutput[$key] = $this->parseRecursive($strName, $value, (!empty($oldArray)?$oldArray[$key]:array()));
+				$output[$key] = $this->parseRecursive($name, $value, (!empty($oldArray)?$oldArray[$key]:array()));
 			} else {
-				$tblOutput[$key][$strName] = $value;
+				$output[$key][$name] = $value;
 			}
 		}
-		return $tblOutput;
+		return $output;
 	}
 
 	/**
@@ -70,6 +70,6 @@ class RequestFilesParser {
 	 * @return array
 	 */
 	public function getResult() {
-		return $this->tblContents;
+		return $this->contents;
 	}
 }

@@ -3,10 +3,10 @@
  * Encapsulates information about URI client requested.
  */
 final class RequestURI {
-	private $strContextPath;
-	private $strPage;
-	private $strQueryString;
-	private $tblParameters;
+	private $contextPath;
+	private $page;
+	private $queryString;
+	private $parameters;
 	
 	public function __construct() {
 		$this->setContextPath();
@@ -19,7 +19,7 @@ final class RequestURI {
 	 * Sets context path from requested URL.
 	 */
 	private function setContextPath() {
-		$this->strContextPath = str_replace(array($_SERVER["DOCUMENT_ROOT"],"/index.php"),"",$_SERVER["SCRIPT_FILENAME"]);
+		$this->contextPath = str_replace(array($_SERVER["DOCUMENT_ROOT"],"/index.php"),"",$_SERVER["SCRIPT_FILENAME"]);
 	}
 	
 	/**
@@ -29,7 +29,7 @@ final class RequestURI {
 	 * @return string
 	 */
 	public function getContextPath() {
-		return $this->strContextPath;
+		return $this->contextPath;
 	}
 	
 	/**
@@ -41,12 +41,12 @@ final class RequestURI {
 		if(!isset($_SERVER["REQUEST_URI"])) throw new ServletException("ServletsAPI requires overriding paths!");
 	    
 		// remove query string
-		$strURLCombined = substr($_SERVER["REQUEST_URI"],strlen($this->strContextPath));
-		$intQuestionPosition = strpos($strURLCombined,"?");
-		if($intQuestionPosition!==false) {
-			$strURLCombined = substr($strURLCombined,0,$intQuestionPosition);
+		$uRLCombined = substr($_SERVER["REQUEST_URI"],strlen($this->contextPath));
+		$questionPosition = strpos($uRLCombined,"?");
+		if($questionPosition!==false) {
+			$uRLCombined = substr($uRLCombined,0,$questionPosition);
 		}
-		$this->strPage = (strpos($strURLCombined,"/")===0?substr($strURLCombined,1):$strURLCombined); // remove trailing slash
+		$this->page = (strpos($uRLCombined,"/")===0?substr($uRLCombined,1):$uRLCombined); // remove trailing slash
 	}
 	
 	/**
@@ -56,14 +56,14 @@ final class RequestURI {
 	 * @return string
 	 */
 	public function getPage() {
-		return $this->strPage;
+		return $this->page;
 	}
 	
 	/**
 	 * Sets query string part from requested URL
 	 */
 	private function setQueryString() {
-		$this->strQueryString = $_SERVER["QUERY_STRING"];
+		$this->queryString = $_SERVER["QUERY_STRING"];
 	}
 	
 	/**
@@ -73,14 +73,14 @@ final class RequestURI {
 	 * @return string
 	 */
 	public function getQueryString() {
-		return $this->strQueryString;
+		return $this->queryString;
 	}
 	
 	/**
 	 * Sets parameters sent by client from PHP superglobal $_GET.
 	 */
 	private function setParameters() {
-		$this->tblParameters = $_GET;
+		$this->parameters = $_GET;
 	}
 	
 	/**
@@ -90,7 +90,7 @@ final class RequestURI {
 	 * @return mixed|null Null if parameter doesn't exist, mixed otherwise.
 	 */
 	public function getParameter($name) {
-		return (isset($this->tblParameters[$name])?$this->tblParameters[$name]:null);
+		return (isset($this->parameters[$name])?$this->parameters[$name]:null);
 	}
 	
 	/**
@@ -99,6 +99,6 @@ final class RequestURI {
 	 * @return array
 	 */
 	public function getParameters() {
-		return $this->tblParameters;
+		return $this->parameters;
 	}
 }

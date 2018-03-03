@@ -3,9 +3,9 @@
  * Single responsibility in validating requested page based on configuration.xml encapsulated by Application object
  */
 class PageValidator implements RequestValidator {
-	private $strPage;
-	private $strContentType;
-	private $tblPathParameters=array();
+	private $page;
+	private $contentType;
+	private $pathParameters=array();
 	
 	/**
 	 * @param string $page 
@@ -21,50 +21,50 @@ class PageValidator implements RequestValidator {
 	 * Detects requested page, format & path parameters by matching routes/formats in xml to requested route.
 	 * 
 	 * @param Application $application
-	 * @param string $strURL
+	 * @param string $uRL
 	 * @throws PathNotFoundException
      * @throws FormatNotFoundException
 	 */
-	private function validate(Application $application, $strURL) {
-		if($strURL=="") {
-			$strURL = $application->getDefaultPage();
+	private function validate(Application $application, $uRL) {
+		if($uRL=="") {
+			$uRL = $application->getDefaultPage();
 		}
 		$extension = $application->getDefaultExtension();
 		if(!$application->getAutoRouting()) {
-			if(!$application->hasRoute($strURL)) {
-				$blnMatchFound = false;
-				$tblRoutes = $application->getRoutes();
-				foreach($tblRoutes as $objRoute) {
-					if(strpos($objRoute->getPath(), "(")!==false) {
-						preg_match_all("/(\(([^)]+)\))/", $objRoute->getPath(), $matches);
+			if(!$application->hasRoute($uRL)) {
+				$matchFound = false;
+				$routes = $application->getRoutes();
+				foreach($routes as $route) {
+					if(strpos($route->getPath(), "(")!==false) {
+						preg_match_all("/(\(([^)]+)\))/", $route->getPath(), $matches);
 						$names = $matches[2];
-						$pattern = "/^".str_replace($matches[1],"([^\/]+)",str_replace("/","\/",$objRoute->getPath()))."$/";
-						if(preg_match_all($pattern,$strURL,$results)==1) {
+						$pattern = "/^".str_replace($matches[1],"([^\/]+)",str_replace("/","\/",$route->getPath()))."$/";
+						if(preg_match_all($pattern,$uRL,$results)==1) {
 							foreach($results as $i=>$item) {
 								if($i==0) continue;
-								$this->tblPathParameters[$names[$i-1]]=$item[0];
+								$this->pathParameters[$names[$i-1]]=$item[0];
 							}
-							if($objRoute->getFormat()) {
-							    $extension = $objRoute->getFormat();
+							if($route->getFormat()) {
+							    $extension = $route->getFormat();
                             }
-							$strURL = $objRoute->getPath();
-							$blnMatchFound = true;
+							$uRL = $route->getPath();
+							$matchFound = true;
 							break;
 						}
 					}
 				}
-				if(!$blnMatchFound) throw new PathNotFoundException("Route could not be matched to routes.route tag @ XML: ".$strURL);
+				if(!$matchFound) throw new PathNotFoundException("Route could not be matched to routes.route tag @ XML: ".$uRL);
 			} else {
-                $objRoute = $application->getRouteInfo($strURL);
-			    if($objRoute->getFormat()) {
-                    $extension = $objRoute->getFormat();
+                $route = $application->getRouteInfo($uRL);
+			    if($route->getFormat()) {
+                    $extension = $route->getFormat();
                 }
             }
 		}
-		$this->strPage = $strURL;
+		$this->page = $uRL;
 
         $format = $application->getFormatInfo($extension);
-        $this->strContentType = $format->getContentType().($format->getCharacterEncoding()?"; charset=".$format->getCharacterEncoding():"");
+        $this->contentType = $format->getContentType().($format->getCharacterEncoding()?"; charset=".$format->getCharacterEncoding():"");
 	}
 	
 	/**
@@ -72,7 +72,7 @@ class PageValidator implements RequestValidator {
 	 * @see RequestValidator::getPage()
 	 */
 	public function getPage() {
-		return $this->strPage;
+		return $this->page;
 	}
 	
 	/**
@@ -80,7 +80,7 @@ class PageValidator implements RequestValidator {
 	 * @see RequestValidator::getPathParameter()
 	 */
 	public function getPathParameter($name) {
-		return (isset($this->tblPathParameters[$name])?$this->tblPathParameters[$name]:null);
+		return (isset($this->pathParameters[$name])?$this->pathParameters[$name]:null);
 	}
 	
 	/**
@@ -88,7 +88,7 @@ class PageValidator implements RequestValidator {
 	 * @see RequestValidator::getPathParameters()
 	 */
 	public function getPathParameters() {
-		return $this->tblPathParameters;
+		return $this->pathParameters;
 	}
 
     /**
@@ -96,6 +96,6 @@ class PageValidator implements RequestValidator {
      * @see RequestValidator::getPathParameters()
      */
     public function getContentType() {
-        return $this->strContentType;
+        return $this->contentType;
     }
 }

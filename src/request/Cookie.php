@@ -8,48 +8,48 @@ final class Cookie {
 	/**
 	 * Adds/updates a cookie param.
 	 * 
-	 * @param string $strKey
-	 * @param mixed $mixValue
-	 * @param CookieSecurityOptions $objSecurityOptions
+	 * @param string $key
+	 * @param mixed $value
+	 * @param CookieSecurityOptions $securityOptions
 	 */
-	public function set($strKey, $mixValue, CookieSecurityOptions $objSecurityOptions=null) {
-		$blnAnswer = false;
-		if($objSecurityOptions) {
-			$blnAnswer = setcookie($strKey, $mixValue, $objSecurityOptions->getExpiredTime(), $objSecurityOptions->getPath(), $objSecurityOptions->getDomain(), $objSecurityOptions->isSecuredByHTTPS(), $objSecurityOptions->isSecuredByHTTPheaders());
+	public function set($key, $value, CookieSecurityOptions $securityOptions=null) {
+		$answer = false;
+		if($securityOptions) {
+			$answer = setcookie($key, $value, $securityOptions->getExpiredTime(), $securityOptions->getPath(), $securityOptions->getDomain(), $securityOptions->isSecuredByHTTPS(), $securityOptions->isSecuredByHTTPheaders());
 		} else {
-			$blnAnswer = setcookie($strKey, $mixValue);
+			$answer = setcookie($key, $value);
 		}
-		if(!$blnAnswer) throw new ServletException("Cookie could not be set!");
+		if(!$answer) throw new ServletException("Cookie could not be set!");
 	}
 	
 	/**
 	 * Gets value of cookie param.
 	 * 
-	 * @param string $strKey
+	 * @param string $key
 	 * @return mixed
 	 */
-	public function get($strKey) {
-		return $_COOKIE[$strKey];
+	public function get($key) {
+		return $_COOKIE[$key];
 	}
 	
 	/**
 	 * Checks if cookie param exists.
 	 * 
-	 * @param string $strKey
+	 * @param string $key
 	 * @return boolean
 	 */
-	public function contains($strKey) {
-		return isset($_COOKIE[$strKey]);
+	public function contains($key) {
+		return isset($_COOKIE[$key]);
 	}
 	
 	/**
 	 * Deletes cookie param.
 	 * 
-	 * @param string $strKey
+	 * @param string $key
 	 */
-	public function remove($strKey) {
-		setcookie ($strKey, "", 1);
-		setcookie ($strKey, false);
-		unset($_COOKIE[$strKey]);
+	public function remove($key) {
+		setcookie ($key, "", 1);
+		setcookie ($key, false);
+		unset($_COOKIE[$key]);
 	}
 }

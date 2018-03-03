@@ -1,5 +1,4 @@
 <?php
-class MethodNotAllowedException extends Exception {}
 /**
  * Defines an abstract RESTful controller. Classes extending it must implement methods that correspond to HTTP verbs they need.
  * 
@@ -13,8 +12,8 @@ class MethodNotAllowedException extends Exception {}
  */
 abstract class RestController extends Controller {
 	public function run() {
-		$strMethod = strtolower($this->request->getMethod());
-		$this->$strMethod();
+		$method = strtolower($this->request->getMethod());
+		$this->$method();
 	}
 	
 	protected function get() {

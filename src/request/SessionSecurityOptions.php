@@ -6,62 +6,62 @@ final class SessionSecurityOptions {
 	/**
 	 * Set path that is going to be used when storing sessions.
 	 * 
-	 * @param string $strPath
+	 * @param string $path
 	 */
-	public function setSavePath($strPath) {
-		ini_set("session.save_path",$strPath);
+	public function setSavePath($path) {
+		ini_set("session.save_path",$path);
 	}
 	
 	/**
 	 * Sets name of session cookie.
 	 * 
-	 * @param string $strName
+	 * @param string $name
 	 */
-	public function setName($strName) {
-		ini_set("session.name",$strName);
+	public function setName($name) {
+		ini_set("session.name",$name);
 	}
 	
 	/**
 	 * Sets session cookie's expiration time.
 	 * 
-	 * @param integer $intSeconds
+	 * @param integer $seconds
 	 */
-	public function setExpiredTime($intSeconds) {
-		ini_set("session.gc_maxlifetime",$intSeconds);
+	public function setExpiredTime($seconds) {
+		ini_set("session.gc_maxlifetime",$seconds);
 	}
 	
 	/**
 	 * Toggles session expiration on browser close.
 	 * 
-	 * @param boolean $blnValue
+	 * @param boolean $value
 	 */
-	public function setExpiredOnBrowserClose($blnValue=false) {
-		ini_set("session.cookie_lifetime", ($blnValue?1:0));
+	public function setExpiredOnBrowserClose($value=false) {
+		ini_set("session.cookie_lifetime", ($value?1:0));
 	}
 	
 	/**
 	 * Toggles restricting sessions to HTTPS only. If ON: HTTP cookies will not be accepted by server.
 	 * 
-	 * @param boolean $blnValue
+	 * @param boolean $value
 	 */
-	public function setSecuredByHTTPS($blnValue=false) {
-		ini_set("session.cookie_secure", ($blnValue?1:0));
+	public function setSecuredByHTTPS($value=false) {
+		ini_set("session.cookie_secure", ($value?1:0));
 	}
 	
 	/**
 	 * Toggles restricting sessions to HTTP headers only. If ON: cookies not sent via HTTP headers will be ignored by server.
-	 * @param boolean $blnValue
+	 * @param boolean $value
 	 */
-	public function setSecuredByHTTPheaders($blnValue=false) {
-		ini_set("session.cookie_httponly", ($blnValue?1:0));
+	public function setSecuredByHTTPheaders($value=false) {
+		ini_set("session.cookie_httponly", ($value?1:0));
 	}
 		
 	/**
 	 * Toggles restricting sessions to those coming with a HTTP referrer LIKE %keyword%.
 	 * 
-	 * @param string $strKeyword
+	 * @param string $keyword
 	 */
-	public function setSecuredByReferrerCheck($strKeyword) {
-		ini_set("session.referer_check", $strKeyword);
+	public function setSecuredByReferrerCheck($keyword) {
+		ini_set("session.referer_check", $keyword);
 	}
 }

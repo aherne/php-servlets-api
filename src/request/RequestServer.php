@@ -3,11 +3,11 @@
  * Encapsulates information about server that received the request.
  */
 final class RequestServer {
-	private $strName;
-	private $strIP;
-	private $intPort;
-	private $strEmail;
-	private $strSoftware;
+	private $name;
+	private $iP;
+	private $port;
+	private $email;
+	private $software;
 	
 	public function __construct() {
 		$this->setIP();
@@ -21,7 +21,7 @@ final class RequestServer {
 	 * Sets server host name.
 	 */
 	private function setName() {
-		$this->strName = $_SERVER["SERVER_NAME"];
+		$this->name = $_SERVER["SERVER_NAME"];
 	}
 	
 	/**
@@ -30,14 +30,14 @@ final class RequestServer {
 	 * @return string
 	 */
 	public function getName() {
-		return $this->strName;
+		return $this->name;
 	}
 	
 	/**
 	 * Sets server IP address.
 	 */
 	private function setIP() {
-		$this->strIP = $_SERVER["SERVER_ADDR"];
+		$this->iP = $_SERVER["SERVER_ADDR"];
 	
 	}
 	
@@ -47,7 +47,7 @@ final class RequestServer {
 	 * @return string
 	 */
 	public function getIP() {
-		return $this->strIP;
+		return $this->iP;
 	}
 	
 	
@@ -55,7 +55,7 @@ final class RequestServer {
 	 * Sets server port
 	 */
 	private function setPort() {
-		$this->intPort = $_SERVER["SERVER_PORT"];
+		$this->port = $_SERVER["SERVER_PORT"];
 	}
 	
 	/**
@@ -64,14 +64,14 @@ final class RequestServer {
 	 * @return int
 	 */
 	public function getPort() {
-		return $this->intPort;
+		return $this->port;
 	}
 	
 	/**
 	 * Sets server admin email.
 	 */
 	private function setEmail() {
-		$this->strEmail = $_SERVER["SERVER_ADMIN"];
+		$this->email = $_SERVER["SERVER_ADMIN"];
 	}
 	
 	/**
@@ -80,14 +80,14 @@ final class RequestServer {
 	 * @return string
 	 */
 	public function getEmail() {
-		return $this->strEmail;
+		return $this->email;
 	}
 	
 	/**
 	 * Sets software web server is using.
 	 */
 	private function setSoftware() {
-		$this->strSoftware = $_SERVER["SERVER_SOFTWARE"];
+		$this->software = $_SERVER["SERVER_SOFTWARE"];
 	}
 	
 	/**
@@ -96,6 +96,6 @@ final class RequestServer {
 	 * @return string
 	 */
 	public function getSoftware() {
-		return $this->strSoftware;
+		return $this->software;
 	}
 }

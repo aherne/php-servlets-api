@@ -8,46 +8,46 @@ class AttributesFactory {
 	 * 
 	 * @var array
 	 */
-	protected $tblAttributes =  array();
+	protected $attributes =  array();
 	
 	/**
 	 * Gets attribute by name.
 	 * 
-	 * @param string $strKey
+	 * @param string $key
 	 * @return mixed
 	 */
-	public function getAttribute($strKey) {
-		return (isset($this->tblAttributes[$strKey])?$this->tblAttributes[$strKey]:null);
+	public function getAttribute($key) {
+		return (isset($this->attributes[$key])?$this->attributes[$key]:null);
 	}	
 	
 	/**
 	 * Sets attribute by name & value.
 	 * 
-	 * @param string $strKey
-	 * @param mixed $mixValue
+	 * @param string $key
+	 * @param mixed $value
 	 */
-	public function setAttribute($strKey, $mixValue) {
-		$this->tblAttributes[$strKey] = $mixValue;
+	public function setAttribute($key, $value) {
+		$this->attributes[$key] = $value;
 	}
 	
 	/**
 	 * Deletes attribute by name.
 	 * 
-	 * @param string $strKey
+	 * @param string $key
 	 * @return void
 	 */
-	public function removeAttribute($strKey) {
-		unset($this->tblAttributes[$strKey]);
+	public function removeAttribute($key) {
+		unset($this->attributes[$key]);
 	}
 	
 	/**
 	 * Checks if attribute exists.
 	 * 
-	 * @param string $strKey
+	 * @param string $key
 	 * @return boolean
 	 */
-	public function isAttribute($strKey) {
-		return isset($this->tblAttributes[$strKey]);
+	public function isAttribute($key) {
+		return isset($this->attributes[$key]);
 	}
 	
 	/**
@@ -56,7 +56,7 @@ class AttributesFactory {
 	 * @return array
 	 */
 	public function toArray() {
-		return $this->tblAttributes;
+		return $this->attributes;
 	}
 	
 	/**
@@ -65,6 +65,6 @@ class AttributesFactory {
 	 * @return boolean
 	 */
 	public function isEmpty() {
-		return empty($this->tblAttributes);
+		return empty($this->attributes);
 	}
 }

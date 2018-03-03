@@ -8,12 +8,12 @@ final class Session {
 	/**
 	 * Starts session.
 	 * 
-	 * @param SessionSecurityOptions $objSessionSecurityOptions Added here to hint where to inject.
-	 * @param SessionHandlerInterface $objSessionHandler	If null, built-in session handler is used.
+	 * @param SessionSecurityOptions $sessionSecurityOptions Added here to hint where to inject.
+	 * @param SessionHandlerInterface $sessionHandler	If null, built-in session handler is used.
 	 */
-	public function start(SessionSecurityOptions $objSessionSecurityOptions = null, SessionHandlerInterface $objSessionHandler = null) {
-		if($objSessionHandler!=null) {
-			session_set_save_handler($objSessionHandler, true);
+	public function start(SessionSecurityOptions $sessionSecurityOptions = null, SessionHandlerInterface $sessionHandler = null) {
+		if($sessionHandler!=null) {
+			session_set_save_handler($sessionHandler, true);
 		}
 		session_start();
 	}
@@ -37,47 +37,47 @@ final class Session {
 	/**
 	 * Adds/updates a session param.
 	 * 
-	 * @param string $strKey
-	 * @param mixed $mixValue
+	 * @param string $key
+	 * @param mixed $value
 	 * @throws ServletException	If session not started.
 	 */
-	public function set($strKey, $mixValue) {
+	public function set($key, $value) {
 		if(!isset($_SESSION)) throw new ServletException("Session not started!");
-		$_SESSION[$strKey] = $mixValue;
+		$_SESSION[$key] = $value;
 	}
 	
 	/**
 	 * Gets session param value.
 	 * 
-	 * @param string $strKey
+	 * @param string $key
 	 * @return mixed
 	 * @throws ServletException	If session not started.
 	 */
-	public function get($strKey) {
+	public function get($key) {
 		if(!isset($_SESSION)) throw new ServletException("Session not started!");
-		return $_SESSION[$strKey];
+		return $_SESSION[$key];
 	}
 	
 	/**
 	 * Checks if session param exists.
 	 * 
-	 * @param string $strKey
+	 * @param string $key
 	 * @return mixed
 	 * @throws ServletException	If session not started.
 	 */
-	public function contains($strKey) {
+	public function contains($key) {
 		if(!isset($_SESSION)) throw new ServletException("Session not started!");
-		return isset($_SESSION[$strKey]);
+		return isset($_SESSION[$key]);
 	}
 	
 	/**
 	 * Deletes a session param.
 	 * 
-	 * @param string $strKey
+	 * @param string $key
 	 * @throws ServletException	If session not started.
 	 */
-	public function remove($strKey) {
+	public function remove($key) {
 		if(!isset($_SESSION)) throw new ServletException("Session not started!");
-		unset($_SESSION[$strKey]);
+		unset($_SESSION[$key]);
 	}
 }

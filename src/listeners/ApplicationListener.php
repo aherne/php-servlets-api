@@ -6,9 +6,9 @@ abstract class ApplicationListener implements Runnable {
 	protected $application;
 
 	/**
-	 * @param Application $objApplication
+	 * @param Application $application
 	 */
-	public function __construct(Application $objApplication) {
-		$this->application = $objApplication;
+	public function __construct(Application $application) {
+		$this->application = $application;
 	}
 }

@@ -10,19 +10,19 @@
  * @author aherne
  */
 class Route {
-	private $strPath, $strControllerFile, $strViewFile, $strFormat;
+	private $path, $controllerFile, $viewFile, $format;
 	
 	/**
-	 * @param string $strPath
-	 * @param string $strControllerFile
-     * @param string $strViewFile
-     * @param string $strFormat
+	 * @param string $path
+	 * @param string $controllerFile
+     * @param string $viewFile
+     * @param string $format
 	 */
-	public function __construct($strPath, $strControllerFile, $strViewFile, $strFormat) {
-		$this->strPath = $strPath;
-		$this->strControllerFile = $strControllerFile;
-		$this->strViewFile = $strViewFile;
-        $this->strFormat = $strFormat;
+	public function __construct($path, $controllerFile, $viewFile, $format) {
+		$this->path = $path;
+		$this->controllerFile = $controllerFile;
+		$this->viewFile = $viewFile;
+        $this->format = $format;
 	}
 	
 	/**
@@ -33,7 +33,7 @@ class Route {
 	 * @example test/{a}/{b}	with path parameters
 	 */
 	public function getPath() {
-		return $this->strPath;
+		return $this->path;
 	}
 	
 	/**
@@ -43,7 +43,7 @@ class Route {
 	 * @example TestController
 	 */
 	public function getController() {
-		return $this->strControllerFile;
+		return $this->controllerFile;
 	}
 	
 	/**
@@ -53,7 +53,7 @@ class Route {
 	 * @example asd/fgh.html
 	 */
 	public function getView() {
-		return $this->strViewFile;
+		return $this->viewFile;
 	}
 
     /**
@@ -63,6 +63,6 @@ class Route {
      * @example json
      */
     public function getFormat() {
-        return $this->strFormat;
+        return $this->format;
     }
 }

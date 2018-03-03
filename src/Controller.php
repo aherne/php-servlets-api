@@ -19,9 +19,9 @@ abstract class Controller implements Runnable {
 	/**
 	 * Implements the three stages of a controller job
 	 */
-	public function __construct(Application $objApplication, Request $objRequest, Response $objResponse) {
-		$this->application = $objApplication;
-		$this->request = $objRequest;
-		$this->response = $objResponse;
+	public function __construct(Application $application, Request $request, Response $response) {
+		$this->application = $application;
+		$this->request = $request;
+		$this->response = $response;
 	}
 }

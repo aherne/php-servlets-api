@@ -6,12 +6,12 @@ require_once("RequestFilesParser.php");
  * Encapsulates information of files sent via multipart forms into UploadedFile objects.
  */
 final class UploadedFileTree {
-	protected $tblAttributes =  array();
+	protected $attributes =  array();
 		
 	public function __construct() {
 		if(sizeof($_FILES)==0) return;
-		$objRequestParser = new RequestFilesParser();
-		$this->tblAttributes = $this->makeObjects($objRequestParser->getResult());
+		$requestParser = new RequestFilesParser();
+		$this->attributes = $this->makeObjects($requestParser->getResult());
 	}
 	
 	/**
@@ -41,6 +41,6 @@ final class UploadedFileTree {
 	 * @return array
 	 */
 	public function toArray() {
-		return $this->tblAttributes;
+		return $this->attributes;
 	}
 }

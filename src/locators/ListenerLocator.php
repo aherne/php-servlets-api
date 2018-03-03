@@ -3,10 +3,10 @@
  * Locates listener based on component name.
  */
 final class ListenerLocator {
-	private $tblClassNames = array();
+	private $classNames = array();
 	
-	public function __construct($objApplication) {
-		$this->setClassNames($objApplication);
+	public function __construct($application) {
+		$this->setClassNames($application);
 	}
 
 	/**
@@ -14,39 +14,39 @@ final class ListenerLocator {
 	 *
 	 * @throws ServletException
 	 */
-	private function setClassNames(Application $objApplication) {
-		$strListenerPath = $objApplication->getListenersPath();
-		$tblListeners = $objApplication->getListeners();
+	private function setClassNames(Application $application) {
+		$listenerPath = $application->getListenersPath();
+		$listeners = $application->getListeners();
 		
 		// gets classes
-		$tblOutput = array();
-		foreach($tblListeners as $strClassName) {
+		$output = array();
+		foreach($listeners as $className) {
 			// load file
-			$strFile = $strListenerPath."/".$strClassName.".php";
-			if(!file_exists($strFile)) throw new ServletException("Listener file not found: ".$strFile);
-			require_once($strFile);
+			$file = $listenerPath."/".$className.".php";
+			if(!file_exists($file)) throw new ServletException("Listener file not found: ".$file);
+			require_once($file);
 				
 			// verify class
-			if(!class_exists($strClassName)) throw new ServletException("Listener class not found: ".$strClassName);
-			$tblOutput[] = $strClassName;
+			if(!class_exists($className)) throw new ServletException("Listener class not found: ".$className);
+			$output[] = $className;
 		}
 		
-		$this->tblClassNames = $tblOutput;
+		$this->classNames = $output;
 	}
 	
 	/**
 	 * Gets class names by parent class name.
 	 * 
-	 * @param string $strParentClassName
+	 * @param string $parentClassName
 	 * @return string[]
 	 */
-	public function getClassNames($strParentClassName) {
-		$tblOutput = array();
-		foreach($this->tblClassNames as $strClassName) {
-			if(is_subclass_of($strClassName, $strParentClassName)) {
-				$tblOutput[] = $strClassName;
+	public function getClassNames($parentClassName) {
+		$output = array();
+		foreach($this->classNames as $className) {
+			if(is_subclass_of($className, $parentClassName)) {
+				$output[] = $className;
 			}
 		}
-		return $tblOutput;
+		return $output;
 	}
 }

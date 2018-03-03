@@ -7,17 +7,17 @@ require_once("response/ResponseStatuses.php");
  * Compiles information about response
  */
 final class Response extends AttributesFactory {
-	private $objHeaders;
-	private $intHTTPStatusCode = ResponseStatuses::SC_OK;
-	private $strViewPath;
-	private $objOutputStream;
-	private $blnIsDisabled;
+	private $headers;
+	private $HTTPStatusCode = ResponseStatuses::SC_OK;
+	private $viewPath;
+	private $outputStream;
+	private $isDisabled;
 	
-	public function __construct($strContentType) {
-		$this->objOutputStream	= new ResponseStream();
+	public function __construct($contentType) {
+		$this->outputStream	= new ResponseStream();
 		
-		$this->objHeaders = new ResponseHeaders();
-		$this->objHeaders->set("Content-Type", $strContentType);
+		$this->headers = new ResponseHeaders();
+		$this->headers->set("Content-Type", $contentType);
 	}
 	
 	/**
@@ -26,7 +26,7 @@ final class Response extends AttributesFactory {
 	 * @return ResponseStream
 	 */
 	public function getOutputStream() {
-		return $this->objOutputStream;
+		return $this->outputStream;
 	}
 	
 	/**
@@ -35,34 +35,34 @@ final class Response extends AttributesFactory {
 	 * @return ResponseHeaders
 	 */
 	public function headers() {
-		return $this->objHeaders;
+		return $this->headers;
 	}
 	
 	/**
 	 * Redirects to a new location.
 	 *
-	 * @param string $strLocation
-	 * @param boolean $blnPermanent
+	 * @param string $location
+	 * @param boolean $permanent
 	 * @param boolean $preventCaching
 	 * @return void
 	 */
-	public static function sendRedirect($strLocation, $blnPermanent=true, $preventCaching=false) {
+	public static function sendRedirect($location, $permanent=true, $preventCaching=false) {
 		if($preventCaching) {
 			header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
 			header("Pragma: no-cache");
 			header("Expires: 0");
 		}
-		header('Location: '.$strLocation, true, $blnPermanent?301:302);
+		header('Location: '.$location, true, $permanent?301:302);
 		exit();
 	}
 	
 	/**
 	 * Forwards response to a file (aka "view")
 	 * 
-	 * @param string $strViewPath
+	 * @param string $viewPath
 	 */
-	public function setView($strViewPath) {
-		$this->strViewPath = $strViewPath;
+	public function setView($viewPath) {
+		$this->viewPath = $viewPath;
 	}
 	
 	/**
@@ -71,16 +71,16 @@ final class Response extends AttributesFactory {
 	 * @return string
 	 */
 	public function getView() {
-		return $this->strViewPath;
+		return $this->viewPath;
 	}
 	
 	/**
 	 * Sets a HTTP status code in response.
 	 * 
-	 * @param int $intHTTPStatusCode 
+	 * @param int $HTTPStatusCode 
 	 */
-	public function setStatus($intHTTPStatusCode) {
-		$this->intHTTPStatusCode = $intHTTPStatusCode;
+	public function setStatus($HTTPStatusCode) {
+		$this->HTTPStatusCode = $HTTPStatusCode;
 	}
 	
 	/**
@@ -89,14 +89,14 @@ final class Response extends AttributesFactory {
 	 * @return int 
 	 */
 	public function getStatus() {
-		return $this->intHTTPStatusCode;
+		return $this->HTTPStatusCode;
 	}
 	
 	/**
 	 * Disables response. A disabled response will output nothing.
 	 */
 	public function disable() {
-		$this->blnIsDisabled = true;
+		$this->isDisabled = true;
 	}
 	
 	/**
@@ -105,27 +105,27 @@ final class Response extends AttributesFactory {
 	 * @return boolean
 	 */
 	public function isDisabled() {
-	    return $this->blnIsDisabled;
+	    return $this->isDisabled;
 	}
 	
 	/**
 	 * Commits response to client.
 	 */
 	public function commit() {	
-		if($this->blnIsDisabled) {
-			http_response_code($this->intHTTPStatusCode);
+		if($this->isDisabled) {
+			http_response_code($this->HTTPStatusCode);
 		} else {
 			if(!headers_sent()) { // PHPUnit fix
-				$headers = $this->objHeaders->toArray();
+				$headers = $this->headers->toArray();
 				if(sizeof($headers)>0) {
-					foreach($headers as $strName=>$strValue) {
-						header($strName.": ".$strValue);
+					foreach($headers as $name=>$value) {
+						header($name.": ".$value);
 					}
 				}
 			}
 			
 			// show output
-			echo $this->objOutputStream->get();
+			echo $this->outputStream->get();
 		}
 	}
 }

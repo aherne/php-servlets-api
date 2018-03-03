@@ -24,76 +24,76 @@ final class FrontController {
 	 * 
 	 * @throws ServletException
 	 */
-	public function __construct($strDocumentDescriptor="configuration.xml") {
+	public function __construct($documentDescriptor="configuration.xml") {
 		// sets application object
-		$objApplication = new Application($strDocumentDescriptor);
+		$application = new Application($documentDescriptor);
 		
 		// instances Listener locator
-		$objListenerLocator = new ListenerLocator($objApplication);
+		$listenerLocator = new ListenerLocator($application);
 		
 		// operates custom changes on configuration object
-		$tblListeners = $objListenerLocator->getClassNames("ApplicationListener");
-		foreach($tblListeners as $strClassName) {
-			$objRunnable = new $strClassName($objApplication);
-			$objRunnable->run();
+		$listeners = $listenerLocator->getClassNames("ApplicationListener");
+		foreach($listeners as $className) {
+			$runnable = new $className($application);
+			$runnable->run();
 		}
 		
 		// sets request object
-		$objRequest = new Request();
-		$objRequest->setValidator(new PageValidator($objRequest->getURI()->getPage(), $objApplication));
+		$request = new Request();
+		$request->setValidator(new PageValidator($request->getURI()->getPage(), $application));
 		
 		// operates custom changes on request object.
-		$tblListeners = $objListenerLocator->getClassNames("RequestListener");
-		foreach($tblListeners as $strClassName) {
-			$objRunnable = new $strClassName($objApplication, $objRequest);
-			$objRunnable->run();
+		$listeners = $listenerLocator->getClassNames("RequestListener");
+		foreach($listeners as $className) {
+			$runnable = new $className($application, $request);
+			$runnable->run();
 		}
 		
 		// sets response object
-		$objResponse = new Response($objRequest->getValidator()->getContentType());
-		if(!$objApplication->getAutoRouting() && $objApplication->getRouteInfo($objRequest->getValidator()->getPage())->getView()) {
-			$objResponse->setView($objApplication->getRouteInfo($objRequest->getValidator()->getPage())->getView());
+		$response = new Response($request->getValidator()->getContentType());
+		if(!$application->getAutoRouting() && $application->getRouteInfo($request->getValidator()->getPage())->getView()) {
+			$response->setView($application->getRouteInfo($request->getValidator()->getPage())->getView());
 		}
 		
 		// locates and runs page controller
-		$objControllerLocator = new ControllerLocator($objApplication, $objRequest->getValidator()->getPage());
-		$strClassName  = $objControllerLocator->getClassName();
-		if($strClassName) {
-			$objRunnable = new $strClassName($objApplication, $objRequest, $objResponse);
-			$objRunnable->run();
+		$controllerLocator = new ControllerLocator($application, $request->getValidator()->getPage());
+		$className  = $controllerLocator->getClassName();
+		if($className) {
+			$runnable = new $className($application, $request, $response);
+			$runnable->run();
 		}
 		
 		// if response is not disabled, produce a view
-		if(!$objResponse->isDisabled()) {
+		if(!$response->isDisabled()) {
 			// locates a wrapper for view type and builds response
-			if($objResponse->getOutputStream()->isEmpty()) {
+			if($response->getOutputStream()->isEmpty()) {
 				// locates and instances wrapper
-				$objWrapperLocator = new WrapperLocator($objApplication, $objResponse->headers()->get("Content-Type"));
-				$strClassName  = $objWrapperLocator->getClassName();
-				if($strClassName == WrapperLocator::DEFAULT_WRAPPER) {
-					$objResponse->setView($objApplication->getViewsPath()."/".$objResponse->getView());
+				$wrapperLocator = new WrapperLocator($application, $response->headers()->get("Content-Type"));
+				$className  = $wrapperLocator->getClassName();
+				if($className == WrapperLocator::DEFAULT_WRAPPER) {
+					$response->setView($application->getViewsPath()."/".$response->getView());
 				}
-				$objRunnable = new $strClassName($objResponse);
+				$runnable = new $className($response);
 	    		
 				// builds response
 				ob_start();
-				$objRunnable->run();
-				$strContents = ob_get_contents();
+				$runnable->run();
+				$contents = ob_get_contents();
 				ob_end_clean();
 			    
 				// writes response to output stream
-				$objResponse->getOutputStream()->write($strContents);
+				$response->getOutputStream()->write($contents);
 			}
 		
 			// operates custom changes on response object
-			$tblListeners = $objListenerLocator->getClassNames("ResponseListener");
-			foreach($tblListeners as $strClassName) {
-				$objRunnable = new $strClassName($objApplication, $objRequest, $objResponse);
-				$objRunnable->run();
+			$listeners = $listenerLocator->getClassNames("ResponseListener");
+			foreach($listeners as $className) {
+				$runnable = new $className($application, $request, $response);
+				$runnable->run();
 			}
 		}
 							
 		// commits response
-		$objResponse->commit();		
+		$response->commit();		
 	}
 }

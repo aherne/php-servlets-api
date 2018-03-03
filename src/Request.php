@@ -11,17 +11,17 @@ require_once("request/RequestValidator.php");
  * Detects information about request from $_SERVER, $_GET, $_POST, $_FILES. Once detected, parameters are immutable.
  */
 final class Request extends AttributesFactory {
-	private $objClient;
-	private $objServer;
-	private $objURI;
-	private $strMethod;
-	private $strProtocol;
+	private $client;
+	private $server;
+	private $uRI;
+	private $method;
+	private $protocol;
 	
-	private $objCookie;
-	private $objSession;
-	private $tblHeaders;
-	private $tblParameters;
-	private $tblUploadedFiles;
+	private $cookie;
+	private $session;
+	private $headers;
+	private $parameters;
+	private $uploadedFiles;
 	
 	private $validator;
 	
@@ -46,7 +46,7 @@ final class Request extends AttributesFactory {
 	 * Sets information about client that made the request.
 	 */
 	private function setClient() {
-		$this->objClient = new RequestClient();
+		$this->client = new RequestClient();
 	}
 
 	/**
@@ -54,14 +54,14 @@ final class Request extends AttributesFactory {
 	 * @return RequestClient
 	 */
 	public function getClient() {
-		return $this->objClient;
+		return $this->client;
 	}
 
 	/**
 	 * Sets information about server that received the request.
 	 */
 	private function setServer() {
-		$this->objServer = new RequestServer();
+		$this->server = new RequestServer();
 	}
 
 	/**
@@ -69,14 +69,14 @@ final class Request extends AttributesFactory {
 	 * @return RequestServer
 	 */
 	public function getServer() {
-		return $this->objServer;
+		return $this->server;
 	}
 
 	/**
 	 * Sets information about URI client requested (host, page, url, etc).
 	 */
 	private function setURI() {
-		$this->objURI = new RequestURI();
+		$this->uRI = new RequestURI();
 	}
 
 	/**
@@ -84,7 +84,7 @@ final class Request extends AttributesFactory {
 	 * @return RequestURI
 	 */
 	public function getURI() {
-		return $this->objURI;
+		return $this->uRI;
 	}
 	
 	/**
@@ -97,7 +97,7 @@ final class Request extends AttributesFactory {
 				$headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
 			}
 		} 
-		$this->tblHeaders = $headers;
+		$this->headers = $headers;
 	}
 	
 	/**
@@ -107,7 +107,7 @@ final class Request extends AttributesFactory {
 	 * @return string|null Null if header doesn't exist, string otherwise.
 	 */
 	public function getHeader($name) {
-		return (isset($this->tblHeaders[$name])?$this->tblHeaders[$name]:null);
+		return (isset($this->headers[$name])?$this->headers[$name]:null);
 	}
 	
 	/**
@@ -116,7 +116,7 @@ final class Request extends AttributesFactory {
 	 * @return array[string:string]
 	 */
 	public function getHeaders() {
-		return $this->tblHeaders;
+		return $this->headers;
 	}
 
 	/**
@@ -125,18 +125,18 @@ final class Request extends AttributesFactory {
 	private function setParameters() {
 		switch($_SERVER["REQUEST_METHOD"]) {
 			case "GET":
-				$this->tblParameters = $_GET;
+				$this->parameters = $_GET;
 				break;		
 			case "POST":
-				$this->tblParameters = $_POST;
+				$this->parameters = $_POST;
 				break;		
 			case "PUT":
 			case "DELETE":
 				parse_str(file_get_contents("php://input"),$post_vars);
-				$this->tblParameters = $post_vars;
+				$this->parameters = $post_vars;
 				break;
 			default:
-				$this->tblParameters = array();
+				$this->parameters = array();
 				break;
 		}		
 	}
@@ -148,7 +148,7 @@ final class Request extends AttributesFactory {
 	 * @return mixed|null Null if parameter doesn't exist, mixed otherwise.
 	 */
 	public function getParameter($name) {
-		return (isset($this->tblParameters[$name])?$this->tblParameters[$name]:null);
+		return (isset($this->parameters[$name])?$this->parameters[$name]:null);
 	}
 	
 	/**
@@ -157,7 +157,7 @@ final class Request extends AttributesFactory {
 	 * @return array
 	 */
 	public function getParameters() {
-		return $this->tblParameters;
+		return $this->parameters;
 	}
 	
 	/**
@@ -166,13 +166,13 @@ final class Request extends AttributesFactory {
 	 * - array structure information is saved to follows exactly structure set in file input @ form. This means:
 	 * 			<input... name="a[b][c]">
 	 * 	 will once posted reflect into item:
-	 * 			array("a"=>array("b"=>array("c"=>$objUploadedFile)))
+	 * 			array("a"=>array("b"=>array("c"=>$uploadedFile)))
 	 * 	 instead of:
 	 * 			array("a"=>array("name"=>array("b"=>array("c"=>"myName")),...) 
 	 */
 	private function setUploadedFiles() {
-		$objFiles = new UploadedFileTree();
-		$this->tblUploadedFiles = $objFiles->toArray();
+		$files = new UploadedFileTree();
+		$this->uploadedFiles = $files->toArray();
 	}
 	
 	/**
@@ -180,7 +180,7 @@ final class Request extends AttributesFactory {
 	 * - array structure follows name of form input. This means:
 	 * 			<input type="file" name="a[b][c]">
 	 * 	 will once posted be seen as:
-	 * 			array("a"=>array("b"=>array("c"=>$objUploadedFile)))
+	 * 			array("a"=>array("b"=>array("c"=>$uploadedFile)))
 	 * 	 instead of $_FILES structure:
 	 * 			array("a"=>array("name"=>array("b"=>array("c"=>"myName")),...) 
 	 * - uploaded file attributes (name, type, tmp_name, etc) are encapsulated into UploadedFile instance
@@ -188,14 +188,14 @@ final class Request extends AttributesFactory {
 	 * @return array
 	 */
 	public function getUploadedFiles() {
-		return $this->tblUploadedFiles;
+		return $this->uploadedFiles;
 	}
 	
 	/**
 	 * Encapsulates parameters received as $_COOKIE
 	 */
 	private function setCookie() {
-		$this->objCookie = new Cookie();
+		$this->cookie = new Cookie();
 	}
 
 	/**
@@ -204,14 +204,14 @@ final class Request extends AttributesFactory {
 	 * @return Cookie
 	 */
 	public function getCookie() {
-		return $this->objCookie;
+		return $this->cookie;
 	}
 
 	/**
 	 * Encapsulates parameters received as $_SESSION
 	 */
 	private function setSession() {
-		$this->objSession = new Session();
+		$this->session = new Session();
 	}
 
 
@@ -221,7 +221,7 @@ final class Request extends AttributesFactory {
 	 * @return Session
 	 */
 	public function getSession() {
-		return $this->objSession;
+		return $this->session;
 	}
 
 	/**
@@ -230,7 +230,7 @@ final class Request extends AttributesFactory {
 	 * @return void
 	 */
 	private function setMethod() {
-		$this->strMethod=$_SERVER["REQUEST_METHOD"];
+		$this->method=$_SERVER["REQUEST_METHOD"];
 	}
 	
 	/**
@@ -240,14 +240,14 @@ final class Request extends AttributesFactory {
 	 * @return string
 	 */
 	public function getMethod() {
-		return $this->strMethod;
+		return $this->method;
 	}
 	
 	/**
 	 * Sets protocol for which URI was requested.
 	 */
 	private function setProtocol() {
-		$this->strProtocol = (!empty($_SERVER['HTTPS'])?"https":"http");
+		$this->protocol = (!empty($_SERVER['HTTPS'])?"https":"http");
 	}
 	
 	/**
@@ -257,7 +257,7 @@ final class Request extends AttributesFactory {
 	 * @return string
 	 */
 	public function getProtocol() {
-		return $this->strProtocol;
+		return $this->protocol;
 	}
 	
 	/**
