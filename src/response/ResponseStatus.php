@@ -78,7 +78,7 @@ class ResponseStatus {
      * @throws ServletException
      */
 	public function __construct($code) {
-	    if(!isset(self::HTTP_STATUSES[$code])) throw new ServletException("Unsupported HTTP status: ".$code);
+	    if(!array_key_exists($code, self::HTTP_STATUSES)) throw new ServletException("Unsupported HTTP status: ".$code);
 	    $this->id = $code;
     }
 
