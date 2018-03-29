@@ -1,7 +1,7 @@
 <?php
 require_once("response/ResponseHeaders.php");
 require_once("response/ResponseStream.php");
-require_once("response/ResponseStatuses.php");
+require_once("response/ResponseStatus.php");
 
 /**
  * Compiles information about response
