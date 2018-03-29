@@ -8,7 +8,7 @@ require_once("response/ResponseStatuses.php");
  */
 final class Response extends AttributesFactory {
 	private $headers;
-	private $HTTPStatusCode = ResponseStatuses::SC_OK;
+	private $HTTPStatusCode;
 	private $viewPath;
 	private $outputStream;
 	private $isDisabled;
@@ -80,7 +80,7 @@ final class Response extends AttributesFactory {
 	 * @param int $HTTPStatusCode 
 	 */
 	public function setStatus($HTTPStatusCode) {
-		$this->HTTPStatusCode = $HTTPStatusCode;
+		$this->HTTPStatusCode = new ResponseStatuses($HTTPStatusCode);
 	}
 	
 	/**
@@ -111,11 +111,12 @@ final class Response extends AttributesFactory {
 	/**
 	 * Commits response to client.
 	 */
-	public function commit() {	
-		if($this->isDisabled) {
-			http_response_code($this->HTTPStatusCode);
-		} else {
+	public function commit() {
+		if(!$this->isDisabled) {
 			if(!headers_sent()) { // PHPUnit fix
+                if($this->HTTPStatusCode) {
+                    header("HTTP/1.1 ".$this->HTTPStatusCode->getStatus());
+                }
 				$headers = $this->headers->toArray();
 				if(sizeof($headers)>0) {
 					foreach($headers as $name=>$value) {
@@ -126,6 +127,10 @@ final class Response extends AttributesFactory {
 			
 			// show output
 			echo $this->outputStream->get();
-		}
+		} else {
+            if($this->HTTPStatusCode) {
+                header("HTTP/1.1 ".$this->HTTPStatusCode->getStatus());
+            }
+        }
 	}
 }
