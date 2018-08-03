@@ -33,7 +33,7 @@ final class ControllerLocator {
 		if(!$application->getAutoRouting()) {
 			$path = $application->getRouteInfo($uRL)->getController();
 			if(!$path) return;
-			$file = $folder."/".$path.".php";
+			$file = ($folder?$folder."/":"").$path.".php";
 			$slashPosition = strrpos($path,"/");
 			if($slashPosition!==false) {
 				$class = substr($path,$slashPosition+1);
