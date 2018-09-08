@@ -27,24 +27,24 @@ final class ControllerLocator {
 		$folder = $application->getControllersPath();
 	
 		// gets page url
-		$uRL = $pagePath;
+		$url = $pagePath;
 	
 		// get controller class name
 		$file = "";
 		$class = "";
 		if(!$application->getAutoRouting()) {
-			$path = $application->getRouteInfo($uRL)->getController();
+			$path = $application->routes()->get($url)->getController();
 			if(!$path) return;
 			$file = ($folder?$folder."/":"").$path.".php";
 			$slashPosition = strrpos($path,"/");
 			if($slashPosition!==false) {
 				$class = substr($path,$slashPosition+1);
-				if(!$class) throw new ServletException("Invalid controller set for route: ".$uRL);
+				if(!$class) throw new ServletException("Invalid controller set for route: ".$url);
 			} else {
 				$class = $path;
 			}
 		} else {
-			$class = str_replace(" ","",ucwords(str_replace(array("/","-")," ",strtolower($uRL))))."Controller";
+			$class = str_replace(" ","",ucwords(str_replace(array("/","-")," ",strtolower($url))))."Controller";
 			$file = $folder."/".$class.".php";
 		}
 		

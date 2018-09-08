@@ -6,7 +6,7 @@ require_once("CookieSecurityOptions.php");
 /**
  * Attributes factory enveloping operations with COOKIE.
  */
-final class Cookie {
+final class Cookie implements MutableAttributes {
 	/**
 	 * Adds/updates a cookie param.
 	 * 

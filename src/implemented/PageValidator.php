@@ -13,7 +13,7 @@ class PageValidator implements RequestValidator {
 	 * @param string $page 
 	 * @param Application $application
 	 * @throws PathNotFoundException
-     * @throws FormatNotFoundException
+     * @throws ServletException
 	 */
 	public function __construct($page, Application $application) {
         $this->validate($application, $page);
@@ -23,25 +23,25 @@ class PageValidator implements RequestValidator {
 	 * Detects requested page, format & path parameters by matching routes/formats in xml to requested route.
 	 * 
 	 * @param Application $application
-	 * @param string $uRL
+	 * @param string $url
 	 * @throws PathNotFoundException
      * @throws FormatNotFoundException
 	 */
-	private function validate(Application $application, $uRL) {
-		if($uRL=="") {
-			$uRL = $application->getDefaultPage();
+	private function validate(Application $application, $url) {
+		if($url=="") {
+			$url = $application->getDefaultPage();
 		}
 		$extension = $application->getDefaultExtension();
 		if(!$application->getAutoRouting()) {
-			if(!$application->hasRoute($uRL)) {
+		    if(!$application->routes()->contains($url)) {
 				$matchFound = false;
-				$routes = $application->getRoutes();
+				$routes = $application->routes()->toArray();
 				foreach($routes as $route) {
 					if(strpos($route->getPath(), "(")!==false) {
 						preg_match_all("/(\(([^)]+)\))/", $route->getPath(), $matches);
 						$names = $matches[2];
 						$pattern = "/^".str_replace($matches[1],"([^\/]+)",str_replace("/","\/",$route->getPath()))."$/";
-						if(preg_match_all($pattern,$uRL,$results)==1) {
+						if(preg_match_all($pattern,$url,$results)==1) {
 							foreach($results as $i=>$item) {
 								if($i==0) continue;
 								$this->pathParameters[$names[$i-1]]=$item[0];
@@ -49,23 +49,24 @@ class PageValidator implements RequestValidator {
 							if($route->getFormat()) {
 							    $extension = $route->getFormat();
                             }
-							$uRL = $route->getPath();
+							$url = $route->getPath();
 							$matchFound = true;
 							break;
 						}
 					}
 				}
-				if(!$matchFound) throw new PathNotFoundException("Route could not be matched to routes.route tag @ XML: ".$uRL);
+				if(!$matchFound) throw new PathNotFoundException("Route could not be matched to routes.route tag @ XML: ".$url);
 			} else {
-                $route = $application->getRouteInfo($uRL);
+                $route = $application->routes()->get($url);
 			    if($route->getFormat()) {
                     $extension = $route->getFormat();
                 }
             }
 		}
-		$this->page = $uRL;
+		$this->page = $url;
 
-        $format = $application->getFormatInfo($extension);
+		if(!$application->formats()->contains($extension)) throw new FormatNotFoundException("Format could not be matched to formats.format tag @ XML: ".$extension);
+        $format = $application->formats()->get($extension);
         $this->contentType = $format->getContentType().($format->getCharacterEncoding()?"; charset=".$format->getCharacterEncoding():"");
 	}
 	

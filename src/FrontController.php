@@ -1,7 +1,6 @@
 <?php
 namespace Lucinda\MVC\STDOUT;
 
-require_once("AttributesFactory.php");
 require_once("Runnable.php");
 require_once("Controller.php");
 require_once("Application.php");
@@ -53,8 +52,11 @@ final class FrontController {
 		
 		// sets response object
 		$response = new Response($request->getValidator()->getContentType());
-		if(!$application->getAutoRouting() && $application->getRouteInfo($request->getValidator()->getPage())->getView()) {
-			$response->setView($application->getRouteInfo($request->getValidator()->getPage())->getView());
+		if(!$application->getAutoRouting()) {
+		    $view = $application->routes()->get($request->getValidator()->getPage())->getView();
+		    if($view) {
+		        $response->setView($view);
+		    }
 		}
 		
 		// locates and runs page controller
@@ -72,7 +74,7 @@ final class FrontController {
 				// locates and instances wrapper
 				$wrapperLocator = new WrapperLocator($application, $response->headers()->get("Content-Type"));
 				$className  = $wrapperLocator->getClassName();
-				if($className == WrapperLocator::DEFAULT_WRAPPER) {
+				if($className == WrapperLocator::DEFAULT_WRAPPER && $application->getViewsPath()) {
 					$response->setView($application->getViewsPath()."/".$response->getView());
 				}
 				$runnable = new $className($response);

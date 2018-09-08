@@ -14,7 +14,7 @@ final class RequestURI {
 		$this->setContextPath();
 		$this->setPage();
 		$this->setQueryString();
-		$this->setParameters();
+		$this->parameters = new ImmutableAttributesFactory($_GET);
 	}
 	
 	/**
@@ -43,12 +43,12 @@ final class RequestURI {
 		if(!isset($_SERVER["REQUEST_URI"])) throw new ServletException("ServletsAPI requires overriding paths!");
 	    
 		// remove query string
-		$uRLCombined = substr($_SERVER["REQUEST_URI"],strlen($this->contextPath));
-		$questionPosition = strpos($uRLCombined,"?");
+		$urlCombined = substr($_SERVER["REQUEST_URI"],strlen($this->contextPath));
+		$questionPosition = strpos($urlCombined,"?");
 		if($questionPosition!==false) {
-			$uRLCombined = substr($uRLCombined,0,$questionPosition);
+			$urlCombined = substr($urlCombined,0,$questionPosition);
 		}
-		$this->page = (strpos($uRLCombined,"/")===0?substr($uRLCombined,1):$uRLCombined); // remove trailing slash
+		$this->page = (strpos($urlCombined,"/")===0?substr($urlCombined,1):$urlCombined); // remove trailing slash
 	}
 	
 	/**
@@ -79,28 +79,11 @@ final class RequestURI {
 	}
 	
 	/**
-	 * Sets parameters sent by client from PHP superglobal $_GET.
-	 */
-	private function setParameters() {
-		$this->parameters = $_GET;
-	}
-	
-	/**
-	 * Gets value of GET parameter
+	 * Gets a pointer to factory that encapsulates query string parameters received from client.
 	 *
-	 * @param string $name
-	 * @return mixed|null Null if parameter doesn't exist, mixed otherwise.
+	 * @return \Lucinda\MVC\STDOUT\ImmutableAttributesFactory
 	 */
-	public function getParameter($name) {
-		return (isset($this->parameters[$name])?$this->parameters[$name]:null);
-	}
-	
-	/**
-	 * Gets all GET parameters received
-	 *
-	 * @return array
-	 */
-	public function getParameters() {
-		return $this->parameters;
+	public function parameters() {
+	    return $this->parameters;
 	}
 }

@@ -1,14 +1,14 @@
 <?php
 namespace Lucinda\MVC\STDOUT;
 
-require_once("response/ResponseHeaders.php");
 require_once("response/ResponseStream.php");
 require_once("response/ResponseStatus.php");
+require_once("attributes/MutableAttributesFactory.php");
 
 /**
  * Compiles information about response
  */
-final class Response extends AttributesFactory {
+final class Response {
     private $headers;
     private $status;
     private $viewPath;
@@ -17,9 +17,8 @@ final class Response extends AttributesFactory {
 
     public function __construct($contentType) {
         $this->outputStream	= new ResponseStream();
-
-        $this->headers = new ResponseHeaders();
-        $this->headers->set("Content-Type", $contentType);
+        $this->headers = new MutableAttributesFactory(array("Content-Type"=>$contentType));
+        $this->attributes = new MutableAttributesFactory();
     }
 
     /**
@@ -30,11 +29,11 @@ final class Response extends AttributesFactory {
     public function getOutputStream() {
         return $this->outputStream;
     }
-
+    
     /**
-     * Delegates to specialized object for response header operations.
+     * Gets a pointer to factory that manages headers application will send back to user.
      *
-     * @return ResponseHeaders
+     * @return \Lucinda\MVC\STDOUT\MutableAttributesFactory
      */
     public function headers() {
         return $this->headers;
@@ -131,5 +130,14 @@ final class Response extends AttributesFactory {
             // show output
             echo $this->outputStream->get();
         }
+    }
+    
+    /**
+     * Gets a pointer to factory that encapsulates data that will be sent to views.
+     *
+     * @return \Lucinda\MVC\STDOUT\MutableAttributesFactory
+     */
+    public function attributes() {
+        return $this->attributes;
     }
 }

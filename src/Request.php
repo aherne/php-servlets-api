@@ -8,11 +8,13 @@ require_once("request/UploadedFileTree.php");
 require_once("request/Session.php");
 require_once("request/Cookie.php");
 require_once("request/RequestValidator.php");
+require_once("attributes/MutableAttributesFactory.php");
+require_once("attributes/ImmutableAttributesFactory.php");
 
 /**
  * Detects information about request from $_SERVER, $_GET, $_POST, $_FILES. Once detected, parameters are immutable.
  */
-final class Request extends AttributesFactory {
+final class Request {
 	private $client;
 	private $server;
 	private $uRI;
@@ -26,11 +28,13 @@ final class Request extends AttributesFactory {
 	private $uploadedFiles;
 	
 	private $validator;
+	private $attributes;
 	
 	/**
 	 * Detects all aspects of a request.
 	 */
 	public function __construct() {
+	    $this->attributes = new MutableAttributesFactory();
 		$this->setClient();
 		$this->setServer();
 		$this->setMethod();
@@ -99,48 +103,31 @@ final class Request extends AttributesFactory {
 				$headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
 			}
 		} 
-		$this->headers = $headers;
-	}
-	
-	/**
-	 * Gets value of HTTP request header.
-	 * 
-	 * @param string $name
-	 * @return string|null Null if header doesn't exist, string otherwise.
-	 */
-	public function getHeader($name) {
-		return (isset($this->headers[$name])?$this->headers[$name]:null);
-	}
-	
-	/**
-	 * Gets all HTTP headers received
-	 * 
-	 * @return array[string:string]
-	 */
-	public function getHeaders() {
-		return $this->headers;
+		$this->headers = new ImmutableAttributesFactory($headers);
 	}
 
 	/**
 	 * Sets parameters sent by client in accordance to HTTP request method.
 	 */
 	private function setParameters() {
+	    $parameters = array();
 		switch($_SERVER["REQUEST_METHOD"]) {
 			case "GET":
-				$this->parameters = $_GET;
+			    $parameters = $_GET;
 				break;		
 			case "POST":
-				$this->parameters = $_POST;
+			    $parameters = $_POST;
 				break;		
 			case "PUT":
 			case "DELETE":
 				parse_str(file_get_contents("php://input"),$post_vars);
-				$this->parameters = $post_vars;
+				$parameters = $post_vars;
 				break;
 			default:
-				$this->parameters = array();
+			    $parameters = array();
 				break;
 		}		
+		$this->parameters = new ImmutableAttributesFactory($parameters);
 	}
 	
 	/**
@@ -293,5 +280,32 @@ final class Request extends AttributesFactory {
 	 */
 	public function getValidator() {
 		return $this->validator;
+	}
+	
+	/**
+	 * Gets a pointer to factory that encapsulates user-defined attributes.
+	 *
+	 * @return \Lucinda\MVC\STDOUT\MutableAttributesFactory
+	 */
+	public function attributes() {
+	    return $this->attributes;
+	}
+	
+	/**
+	 * Gets a pointer to factory that encapsulates headers received from client.
+	 *
+	 * @return \Lucinda\MVC\STDOUT\ImmutableAttributesFactory
+	 */
+	public function headers() {
+	    return $this->headers;
+	}
+	
+	/**
+	 * Gets a pointer to factory that encapsulates parameters associated to request method (GET/POST/PUT/DELETE) received from client.
+	 *
+	 * @return \Lucinda\MVC\STDOUT\ImmutableAttributesFactory
+	 */
+	public function parameters() {
+	    return $this->parameters;
 	}
 }

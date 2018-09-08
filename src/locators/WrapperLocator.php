@@ -30,7 +30,7 @@ final class WrapperLocator {
 		
 		// detect wrapper @ application
 		if($application->getWrappersPath()) {
-			$formats = $application->getFormats();			
+			$formats = $application->formats()->toArray();			
 			foreach($formats as $format) {
 				$wrapperClass = $format->getWrapper();
 				if(strpos($contentType, $format->getContentType()) === 0 && $wrapperClass) {
