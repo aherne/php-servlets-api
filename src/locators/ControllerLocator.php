@@ -1,4 +1,5 @@
 <?php
+namespace Lucinda\MVC\STDOUT;
 /**
  * Locates controller based on page requested by client and values set in DD.
  */
@@ -12,6 +13,7 @@ final class ControllerLocator {
 	public function __construct(Application $application, $pagePath) {
 		$this->setClassName($application, $pagePath);
 	}
+	
 
 	/**
 	 * Sets controller class name. 

@@ -1,4 +1,6 @@
 <?php
+namespace Lucinda\MVC\STDOUT;
+
 /**
  * Manages operations with response stream, in which response is aggregated before it is committed.
  */

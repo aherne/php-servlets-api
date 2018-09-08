@@ -1,4 +1,6 @@
 <?php
+namespace Lucinda\MVC\STDOUT;
+
 /**
  * Encapsulates session security settings on top of php.ini.
  */

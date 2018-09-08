@@ -1,4 +1,6 @@
 <?php
+namespace Lucinda\MVC\STDOUT;
+
 /**
  * Listens on request object and appends attributes to it.
  */

@@ -1,4 +1,6 @@
 <?php
+namespace Lucinda\MVC\STDOUT;
+
 /**
  * Encapsulates route information:
  * - url: relative path requested

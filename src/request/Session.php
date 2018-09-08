@@ -1,4 +1,6 @@
 <?php
+namespace Lucinda\MVC\STDOUT;
+
 require_once("SessionSecurityOptions.php");
 
 /**
@@ -9,9 +11,9 @@ final class Session {
 	 * Starts session.
 	 * 
 	 * @param SessionSecurityOptions $sessionSecurityOptions Added here to hint where to inject.
-	 * @param SessionHandlerInterface $sessionHandler	If null, built-in session handler is used.
+	 * @param \SessionHandlerInterface $sessionHandler	If null, built-in session handler is used.
 	 */
-	public function start(SessionSecurityOptions $sessionSecurityOptions = null, SessionHandlerInterface $sessionHandler = null) {
+	public function start(SessionSecurityOptions $sessionSecurityOptions = null, \SessionHandlerInterface $sessionHandler = null) {
 		if($sessionHandler!=null) {
 			session_set_save_handler($sessionHandler, true);
 		}

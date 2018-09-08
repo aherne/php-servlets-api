@@ -1,4 +1,6 @@
 <?php
+namespace Lucinda\MVC\STDOUT;
+
 /**
  * Listens on response object and alters response body.
  */

@@ -1,4 +1,6 @@
 <?php
+namespace Lucinda\MVC\STDOUT;
+
 /**
  * Parses information of files sent via multipart forms into a beautified array.
  * 

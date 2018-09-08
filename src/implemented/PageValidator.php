@@ -1,4 +1,6 @@
 <?php
+namespace Lucinda\MVC\STDOUT;
+
 /**
  * Single responsibility in validating requested page based on configuration.xml encapsulated by Application object
  */

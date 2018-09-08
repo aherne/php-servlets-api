@@ -1,4 +1,6 @@
 <?php
+namespace Lucinda\MVC\STDOUT;
+
 require_once("response/ResponseHeaders.php");
 require_once("response/ResponseStream.php");
 require_once("response/ResponseStatus.php");

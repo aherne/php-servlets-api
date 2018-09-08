@@ -1,4 +1,6 @@
 <?php
+namespace Lucinda\MVC\STDOUT;
+
 /**
  * Locates wrapper based on extension of page requested by client (or overridden by controller) and values set in DD.
  */

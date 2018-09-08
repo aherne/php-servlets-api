@@ -1,4 +1,6 @@
 <?php
+namespace Lucinda\MVC\STDOUT;
+
 require_once("exceptions/ApplicationException.php");
 require_once("AttributesFactory.php");
 require_once("application/Route.php");
@@ -9,7 +11,7 @@ require_once("application/Format.php");
  */
 class Application extends AttributesFactory {
 	/**
-	 * @var SimpleXMLElement
+	 * @var \SimpleXMLElement
 	 */
 	private $simpleXMLElement;
 	private	$defaultPage, $defaultExtension, $controllerPath, $listenerPath, $wrapperPath, $viewsPath, $publicPath, $autoRouting, $version;
@@ -327,7 +329,7 @@ class Application extends AttributesFactory {
 	/**
 	 * Gets a pointer to XML file reader.
 	 * 
-	 * @return SimpleXMLElement
+	 * @return \SimpleXMLElement
 	 */
 	public function getXML() {
 	    return $this->simpleXMLElement;

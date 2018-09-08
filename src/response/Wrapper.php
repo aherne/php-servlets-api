@@ -1,4 +1,6 @@
 <?php
+namespace Lucinda\MVC\STDOUT;
+
 /**
  * Wraps response according to content type. Must be extended by classes implementing type-aware response (html, json).
  */

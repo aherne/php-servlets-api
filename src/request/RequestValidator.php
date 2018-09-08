@@ -1,4 +1,6 @@
 <?php
+namespace Lucinda\MVC\STDOUT;
+
 /**
  * Blueprint for class able to process request originally issued by client and extract requested page, path parameters and content type
  */

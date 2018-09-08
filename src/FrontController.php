@@ -1,4 +1,6 @@
 <?php
+namespace Lucinda\MVC\STDOUT;
+
 require_once("AttributesFactory.php");
 require_once("Runnable.php");
 require_once("Controller.php");

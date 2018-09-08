@@ -1,4 +1,6 @@
 <?php
+namespace Lucinda\MVC\STDOUT;
+
 /**
  * Simple (HTML) view wrapper, used whenever an explicit wrapper for content type was not set.
  */

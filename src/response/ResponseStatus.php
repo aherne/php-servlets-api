@@ -1,4 +1,6 @@
 <?php
+namespace Lucinda\MVC\STDOUT;
+
 /**
  * Encapsulates HTTP response status logic in accordance to HTTP/1.1 specifications
  */

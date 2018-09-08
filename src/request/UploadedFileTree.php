@@ -1,4 +1,6 @@
 <?php
+namespace Lucinda\MVC\STDOUT;
+
 require_once("UploadedFile.php");
 require_once("RequestFilesParser.php");
  

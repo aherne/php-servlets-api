@@ -1,4 +1,6 @@
 <?php
+namespace Lucinda\MVC\STDOUT;
+
 require_once("request/RequestClient.php");
 require_once("request/RequestServer.php");
 require_once("request/RequestURI.php");
