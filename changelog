@@ -14,7 +14,7 @@
 - ApplicationException -> XMLException
 
 - moved RestController & HtmlResolver to framework
-- framework: removed BypassWrapper
-- framework: renamed application.wrappers >> application.view_resolvers
+- framework: removed BypassWrapper, renamed JsonWrapper to JsonResolver
+- framework: renamed application.wrappers >> application.resolvers
 
 TODO: create namespaces relative to subfolders

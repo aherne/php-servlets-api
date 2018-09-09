@@ -54,7 +54,7 @@ class Application {
 		if(!$this->defaultExtension) throw new XMLException("XML tag is mandatory: application.default_extension");
 		$this->listenerPath = (string) $xml->paths->listeners;
 		$this->controllerPath = (string) $xml->paths->controllers;
-		$this->viewResolversPath = (string) $xml->paths->view_resolvers;
+		$this->viewResolversPath = (string) $xml->paths->resolvers;
 		$this->viewsPath = (string) $xml->paths->views;
 		$this->publicPath = (string) $xml->paths->public;
 		$this->autoRouting = (int) $xml->auto_routing;
