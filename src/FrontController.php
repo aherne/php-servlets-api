@@ -16,17 +16,17 @@ require_once("listeners/RequestListener.php");
 require_once("listeners/ResponseListener.php");
 
 /**
- * Implements front controller MVC functionality. This is ServletsAPI focal point, integrating all components as a whole.
+ * Implements STDOUT front controller MVC functionality, integrating all API components as a whole.
  */
 final class FrontController {	
 	/**
 	 * Performs all steps required to convert request to response in procedural mode, while delegating to subcomponents, to maximize performance
-	 * 
-	 * @throws ServletException 
-	 * @throws XMLException
-	 * @throws FormatNotFoundException
-	 * @throws PathNotFoundException
-	 * @throws FileUploadException
+	 *  
+	 * @throws XMLException If xml contents fail validation checks.
+	 * @throws FormatNotFoundException If an invalid response format was setup by developer in XML for route requested by client. 
+	 * @throws PathNotFoundException If an invalid route was requested from client or setup by developer in XML. 
+	 * @throws FileUploadException If file upload failed due to server constraints.
+	 * @throws ServletException If any other situation where execution cannot continue.
 	 */
 	public function __construct($documentDescriptor="configuration.xml") {
 		// sets application object based on user-defined XML

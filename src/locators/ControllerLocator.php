@@ -39,7 +39,7 @@ final class ControllerLocator {
 			$slashPosition = strrpos($path,"/");
 			if($slashPosition!==false) {
 				$class = substr($path,$slashPosition+1);
-				if(!$class) throw new ServletException("Invalid controller set for route: ".$url);
+				if(!$class) throw new XMLException("Invalid controller set for route: ".$url);
 			} else {
 				$class = $path;
 			}
