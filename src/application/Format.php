@@ -5,25 +5,26 @@ namespace Lucinda\MVC\STDOUT;
  * Encapsulates file format information:
  * - format: file format / extension
  * - content type: content type that corresponds to above file format
- * - wrapper: (optional) wrapper class name. If not set, framework-defined ViewWrapper will be used.
+ * - character encoding: charset associated to content type
+ * - view resolver: (optional) view resolver class name. If not set, framework will resolve into an empty view with headers only.
  * Utility @ Application class.
  * 
  * @author aherne
  */
 class Format {
-	private $extension, $contentType, $wrapperClass, $characterEncoding;
+	private $extension, $contentType, $viewResolverClass, $characterEncoding;
 
 	/**
 	 * @param string $extension
 	 * @param string $contentType
 	 * @param string $characterEncoding
-	 * @param string $wrapperClass
+	 * @param string $viewResolverClass
 	 */
-	public function __construct($extension, $contentType, $characterEncoding="", $wrapperClass="") {
+	public function __construct($extension, $contentType, $characterEncoding="", $viewResolverClass="") {
 		$this->extension = $extension;
 		$this->contentType = $contentType;
 		$this->characterEncoding= $characterEncoding;
-		$this->wrapperClass = $wrapperClass;
+		$this->viewResolverClass = $viewResolverClass;
 	}
 
 	/**
@@ -56,12 +57,12 @@ class Format {
 	}
 
 	/**
-	 * Gets view resolver class name based on file format.
+	 * Gets view resolver class name
 	 * 
 	 * @return string
-	 * @example JsonWrapper
+	 * @example JsonResolver
 	 */
-	public function getWrapper() {
-		return $this->wrapperClass;
+	public function getViewResolver() {
+		return $this->viewResolverClass;
 	}
 }

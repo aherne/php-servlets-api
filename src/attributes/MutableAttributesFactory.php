@@ -5,7 +5,7 @@ require_once("MutableAttributes.php");
 require_once("AttributesFactory.php");
 
 /**
- * Abstract class all servlet components extend.
+ * Implements a factory of mutable attributes
  */
 class MutableAttributesFactory implements MutableAttributes, AttributesFactory {
     /**

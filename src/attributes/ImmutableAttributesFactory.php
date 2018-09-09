@@ -5,9 +5,9 @@ require_once("ImmutableAttributes.php");
 require_once("AttributesFactory.php");
 
 /**
- * Abstract class all servlet components extend.
+ * Implements a factory of immutable attributes
  */
-class ImmutableAttributesFactory implements ImmutableAttributes {
+class ImmutableAttributesFactory implements ImmutableAttributes, AttributesFactory {
     /**
      * @var array
      */

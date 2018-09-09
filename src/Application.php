@@ -3,8 +3,6 @@ namespace Lucinda\MVC\STDOUT;
 
 require_once("exceptions/XMLException.php");
 require_once("exceptions/ServletException.php");
-require_once("exceptions/PathNotFoundException.php");
-require_once("exceptions/FormatNotFoundException.php");
 require_once("attributes/MutableAttributesFactory.php");
 require_once("application/Route.php");
 require_once("application/Format.php");
@@ -17,7 +15,7 @@ class Application {
 	 * @var \SimpleXMLElement
 	 */
 	private $simpleXMLElement;
-	private	$defaultPage, $defaultExtension, $controllerPath, $listenerPath, $wrapperPath, $viewsPath, $publicPath, $autoRouting, $version;
+	private	$defaultPage, $defaultExtension, $controllerPath, $listenerPath, $viewResolversPath, $viewsPath, $publicPath, $autoRouting, $version;
 	private $listeners = array(), $routes, $formats, $attributes;
 	
 	/**
@@ -56,7 +54,7 @@ class Application {
 		if(!$this->defaultExtension) throw new XMLException("XML tag is mandatory: application.default_extension");
 		$this->listenerPath = (string) $xml->paths->listeners;
 		$this->controllerPath = (string) $xml->paths->controllers;
-		$this->wrapperPath = (string) $xml->paths->wrappers;
+		$this->viewResolversPath = (string) $xml->paths->view_resolvers;
 		$this->viewsPath = (string) $xml->paths->views;
 		$this->publicPath = (string) $xml->paths->public;
 		$this->autoRouting = (int) $xml->auto_routing;
@@ -158,12 +156,12 @@ class Application {
 	}
 
 	/**
-	 * Gets path to wrappers folder.
+	 * Gets path to view resolvers folder.
 	 *
 	 * @return string
 	 */
-	public function getWrappersPath() {
-		return $this->wrapperPath;
+	public function getViewResolversPath() {
+		return $this->viewResolversPath;
 	}
 
 	/**
