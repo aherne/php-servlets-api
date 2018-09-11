@@ -3,7 +3,7 @@ namespace Lucinda\MVC\STDOUT;
 
 /**
  * Encapsulates file format information:
- * - format: file format / extension
+ * - format: file format / name
  * - content type: content type that corresponds to above file format
  * - character encoding: charset associated to content type
  * - view resolver: (optional) view resolver class name. If not set, framework will resolve into an empty view with headers only.
@@ -12,29 +12,29 @@ namespace Lucinda\MVC\STDOUT;
  * @author aherne
  */
 class Format {
-	private $extension, $contentType, $viewResolverClass, $characterEncoding;
+	private $name, $contentType, $viewResolverClass, $characterEncoding;
 
 	/**
-	 * @param string $extension
+	 * @param string $name
 	 * @param string $contentType
 	 * @param string $characterEncoding
 	 * @param string $viewResolverClass
 	 */
-	public function __construct($extension, $contentType, $characterEncoding="", $viewResolverClass="") {
-		$this->extension = $extension;
+	public function __construct($name, $contentType, $characterEncoding="", $viewResolverClass="") {
+		$this->name = $name;
 		$this->contentType = $contentType;
 		$this->characterEncoding= $characterEncoding;
 		$this->viewResolverClass = $viewResolverClass;
 	}
 
 	/**
-	 * Gets file format.
+	 * Gets response format name (extension).
 	 * 
 	 * @return string
 	 * @example json
 	 */
-	public function getExtension() {
-		return $this->extension;
+	public function getName() {
+		return $this->name;
 	}
 
 	/**

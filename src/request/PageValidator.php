@@ -31,7 +31,7 @@ class PageValidator implements RequestValidator {
 		if($url=="") {
 			$url = $application->getDefaultPage();
 		}
-		$extension = $application->getDefaultExtension();
+		$extension = $application->getDefaultFormat();
 		if(!$application->getAutoRouting()) {
 		    if(!$application->routes()->contains($url)) {
 				$matchFound = false;

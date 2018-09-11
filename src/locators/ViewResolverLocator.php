@@ -2,7 +2,7 @@
 namespace Lucinda\MVC\STDOUT;
 
 /**
- * Locates view resolver based on extension of page requested by client (or overridden by controller) and values set in DD.
+ * Locates view resolver based on response format name of page requested.
  */
 final class ViewResolverLocator {	
 	private $className;

@@ -4,7 +4,9 @@
 - Application::getRoutes/getRouteInfo/hasRoute -> Application:routes()
 - Application::getFormats/getFormatInfo/hasFormat -> Application:formats()
 - Application:getWrappersPath -> Application:getViewResolversPath
+- Application:getDefaultExtension -> Application:getDefaultFormat
 - Format:getWrapper -> Format:getViewResolver
+- Format:getExtension -> Format:getName
 - Request:getParameter/getParameters -> Request:parameters()
 - Request:getHeader/getHeaders -> Request:headers()
 - Request:setAttribute/getAttribute -> Request:attributes()
@@ -12,6 +14,8 @@
 - Response:setAttribute/getAttribute -> Response:attributes()
 - Response:Wrapper -> Response:ViewResolver
 - ApplicationException -> XMLException
+- formats->format['extension'] >> formats->format['name']
+- application->default_extension >> application->default_format
 
 - moved RestController & HtmlResolver to framework
 - framework: removed BypassWrapper, renamed JsonWrapper to JsonResolver

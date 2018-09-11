@@ -15,7 +15,7 @@ class Application {
 	 * @var \SimpleXMLElement
 	 */
 	private $simpleXMLElement;
-	private	$defaultPage, $defaultExtension, $controllerPath, $listenerPath, $viewResolversPath, $viewsPath, $publicPath, $autoRouting, $version;
+	private	$defaultPage, $defaultFormat, $controllerPath, $listenerPath, $viewResolversPath, $viewsPath, $publicPath, $autoRouting, $version;
 	private $listeners = array(), $routes, $formats, $attributes;
 	
 	/**
@@ -50,8 +50,8 @@ class Application {
 	    $xml = $this->getTag("application");
 		$this->defaultPage = (string) $xml->default_page;
 		if(!$this->defaultPage) throw new XMLException("XML tag is mandatory: application.default_page");
-		$this->defaultExtension = (string) $xml->default_extension;
-		if(!$this->defaultExtension) throw new XMLException("XML tag is mandatory: application.default_extension");
+		$this->defaultFormat = (string) $xml->default_format;
+		if(!$this->defaultFormat) throw new XMLException("XML tag is mandatory: application.default_format");
 		$this->listenerPath = (string) $xml->paths->listeners;
 		$this->controllerPath = (string) $xml->paths->controllers;
 		$this->viewResolversPath = (string) $xml->paths->resolvers;
@@ -89,7 +89,7 @@ class Application {
 	    foreach($tmp as $info) {
 	        if(empty($info['url'])) throw new XMLException("XML property is mandatory: routes.route['url']");
 	        $url = (string) $info['url'];
-	        $routes[$url] = new Route($url, (string) $info['controller'], (string) $info['view'], (string) $info['extension']);
+	        $routes[$url] = new Route($url, (string) $info['controller'], (string) $info['view'], (string) $info['format']);
 	    }
 	    if(empty($routes)) throw new XMLException("XML tag cannot be empty: routes");
 	    $this->routes = new ImmutableAttributesFactory($routes);
@@ -106,11 +106,11 @@ class Application {
 	    if(!is_array($tmp)) $tmp = array($tmp);
 	    $formats = array();
 	    foreach($tmp as $info) {
-	        if(empty($info['extension'])) throw new XMLException("XML property is mandatory: formats->format['extension']");
+	        if(empty($info['name'])) throw new XMLException("XML property is mandatory: formats->format['name']");
 	        if(empty($info['content_type'])) throw new XMLException("XML property is mandatory: formats->format['content_type']");
-	        $extension = (string) $info['extension'];
-	        $formats[$extension] = new Format(
-	            $extension,
+	        $name = (string) $info['name'];
+	        $formats[$name] = new Format(
+	            $name,
 	            (string) $info['content_type'],
 	            (isset($info['charset'])?(string) $info['charset']:""),
 	            (isset($info['class'])?(string) $info['class']:""));
@@ -129,12 +129,12 @@ class Application {
 	}
 
 	/**
-	 * Gets default file format.
+	 * Gets default response format name (eg: html or json)
 	 *
 	 * @return string
 	 */
-	public function getDefaultExtension() {
-		return $this->defaultExtension;
+	public function getDefaultFormat() {
+		return $this->defaultFormat;
 	}
 
 	/**
