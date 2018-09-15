@@ -1,6 +1,8 @@
 <?php
 namespace Lucinda\MVC\STDOUT;
 
+require_once("attributes/MutableAttributesFactory.php");
+require_once("attributes/ImmutableAttributesFactory.php");
 require_once("request/RequestClient.php");
 require_once("request/RequestServer.php");
 require_once("request/RequestURI.php");
@@ -8,8 +10,6 @@ require_once("request/UploadedFileTree.php");
 require_once("request/Session.php");
 require_once("request/Cookie.php");
 require_once("request/RequestValidator.php");
-require_once("attributes/MutableAttributesFactory.php");
-require_once("attributes/ImmutableAttributesFactory.php");
 
 /**
  * Detects information about request from $_SERVER, $_GET, $_POST, $_FILES. Once detected, parameters are immutable.
