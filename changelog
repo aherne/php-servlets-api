@@ -17,7 +17,7 @@
 - formats->format['extension'] >> formats->format['name']
 - application->default_extension >> application->default_format
 
-- moved RestController & HtmlResolver to framework
+- moved HtmlResolver to framework
 - framework: removed BypassWrapper, renamed JsonWrapper to JsonResolver
 - framework: renamed application.wrappers >> application.resolvers
 
