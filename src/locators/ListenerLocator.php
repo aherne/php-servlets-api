@@ -45,7 +45,7 @@ final class ListenerLocator {
 	public function getClassNames($parentClassName) {
 		$output = array();
 		foreach($this->classNames as $className) {
-			if(is_subclass_of($className, $parentClassName)) {
+		    if(is_subclass_of($className, __NAMESPACE__."\\".$parentClassName)) {
 				$output[] = $className;
 			}
 		}

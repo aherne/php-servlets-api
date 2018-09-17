@@ -54,7 +54,7 @@ final class ControllerLocator {
 
 		// validates and sets controller class
 		if(!class_exists($class)) throw new ServletException("Controller class not found: ".$class);
-		if(!is_subclass_of($class, "Controller")) throw new ServletException($class." must be a subclass of Controller");
+		if(!is_subclass_of($class, __NAMESPACE__."\\"."Controller")) throw new ServletException($class." must be a subclass of Controller");
 		$this->className = $class;
 	}
 

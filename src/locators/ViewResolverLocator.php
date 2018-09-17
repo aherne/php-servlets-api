@@ -50,7 +50,7 @@ final class ViewResolverLocator {
 		$this->className = $resolverClass;
 		
 		// checks if it is a subclass of Controller
-		if(!is_subclass_of($this->className, "ViewResolver")) throw new ServletException($this->className." must be a subclass of ViewResolver");
+		if(!is_subclass_of($this->className, __NAMESPACE__."\\"."ViewResolver")) throw new ServletException($this->className." must be a subclass of ViewResolver");
 	}
 
 	/**
