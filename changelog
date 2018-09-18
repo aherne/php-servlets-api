@@ -16,9 +16,8 @@
 - ApplicationException -> XMLException
 - formats->format['extension'] >> formats->format['name']
 - application->default_extension >> application->default_format
+- tags default_page, default_format, auto_routing, version @ application >> attributes @ application
 
 - moved HtmlResolver to framework
 - framework: removed BypassWrapper, renamed JsonWrapper to JsonResolver
 - framework: renamed application.wrappers >> application.resolvers
-
-TODO: create namespaces relative to subfolders

@@ -9,6 +9,7 @@ require_once("application/Format.php");
 
 /**
  * Compiles information about application.
+ * TODO: transform default_page, default_format, auto_routing into attributes @ application tag
  */
 class Application {
 	/**
@@ -48,17 +49,17 @@ class Application {
 	 */
 	private function setApplicationInfo() {
 	    $xml = $this->getTag("application");
-		$this->defaultPage = (string) $xml->default_page;
+		$this->defaultPage = (string) $xml["default_page"];
 		if(!$this->defaultPage) throw new XMLException("XML tag is mandatory: application.default_page");
-		$this->defaultFormat = (string) $xml->default_format;
+		$this->defaultFormat = (string) $xml["default_format"];
 		if(!$this->defaultFormat) throw new XMLException("XML tag is mandatory: application.default_format");
 		$this->listenerPath = (string) $xml->paths->listeners;
 		$this->controllerPath = (string) $xml->paths->controllers;
 		$this->viewResolversPath = (string) $xml->paths->resolvers;
 		$this->viewsPath = (string) $xml->paths->views;
 		$this->publicPath = (string) $xml->paths->public;
-		$this->autoRouting = (int) $xml->auto_routing;
-		$this->version = (string) $xml->version;
+		$this->autoRouting = (int) $xml["auto_routing"];
+		$this->version = (string) $xml["version"];
 	}
 	
 	/**
@@ -70,7 +71,7 @@ class Application {
 	    $tmp = $tmp["listener"];
 	    if(!is_array($tmp)) $tmp = array($tmp);
 	    foreach($tmp as $info) {
-	        if(empty($info['class'])) throw new XMLException("XML property is mandatory: listeners.listener['class']");
+	        if(empty($info['class'])) throw new XMLException("Attribute 'class' is mandatory for 'listener' tag");
 	        $this->listeners[] = (string) $info['class'];
 	    }
 	}
@@ -82,16 +83,16 @@ class Application {
 	 */
 	private function setRoutes() {
 	    $tmp = (array) $this->getTag("routes");
-	    if(empty($tmp["route"])) throw new XMLException("XML tag is mandatory: routes.route");
+	    if(empty($tmp["route"])) throw new XMLException("Tag 'routes' missing 'route' subtags");
 	    $tmp = $tmp["route"];
 	    if(!is_array($tmp)) $tmp = array($tmp);
 	    $routes = array();
 	    foreach($tmp as $info) {
-	        if(empty($info['url'])) throw new XMLException("XML property is mandatory: routes.route['url']");
+	        if(empty($info['url'])) throw new XMLException("Attribute 'url' is mandatory for 'route' tag");
 	        $url = (string) $info['url'];
 	        $routes[$url] = new Route($url, (string) $info['controller'], (string) $info['view'], (string) $info['format']);
 	    }
-	    if(empty($routes)) throw new XMLException("XML tag cannot be empty: routes");
+	    if(empty($routes)) throw new XMLException("Tag 'routes' is mandatory");
 	    $this->routes = new ImmutableAttributesFactory($routes);
 	}
 	
@@ -101,13 +102,13 @@ class Application {
 	 */
 	private function setFormats() {
 	    $tmp = (array) $this->getTag("formats");
-	    if(empty($tmp["format"])) throw new XMLException("XML tag is mandatory: formats.format");
+	    if(empty($tmp["format"])) throw new XMLException("Tag 'format' child of 'formats' tag is mandatory");
 	    $tmp = $tmp["format"];
 	    if(!is_array($tmp)) $tmp = array($tmp);
 	    $formats = array();
 	    foreach($tmp as $info) {
-	        if(empty($info['name'])) throw new XMLException("XML property is mandatory: formats->format['name']");
-	        if(empty($info['content_type'])) throw new XMLException("XML property is mandatory: formats->format['content_type']");
+	        if(empty($info['name'])) throw new XMLException("Attribute 'name' is mandatory for 'format' tag");
+	        if(empty($info['content_type'])) throw new XMLException("Attribute 'content_type' is mandatory for 'format' tag");
 	        $name = (string) $info['name'];
 	        $formats[$name] = new Format(
 	            $name,
@@ -115,7 +116,7 @@ class Application {
 	            (isset($info['charset'])?(string) $info['charset']:""),
 	            (isset($info['class'])?(string) $info['class']:""));
 	    }
-	    if(empty($formats)) throw new XMLException("XML tag cannot be empty: formats");
+	    if(empty($formats)) throw new XMLException("Tag 'formats' is mandatory");
 	    $this->formats = new ImmutableAttributesFactory($formats);
 	}
 
