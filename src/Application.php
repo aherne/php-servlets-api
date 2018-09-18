@@ -50,9 +50,9 @@ class Application {
 	private function setApplicationInfo() {
 	    $xml = $this->getTag("application");
 		$this->defaultPage = (string) $xml["default_page"];
-		if(!$this->defaultPage) throw new XMLException("XML tag is mandatory: application.default_page");
+		if(!$this->defaultPage) throw new XMLException("Attribute 'default_page' is mandatory for 'application' tag");
 		$this->defaultFormat = (string) $xml["default_format"];
-		if(!$this->defaultFormat) throw new XMLException("XML tag is mandatory: application.default_format");
+		if(!$this->defaultFormat) throw new XMLException("Attribute 'default_format' is mandatory for 'application' tag");
 		$this->listenerPath = (string) $xml->paths->listeners;
 		$this->controllerPath = (string) $xml->paths->controllers;
 		$this->viewResolversPath = (string) $xml->paths->resolvers;
