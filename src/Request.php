@@ -131,25 +131,6 @@ final class Request {
 	}
 	
 	/**
-	 * Gets value of parameter sent by client in accordance to HTTP request method based on its name.
-	 * 
-	 * @param string $name
-	 * @return mixed|null Null if parameter doesn't exist, mixed otherwise.
-	 */
-	public function getParameter($name) {
-		return (isset($this->parameters[$name])?$this->parameters[$name]:null);
-	}
-	
-	/**
-	 * Gets all parameters sent by client in accordance to HTTP request method.
-	 * 
-	 * @return array
-	 */
-	public function getParameters() {
-		return $this->parameters;
-	}
-	
-	/**
 	 * Sets files uploaded by client via form based on PHP superglobal $_FILES with two structural changes:
 	 * - uploaded file attributes (name, type, tmp_name, etc) are encapsulated into an UploadedFile instance
 	 * - array structure information is saved to follows exactly structure set in file input @ form. This means:
