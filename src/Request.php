@@ -120,6 +120,7 @@ final class Request {
 				break;		
 			case "PUT":
 			case "DELETE":
+			    $post_vars = array();
 				parse_str(file_get_contents("php://input"),$post_vars);
 				$parameters = $post_vars;
 				break;
