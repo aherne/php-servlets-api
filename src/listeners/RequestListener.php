@@ -9,6 +9,8 @@ abstract class RequestListener implements Runnable {
 	protected $request;
 	
 	/**
+	 * Saves Application & Request objects to be available in implemented run() methods.
+	 * 
 	 * @param Application $application
 	 * @param Request $request
 	 */

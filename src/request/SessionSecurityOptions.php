@@ -4,7 +4,7 @@ namespace Lucinda\MVC\STDOUT;
 /**
  * Encapsulates session security settings on top of php.ini.
  */
-final class SessionSecurityOptions {
+class SessionSecurityOptions {
 	/**
 	 * Set path that is going to be used when storing sessions.
 	 * 

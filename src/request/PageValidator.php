@@ -2,7 +2,7 @@
 namespace Lucinda\MVC\STDOUT;
 
 /**
- * Single responsibility in validating requested page based on configuration.xml encapsulated by Application object
+ * Single responsibility in validating requested page based on XML encapsulated by Application object
  */
 class PageValidator implements RequestValidator {
 	private $page;
@@ -10,10 +10,12 @@ class PageValidator implements RequestValidator {
 	private $pathParameters=array();
 	
 	/**
+	 * Validates resource requested by client based on XML information
+	 * 
 	 * @param string $page 
 	 * @param Application $application
-	 * @throws PathNotFoundException
-     * @throws ServletException
+	 * @throws PathNotFoundException If requested resource doesn't exist in XML as a "route" tag.
+     * @throws FormatNotFoundException If requested response format doesn't exist in XML as a "format" tag.
 	 */
 	public function __construct($page, Application $application) {
         $this->validate($application, $page);
@@ -96,7 +98,7 @@ class PageValidator implements RequestValidator {
 
     /**
      * {@inheritDoc}
-     * @see RequestValidator::getPathParameters()
+     * @see RequestValidator::getContentType()
      */
     public function getContentType() {
         return $this->contentType;

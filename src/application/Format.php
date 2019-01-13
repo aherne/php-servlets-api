@@ -15,6 +15,8 @@ class Format {
 	private $name, $contentType, $viewResolverClass, $characterEncoding;
 
 	/**
+	 * Saves response format data detected from XML tag "format".
+	 * 
 	 * @param string $name
 	 * @param string $contentType
 	 * @param string $characterEncoding

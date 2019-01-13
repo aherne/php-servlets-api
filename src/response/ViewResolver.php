@@ -9,7 +9,9 @@ abstract class ViewResolver implements Runnable {
 	protected $response;
 	
 	/**
-	 * Constructor performing resolver task
+	 * Saves Application and Response objects to be available in implemented getContent() methods.
+	 * 
+	 * @param Application $application
 	 * @param Response $response
 	 */
 	public function __construct(Application $application, Response $response) {
@@ -19,7 +21,7 @@ abstract class ViewResolver implements Runnable {
 	
 	/**
 	 * {@inheritDoc}
-	 * @see \Lucinda\MVC\STDOUT\Runnable::run()
+	 * @see Runnable::run()
 	 */
 	public function run() {
 	    $this->response->getOutputStream()->write($this->getContent());
@@ -28,7 +30,7 @@ abstract class ViewResolver implements Runnable {
 	/**
 	 * Gets view content to write to output stream
 	 * 
-	 * @return mixed A string for html/json/xml response formats.
+	 * @return mixed Content to display: string for html/json/xml response formats.
 	 */
 	abstract protected function getContent();
 }

@@ -23,38 +23,32 @@ class ImmutableAttributesFactory implements ImmutableAttributes, AttributesFacto
     }
     
     /**
-     * Gets attribute by name.
-     *
-     * @param string $key
-     * @return mixed
+     * {@inheritDoc}
+     * @see ImmutableAttributes::get()
      */
     public function get($key) {
         return (isset($this->attributes[$key])?$this->attributes[$key]:null);
     }
     
     /**
-     * Checks if attribute exists.
-     *
-     * @param string $key
-     * @return boolean
+     * {@inheritDoc}
+     * @see ImmutableAttributes::contains()
      */
     public function contains($key) {
         return isset($this->attributes[$key]);
     }
     
     /**
-     * Gets all attributes as array.
-     *
-     * @return array
+     * {@inheritDoc}
+     * @see AttributesFactory::toArray()
      */
     public function toArray() {
         return $this->attributes;
     }
     
     /**
-     * Checks if factory has no attributes.
-     *
-     * @return boolean
+     * {@inheritDoc}
+     * @see AttributesFactory::isEmpty()
      */
     public function isEmpty() {
         return empty($this->attributes);

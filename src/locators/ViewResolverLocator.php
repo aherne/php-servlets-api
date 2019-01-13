@@ -4,12 +4,15 @@ namespace Lucinda\MVC\STDOUT;
 /**
  * Locates view resolver based on response format name of page requested.
  */
-final class ViewResolverLocator {	
+class ViewResolverLocator {	
 	private $className;
 	
 	/**
+	 * Locates view resolver on disk based on requested page, response content type and data in XML
+	 * 
 	 * @param Application $application
 	 * @param string $contentType
+	 * @throws ServletException If view resolver file could not be located on disk.
 	 */
 	public function __construct(Application $application, $contentType) {
 		$this->setClassName($application, $contentType);
@@ -20,7 +23,7 @@ final class ViewResolverLocator {
 	 *
 	 * @param Application $application
 	 * @param string $contentType
-	 * @throws ServletException
+	 * @throws ServletException If view resolver file could not be located on disk.
 	 */
 	private function setClassName(Application $application, $contentType) {
 		// get listener path

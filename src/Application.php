@@ -201,7 +201,7 @@ class Application {
     /**
      * Gets user-defined listeners. They will be executed in exactly the order set by user.
      *
-     * @return array(string)	List of class names
+     * @return string[]	List of class names
      */
     public function getListeners() {
         return $this->listeners;
@@ -230,7 +230,7 @@ class Application {
     /**
      * Gets a pointer to factory that manages user-defined attributes.
      *
-     * @return \Lucinda\MVC\STDOUT\MutableAttributesFactory
+     * @return MutableAttributesFactory
      */
     public function attributes() {
         return $this->attributes;
@@ -239,7 +239,7 @@ class Application {
     /**
      * Gets a pointer to factory that encapsulats routes defined in XML
      *
-     * @return \Lucinda\MVC\STDOUT\ImmutableAttributesFactory
+     * @return ImmutableAttributesFactory
      */
     public function routes() {
         return $this->routes;
@@ -249,7 +249,7 @@ class Application {
     /**
      * Gets a pointer to factory that encapsulats formats defined in XML
      *
-     * @return \Lucinda\MVC\STDOUT\ImmutableAttributesFactory
+     * @return ImmutableAttributesFactory
      */
     public function formats() {
         return $this->formats;

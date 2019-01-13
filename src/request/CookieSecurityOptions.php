@@ -4,7 +4,7 @@ namespace Lucinda\MVC\STDOUT;
 /**
  * Encapsulates session security settings on top of php.ini.
  */
-final class CookieSecurityOptions {
+class CookieSecurityOptions {
 	private $expiredTime = 0;
 	private $isHTTPSOnly = false;
 	private $isHTTPHeadersOnly = false;

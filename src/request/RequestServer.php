@@ -4,13 +4,16 @@ namespace Lucinda\MVC\STDOUT;
 /**
  * Encapsulates information about server that received the request.
  */
-final class RequestServer {
+class RequestServer {
 	private $name;
 	private $iP;
 	private $port;
 	private $email;
 	private $software;
 	
+	/**
+	 * Detects info based on values in $_SERVER superglobal
+	 */
 	public function __construct() {
 		$this->setIP();
 		$this->setName();

@@ -4,12 +4,15 @@ namespace Lucinda\MVC\STDOUT;
 /**
  * Encapsulates information about URI client requested.
  */
-final class RequestURI {
+class RequestURI {
 	private $contextPath;
 	private $page;
 	private $queryString;
 	private $parameters;
 	
+	/**
+	 * Detects info based on values in $_SERVER superglobal
+	 */
 	public function __construct() {
 		$this->setContextPath();
 		$this->setPage();
@@ -81,7 +84,7 @@ final class RequestURI {
 	/**
 	 * Gets a pointer to factory that encapsulates query string parameters received from client.
 	 *
-	 * @return \Lucinda\MVC\STDOUT\ImmutableAttributesFactory
+	 * @return ImmutableAttributesFactory
 	 */
 	public function parameters() {
 	    return $this->parameters;

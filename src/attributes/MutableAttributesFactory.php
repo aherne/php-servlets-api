@@ -24,60 +24,49 @@ class MutableAttributesFactory implements MutableAttributes, AttributesFactory {
         $this->attributes = $attributes;
     }
     
-    
     /**
-     * Gets attribute by name.
-     *
-     * @param string $key
-     * @return mixed
+     * {@inheritDoc}
+     * @see ImmutableAttributes::get()
      */
     public function get($key) {
         return (isset($this->attributes[$key])?$this->attributes[$key]:null);
     }
     
     /**
-     * Sets attribute by name & value.
-     *
-     * @param string $key
-     * @param mixed $value
+     * {@inheritDoc}
+     * @see MutableAttributes::set()
      */
     public function set($key, $value) {
         $this->attributes[$key] = $value;
     }
     
     /**
-     * Deletes attribute by name.
-     *
-     * @param string $key
-     * @return void
+     * {@inheritDoc}
+     * @see MutableAttributes::remove()
      */
     public function remove($key) {
         unset($this->attributes[$key]);
     }
     
     /**
-     * Checks if attribute exists.
-     *
-     * @param string $key
-     * @return boolean
+     * {@inheritDoc}
+     * @see ImmutableAttributes::contains()
      */
     public function contains($key) {
         return isset($this->attributes[$key]);
     }
     
     /**
-     * Decapsulates attributes as array.
-     *
-     * @return array
+     * {@inheritDoc}
+     * @see AttributesFactory::toArray()
      */
     public function toArray() {
         return $this->attributes;
     }
     
     /**
-     * Checks if component has no attributes.
-     *
-     * @return boolean
+     * {@inheritDoc}
+     * @see AttributesFactory::isEmpty()
      */
     public function isEmpty() {
         return empty($this->attributes);

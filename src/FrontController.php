@@ -18,10 +18,11 @@ require_once("listeners/ResponseListener.php");
 /**
  * Implements STDOUT front controller MVC functionality, integrating all API components as a whole.
  */
-final class FrontController {	
+class FrontController {	
 	/**
 	 * Performs all steps required to convert request to response in procedural mode, while delegating to subcomponents, to maximize performance
 	 *  
+	 * @param string $documentDescriptor Path to XML file that configures API
 	 * @throws XMLException If xml contents fail validation checks.
 	 * @throws FormatNotFoundException If an invalid response format was setup by developer in XML for route requested by client. 
 	 * @throws PathNotFoundException If an invalid route was requested from client or setup by developer in XML. 

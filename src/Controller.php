@@ -19,7 +19,11 @@ abstract class Controller implements Runnable {
 	protected $response;
 	
 	/**
-	 * Implements the three stages of a controller job
+	 * Saves Application, Request and Response objects to be available in implemented run() methods.
+	 * 
+	 * @param Application $application
+	 * @param Request $request
+	 * @param Response $response
 	 */
 	public function __construct(Application $application, Request $request, Response $response) {
 		$this->application = $application;

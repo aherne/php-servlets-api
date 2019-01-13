@@ -8,13 +8,18 @@ require_once("attributes/MutableAttributesFactory.php");
 /**
  * Compiles information about response
  */
-final class Response {
+class Response {
     private $headers;
     private $status;
     private $viewPath;
     private $outputStream;
     private $isDisabled;
 
+    /**
+     * Constructs an empty response based on content type
+     * 
+     * @param string $contentType Value of content type header that will be sent in response
+     */
     public function __construct($contentType) {
         $this->outputStream	= new ResponseStream();
         $this->headers = new MutableAttributesFactory(array("Content-Type"=>$contentType));
@@ -33,7 +38,7 @@ final class Response {
     /**
      * Gets a pointer to factory that manages headers application will send back to user.
      *
-     * @return \Lucinda\MVC\STDOUT\MutableAttributesFactory
+     * @return MutableAttributesFactory
      */
     public function headers() {
         return $this->headers;
@@ -45,7 +50,6 @@ final class Response {
      * @param string $location
      * @param boolean $permanent
      * @param boolean $preventCaching
-     * @return void
      */
     public static function sendRedirect($location, $permanent=true, $preventCaching=false) {
         if($preventCaching) {
@@ -135,7 +139,7 @@ final class Response {
     /**
      * Gets a pointer to factory that encapsulates data that will be sent to views.
      *
-     * @return \Lucinda\MVC\STDOUT\MutableAttributesFactory
+     * @return MutableAttributesFactory
      */
     public function attributes() {
         return $this->attributes;

@@ -76,8 +76,8 @@ class ResponseStatus {
     /**
      * Sets response HTTP status by its numeric code
      *
-     * @param $code
-     * @throws ServletException
+     * @param integer $code
+     * @throws ServletException If incorrect numeric code is supplied.
      */
 	public function __construct($code) {
 	    if(!array_key_exists($code, self::HTTP_STATUSES)) throw new ServletException("Unsupported HTTP status: ".$code);

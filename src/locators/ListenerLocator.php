@@ -2,19 +2,26 @@
 namespace Lucinda\MVC\STDOUT;
 
 /**
- * Locates listener based on component name.
+ * Locates all event listeners based on data in XML tag <listeners>.
  */
-final class ListenerLocator {
+class ListenerLocator {
 	private $classNames = array();
 	
-	public function __construct($application) {
+	/**
+	 * Detects all event listeners based on entries in XML tag <listeners>. 
+	 * 
+	 * @param Application $application
+	 * @throws ServletException If listener file could not be located on disk.
+	 */
+	public function __construct(Application $application) {
 		$this->setClassNames($application);
 	}
 
 	/**
 	 * Locates listeners by component name (configuration | request | response).
 	 *
-	 * @throws ServletException
+	 * @param Application $application
+	 * @throws ServletException If listener file could not be located on disk.
 	 */
 	private function setClassNames(Application $application) {
 		$listenerPath = $application->getListenersPath();
@@ -37,7 +44,7 @@ final class ListenerLocator {
 	}
 	
 	/**
-	 * Gets class names by parent class name.
+	 * Gets event listener class names by parent class name.
 	 * 
 	 * @param string $parentClassName
 	 * @return string[]

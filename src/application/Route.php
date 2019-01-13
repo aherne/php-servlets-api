@@ -15,6 +15,8 @@ class Route {
 	private $path, $controllerFile, $viewFile, $format;
 	
 	/**
+	 * Saves response format data detected from XML tag "route".
+	 * 
 	 * @param string $path
 	 * @param string $controllerFile
      * @param string $viewFile

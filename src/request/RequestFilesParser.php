@@ -2,36 +2,20 @@
 namespace Lucinda\MVC\STDOUT;
 
 /**
- * Parses information of files sent via multipart forms into a beautified array.
- * 
- * Example:
- * 		array (
- * 			"a"=>array(
- * 				"name"=>array(
- * 					1=>"a.jpg",
- * 					2=>"b.jpg"
- * 				),
- * 				...
- * 			)
- * 		)
- * 		becomes:
- * 		array (
- * 			"a"=>array(
- * 				1=>array(
- * 					"name"=>"a.jpg",
- * 					...
- * 				),
- * 2=>array("name"=>"b.jpg",...)));
+ * Encapsulates information from $_FILES superglobal into a tree.
  */
 class RequestFilesParser {
 	private $contents;
 
+	/**
+	 * Parses through $_FILES superglobal and compiles a tree.
+	 */
 	public function __construct() {
 		$this->setResult();
 	}
 
 	/**
-	 * Constructs beautified array
+	 * Constructs tree
 	 */
 	private function setResult() {
 		foreach($_FILES as $k1=>$v1) {
@@ -67,7 +51,7 @@ class RequestFilesParser {
 	}
 
 	/**
-	 * Gets beautified array.
+	 * Gets tree.
 	 * 
 	 * @return array
 	 */

@@ -34,7 +34,7 @@ interface RequestValidator {
 	 * Gets all path parameters
 	 * 
 	 * @example array("id"=>"234","name"=>"Henry") @ /asd/def/(id)/(name) that mapped request to /asd/def/234/Henry
-	 * @return array[string:string]
+	 * @return string[string]
 	 */
 	public function getPathParameters();
 }

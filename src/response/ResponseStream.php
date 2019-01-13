@@ -4,7 +4,7 @@ namespace Lucinda\MVC\STDOUT;
 /**
  * Manages operations with response stream, in which response is aggregated before it is committed.
  */
-final class ResponseStream {
+class ResponseStream {
 	/**
 	 * Stores whatever is pending display before response is committed. Can be:
 	 * - string content (eg: html, xml, json)
@@ -25,8 +25,6 @@ final class ResponseStream {
 	
 	/**
 	 * Clears stream
-	 * 
-	 * @return void
 	 */
 	public function clear() {
 		$this->contents = null;

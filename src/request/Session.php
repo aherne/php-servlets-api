@@ -6,7 +6,7 @@ require_once("SessionSecurityOptions.php");
 /**
  * Attributes factory enveloping operations with SESSION. 
 */
-final class Session implements MutableAttributes {
+class Session implements MutableAttributes {
 	/**
 	 * Starts session.
 	 * 

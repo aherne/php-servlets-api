@@ -10,6 +10,8 @@ abstract class ResponseListener implements Runnable {
 	protected $response;
 	
 	/**
+	 * Saves Application, Request and Response objects to be available in implemented run() methods.
+	 * 
 	 * @param Application $application
 	 * @param Request $request
 	 * @param Response $response

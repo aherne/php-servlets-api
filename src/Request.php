@@ -14,7 +14,7 @@ require_once("request/RequestValidator.php");
 /**
  * Detects information about request from $_SERVER, $_GET, $_POST, $_FILES. Once detected, parameters are immutable.
  */
-final class Request {
+class Request {
 	private $client;
 	private $server;
 	private $uRI;
@@ -134,12 +134,7 @@ final class Request {
 	/**
 	 * Sets files uploaded by client via form based on PHP superglobal $_FILES with two structural changes:
 	 * - uploaded file attributes (name, type, tmp_name, etc) are encapsulated into an UploadedFile instance
-	 * - array structure information is saved to follows exactly structure set in file input @ form. This means:
-	 * 			<input... name="a[b][c]">
-	 * 	 will once posted reflect into item:
-	 * 			array("a"=>array("b"=>array("c"=>$uploadedFile)))
-	 * 	 instead of:
-	 * 			array("a"=>array("name"=>array("b"=>array("c"=>"myName")),...) 
+	 * - array structure information is saved to follows exactly structure set in file input @ form. 
 	 */
 	private function setUploadedFiles() {
 		$files = new UploadedFileTree();
@@ -147,14 +142,7 @@ final class Request {
 	}
 	
 	/**
-	 * Gets files originally uploaded by client under this structure:
-	 * - array structure follows name of form input. This means:
-	 * 			<input type="file" name="a[b][c]">
-	 * 	 will once posted be seen as:
-	 * 			array("a"=>array("b"=>array("c"=>$uploadedFile)))
-	 * 	 instead of $_FILES structure:
-	 * 			array("a"=>array("name"=>array("b"=>array("c"=>"myName")),...) 
-	 * - uploaded file attributes (name, type, tmp_name, etc) are encapsulated into UploadedFile instance
+	 * Gets files uploaded as tree of UploadedFile objects following request structure. 
 	 * 
 	 * @return array
 	 */
@@ -267,7 +255,7 @@ final class Request {
 	/**
 	 * Gets a pointer to factory that encapsulates user-defined attributes.
 	 *
-	 * @return \Lucinda\MVC\STDOUT\MutableAttributesFactory
+	 * @return MutableAttributesFactory
 	 */
 	public function attributes() {
 	    return $this->attributes;
@@ -276,7 +264,7 @@ final class Request {
 	/**
 	 * Gets a pointer to factory that encapsulates headers received from client.
 	 *
-	 * @return \Lucinda\MVC\STDOUT\ImmutableAttributesFactory
+	 * @return ImmutableAttributesFactory
 	 */
 	public function headers() {
 	    return $this->headers;
@@ -285,7 +273,7 @@ final class Request {
 	/**
 	 * Gets a pointer to factory that encapsulates parameters associated to request method (GET/POST/PUT/DELETE) received from client.
 	 *
-	 * @return \Lucinda\MVC\STDOUT\ImmutableAttributesFactory
+	 * @return ImmutableAttributesFactory
 	 */
 	public function parameters() {
 	    return $this->parameters;

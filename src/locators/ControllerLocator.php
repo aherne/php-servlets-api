@@ -1,14 +1,19 @@
 <?php
 namespace Lucinda\MVC\STDOUT;
+
 /**
- * Locates controller based on page requested by client and values set in DD.
+ * Locates controller by matching page requested by client to data in XML tag "route".
  */
-final class ControllerLocator {
+class ControllerLocator {
 	private $className;
 	
 	/**
+	 * Detects controller based on page requested and XML. 
+	 * 
 	 * @param Application $application
 	 * @param string $pagePath
+	 * @throws ServletException If controller file could not be located on disk.
+	 * @throws XMLException If XML is misconfigured 
 	 */
 	public function __construct(Application $application, $pagePath) {
 		$this->setClassName($application, $pagePath);
@@ -20,7 +25,8 @@ final class ControllerLocator {
 	 * 
 	 * @param Application $application
 	 * @param string $pagePath
-	 * @throws ServletException
+	 * @throws ServletException If controller file could not be located on disk.
+	 * @throws XMLException If XML is misconfigured 
 	 */
 	private function setClassName(Application $application, $pagePath) {
 		// get controller class folder
