@@ -68,7 +68,8 @@ class Application {
     private function setListeners() {
         $tmp = (array) $this->getTag("listeners");
         if(empty($tmp["listener"])) return;
-        foreach($tmp["listener"] as $info) {
+        $list = (is_array($tmp["listener"])?$tmp["listener"]:[$tmp["listener"]]);
+        foreach($list as $info) {
             if(empty($info['class'])) throw new XMLException("Attribute 'class' is mandatory for 'listener' tag");
             $this->listeners[] = (string) $info['class'];
         }
@@ -82,8 +83,9 @@ class Application {
     private function setRoutes() {
         $tmp = (array) $this->getTag("routes");
         if(empty($tmp["route"])) throw new XMLException("Tag 'routes' missing 'route' subtags");
+        $list = (is_array($tmp["route"])?$tmp["route"]:[$tmp["route"]]);
         $routes = array();
-        foreach($tmp["route"] as $info) {
+        foreach($list as $info) {
             if(empty($info['url'])) throw new XMLException("Attribute 'url' is mandatory for 'route' tag");
             $url = (string) $info['url'];
             $routes[$url] = new Route($url, (string) $info['controller'], (string) $info['view'], (string) $info['format']);
@@ -99,8 +101,9 @@ class Application {
     private function setFormats() {
         $tmp = (array) $this->getTag("formats");
         if(empty($tmp["format"])) throw new XMLException("Tag 'format' child of 'formats' tag is mandatory");
+        $list = (is_array($tmp["format"])?$tmp["format"]:[$tmp["format"]]);
         $formats = array();
-        foreach($tmp["format"] as $info) {
+        foreach($list as $info) {
             if(empty($info['name'])) throw new XMLException("Attribute 'name' is mandatory for 'format' tag");
             if(empty($info['content_type'])) throw new XMLException("Attribute 'content_type' is mandatory for 'format' tag");
             $name = (string) $info['name'];
