@@ -1,9 +1,9 @@
 {
     "name": "lucinda/mvc",
     "type": "library",
-    "description": "High performance MVC API inspired by Java Servlets & Spring MVC",
+    "description": "MVC API for normal STDOUT flow in PHP applications",
     "keywords": ["mvc","servlets","event listeners","view resolvers"],
-    "homepage": "http://www.lucinda-framework.com/servlets",
+    "homepage": "http://www.lucinda-framework.com/stdout-mvc",
     "license": "MIT",
     "authors": [
         {
