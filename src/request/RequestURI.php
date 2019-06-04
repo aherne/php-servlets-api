@@ -17,7 +17,7 @@ class RequestURI {
 		$this->setContextPath();
 		$this->setPage();
 		$this->setQueryString();
-		$this->parameters = new ImmutableAttributesFactory($_GET);
+		$this->parameters = $_GET;
 	}
 	
 	/**
@@ -82,11 +82,13 @@ class RequestURI {
 	}
 	
 	/**
-	 * Gets a pointer to factory that encapsulates query string parameters received from client.
+	 * Gets query string parameters detected by optional name
 	 *
-	 * @return ImmutableAttributesFactory
+	 * @param string $name
+	 * @return mixed[string]|NULL|mixed
 	 */
-	public function parameters() {
-	    return $this->parameters;
+	public function parameters($name="") {
+	    if(!$name) return $this->parameters;
+	    else return (isset($this->parameters[$name])?$this->parameters[$name]:null);
 	}
 }

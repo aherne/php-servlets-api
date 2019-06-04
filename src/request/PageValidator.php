@@ -7,7 +7,7 @@ namespace Lucinda\MVC\STDOUT;
 class PageValidator implements RequestValidator {
 	private $page;
 	private $contentType;
-	private $pathParameters=array();
+	private $parameters=array();
 	
 	/**
 	 * Validates resource requested by client based on XML information
@@ -35,9 +35,9 @@ class PageValidator implements RequestValidator {
 		}
 		$extension = $application->getDefaultFormat();
 		if(!$application->getAutoRouting()) {
-		    if(!$application->routes()->contains($url)) {
+		    if($application->routes($url)===null) {
 				$matchFound = false;
-				$routes = $application->routes()->toArray();
+				$routes = $application->routes();
 				foreach($routes as $route) {
 					if(strpos($route->getPath(), "(")!==false) {
 						preg_match_all("/(\(([^)]+)\))/", $route->getPath(), $matches);
@@ -46,7 +46,7 @@ class PageValidator implements RequestValidator {
 						if(preg_match_all($pattern,$url,$results)==1) {
 							foreach($results as $i=>$item) {
 								if($i==0) continue;
-								$this->pathParameters[$names[$i-1]]=$item[0];
+								$this->parameters[$names[$i-1]]=$item[0];
 							}
 							if($route->getFormat()) {
 							    $extension = $route->getFormat();
@@ -59,7 +59,7 @@ class PageValidator implements RequestValidator {
 				}
 				if(!$matchFound) throw new PathNotFoundException("Route could not be matched to routes.route tag @ XML: ".$url);
 			} else {
-                $route = $application->routes()->get($url);
+                $route = $application->routes($url);
 			    if($route->getFormat()) {
                     $extension = $route->getFormat();
                 }
@@ -67,8 +67,8 @@ class PageValidator implements RequestValidator {
 		}
 		$this->page = $url;
 
-		if(!$application->formats()->contains($extension)) throw new FormatNotFoundException("Format could not be matched to formats.format tag @ XML: ".$extension);
-        $format = $application->formats()->get($extension);
+		if($application->formats($extension)===null) throw new FormatNotFoundException("Format could not be matched to formats.format tag @ XML: ".$extension);
+        $format = $application->formats($extension);
         $this->contentType = $format->getContentType().($format->getCharacterEncoding()?"; charset=".$format->getCharacterEncoding():"");
 	}
 	
@@ -82,18 +82,11 @@ class PageValidator implements RequestValidator {
 	
 	/**
 	 * {@inheritDoc}
-	 * @see RequestValidator::getPathParameter()
+	 * @see RequestValidator::parameters()
 	 */
-	public function getPathParameter($name) {
-		return (isset($this->pathParameters[$name])?$this->pathParameters[$name]:null);
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 * @see RequestValidator::getPathParameters()
-	 */
-	public function getPathParameters() {
-		return $this->pathParameters;
+	public function parameters($name="") {
+	    if(!$name) return $this->parameters;
+	    else return (isset($this->parameters[$name])?$this->parameters[$name]:null);
 	}
 
     /**

@@ -21,20 +21,12 @@ interface RequestValidator {
 	 */
 	public function getPage();
 	
-	/**
-	 * Gets value of path parameter by name
-	 *
-	 * @example Henry @ /asd/def/(name) that mapped request to /asd/def/Henry
-	 * @param string $name
-	 * @return string|null Null if not exists, string otherwise.
-	 */
-	public function getPathParameter($name);
 	
 	/**
-	 * Gets all path parameters
-	 * 
-	 * @example array("id"=>"234","name"=>"Henry") @ /asd/def/(id)/(name) that mapped request to /asd/def/234/Henry
-	 * @return string[string]
+	 * Gets path parameters detected by optional name
+	 *
+	 * @param string $name
+	 * @return string[string]|NULL|string
 	 */
-	public function getPathParameters();
+	public function parameters($name="");
 }

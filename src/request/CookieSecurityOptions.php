@@ -2,7 +2,7 @@
 namespace Lucinda\MVC\STDOUT;
 
 /**
- * Encapsulates session security settings on top of php.ini.
+ * Encapsulates cookie security settings on top of php.ini.
  */
 class CookieSecurityOptions {
 	private $expiredTime = 0;
@@ -12,7 +12,7 @@ class CookieSecurityOptions {
 	private $domain = "";
 		
 	/**
-	 * Sets session cookie's expiration time.
+	 * Sets cookie's expiration time.
 	 * 
 	 * @param integer $seconds
 	 */
@@ -30,7 +30,7 @@ class CookieSecurityOptions {
 	}
 	
 	/**
-	 * Toggles restricting sessions to HTTPS only. If ON: HTTP cookies will not be accepted by server.
+	 * Toggles restricting to HTTPS only. If ON: HTTP cookies will not be accepted by server.
 	 * 
 	 * @param boolean $value
 	 */

@@ -4,9 +4,9 @@ namespace Lucinda\MVC\STDOUT;
 require_once("CookieSecurityOptions.php");
 
 /**
- * Attributes factory enveloping operations with COOKIE.
+ * Encapsulates COOKIE operations and parameters
  */
-class Cookie implements MutableAttributes {
+class Cookie {
 	/**
 	 * Adds/updates a cookie param.
 	 * 

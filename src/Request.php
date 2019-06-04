@@ -1,8 +1,6 @@
 <?php
 namespace Lucinda\MVC\STDOUT;
 
-require_once("attributes/MutableAttributesFactory.php");
-require_once("attributes/ImmutableAttributesFactory.php");
 require_once("request/RequestClient.php");
 require_once("request/RequestServer.php");
 require_once("request/RequestURI.php");
@@ -23,18 +21,17 @@ class Request {
 	
 	private $cookie;
 	private $session;
-	private $headers;
-	private $parameters;
+	private $headers = array();
+	private $parameters = array();
 	private $uploadedFiles;
 	
 	private $validator;
-	private $attributes;
+	private $attributes = array();
 	
 	/**
 	 * Detects all aspects of a request.
 	 */
 	public function __construct() {
-	    $this->attributes = new MutableAttributesFactory();
 		$this->setClient();
 		$this->setServer();
 		$this->setMethod();
@@ -97,38 +94,34 @@ class Request {
 	 * Sets headers sent by client.
 	 */
 	private function setHeaders() {
-		$headers = array();
 		foreach($_SERVER as $name => $value){
 			if(strpos($name, "HTTP_") === 0){
-				$headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
+			    $this->headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
 			}
 		} 
-		$this->headers = new ImmutableAttributesFactory($headers);
 	}
 
 	/**
 	 * Sets parameters sent by client in accordance to HTTP request method.
 	 */
 	private function setParameters() {
-	    $parameters = array();
 		switch($_SERVER["REQUEST_METHOD"]) {
 			case "GET":
-			    $parameters = $_GET;
+			    $this->parameters = $_GET;
 				break;		
 			case "POST":
-			    $parameters = $_POST;
+			    $this->parameters = $_POST;
 				break;		
 			case "PUT":
 			case "DELETE":
 			    $post_vars = array();
 				parse_str(file_get_contents("php://input"),$post_vars);
-				$parameters = $post_vars;
+				$this->parameters = $post_vars;
 				break;
 			default:
-			    $parameters = array();
+			    $this->parameters = array();
 				break;
 		}		
-		$this->parameters = new ImmutableAttributesFactory($parameters);
 	}
 	
 	/**
@@ -253,29 +246,37 @@ class Request {
 	}
 	
 	/**
-	 * Gets a pointer to factory that encapsulates user-defined attributes.
+	 * Gets or sets request attributes
 	 *
-	 * @return MutableAttributesFactory
+	 * @param string $key
+	 * @param mixed $value
+	 * @return mixed[string]|NULL|mixed
 	 */
-	public function attributes() {
-	    return $this->attributes;
+	public function attributes($key="", $value=null) {
+	    if(!$key) return $this->attributes;
+	    else if($value===null) return (isset($this->attributes[$key])?$this->attributes[$key]:null);
+	    else $this->attributes[$key] = $value;
 	}
 	
 	/**
-	 * Gets a pointer to factory that encapsulates headers received from client.
+	 * Gets request headers detected by optional name
 	 *
-	 * @return ImmutableAttributesFactory
+	 * @param string $name
+	 * @return string[string]|NULL|string
 	 */
-	public function headers() {
-	    return $this->headers;
+	public function headers($name="") {
+	    if(!$name) return $this->headers;
+	    else return (isset($this->headers[$name])?$this->headers[$name]:null);
 	}
 	
 	/**
-	 * Gets a pointer to factory that encapsulates parameters associated to request method (GET/POST/PUT/DELETE) received from client.
+	 * Gets request parameters detected by optional name
 	 *
-	 * @return ImmutableAttributesFactory
+	 * @param string $name
+	 * @return mixed[string]|NULL|mixed
 	 */
-	public function parameters() {
-	    return $this->parameters;
+	public function parameters($name="") {
+	    if(!$name) return $this->parameters;
+	    else return (isset($this->parameters[$name])?$this->parameters[$name]:null);
 	}
 }

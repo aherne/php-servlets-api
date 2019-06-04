@@ -3,7 +3,6 @@ namespace Lucinda\MVC\STDOUT;
 
 require_once("exceptions/XMLException.php");
 require_once("exceptions/ServletException.php");
-require_once("attributes/MutableAttributesFactory.php");
 require_once("application/Route.php");
 require_once("application/Format.php");
 
@@ -16,7 +15,7 @@ class Application {
      */
     private $simpleXMLElement;
     private	$defaultPage, $defaultFormat, $controllerPath, $listenerPath, $viewResolversPath, $viewsPath, $publicPath, $autoRouting, $version;
-    private $listeners = array(), $routes, $formats, $attributes;
+    private $listeners = array(), $routes = array(), $formats = array(), $attributes = array();
     
     /**
      * Populates attributes based on an XML file
@@ -38,8 +37,6 @@ class Application {
         }
         
         $this->setFormats();
-        
-        $this->attributes = new MutableAttributesFactory();
     }
     
     /**
@@ -84,14 +81,12 @@ class Application {
         $tmp = (array) $this->getTag("routes");
         if(empty($tmp["route"])) throw new XMLException("Tag 'routes' missing 'route' subtags");
         $list = (is_array($tmp["route"])?$tmp["route"]:[$tmp["route"]]);
-        $routes = array();
         foreach($list as $info) {
             if(empty($info['url'])) throw new XMLException("Attribute 'url' is mandatory for 'route' tag");
             $url = (string) $info['url'];
-            $routes[$url] = new Route($url, (string) $info['controller'], (string) $info['view'], (string) $info['format']);
+            $this->routes[$url] = new Route($url, (string) $info['controller'], (string) $info['view'], (string) $info['format']);
         }
-        if(empty($routes)) throw new XMLException("Tag 'routes' is mandatory");
-        $this->routes = new ImmutableAttributesFactory($routes);
+        if(empty($this->routes)) throw new XMLException("Tag 'routes' is mandatory");
     }
     
     /**
@@ -102,19 +97,17 @@ class Application {
         $tmp = (array) $this->getTag("formats");
         if(empty($tmp["format"])) throw new XMLException("Tag 'format' child of 'formats' tag is mandatory");
         $list = (is_array($tmp["format"])?$tmp["format"]:[$tmp["format"]]);
-        $formats = array();
         foreach($list as $info) {
             if(empty($info['name'])) throw new XMLException("Attribute 'name' is mandatory for 'format' tag");
             if(empty($info['content_type'])) throw new XMLException("Attribute 'content_type' is mandatory for 'format' tag");
             $name = (string) $info['name'];
-            $formats[$name] = new Format(
+            $this->formats[$name] = new Format(
                 $name,
                 (string) $info['content_type'],
                 (isset($info['charset'])?(string) $info['charset']:""),
                 (isset($info['class'])?(string) $info['class']:""));
         }
-        if(empty($formats)) throw new XMLException("Tag 'formats' is mandatory");
-        $this->formats = new ImmutableAttributesFactory($formats);
+        if(empty($this->formats)) throw new XMLException("Tag 'formats' is mandatory");
     }
     
     /**
@@ -229,32 +222,39 @@ class Application {
             return $xml;
         }
     }
-    
+        
     /**
-     * Gets a pointer to factory that manages user-defined attributes.
+     * Gets or sets application attributes
      *
-     * @return MutableAttributesFactory
+     * @param string $key
+     * @param mixed $value
+     * @return mixed[string]|NULL|mixed
      */
-    public function attributes() {
-        return $this->attributes;
+    public function attributes($key="", $value=null) {
+        if(!$key) return $this->attributes;
+        else if($value===null) return (isset($this->attributes[$key])?$this->attributes[$key]:null);
+        else $this->attributes[$key] = $value;
     }
     
     /**
-     * Gets a pointer to factory that encapsulats routes defined in XML
-     *
-     * @return ImmutableAttributesFactory
+     * Gets routes detected by optional url
+     * 
+     * @param string $url
+     * @return Route[string]|NULL|Route
      */
-    public function routes() {
-        return $this->routes;
+    public function routes($url="") {
+        if(!$url) return $this->routes;
+        else return (isset($this->routes[$url])?$this->routes[$url]:null);
     }
     
-    
     /**
-     * Gets a pointer to factory that encapsulats formats defined in XML
-     *
-     * @return ImmutableAttributesFactory
+     * Gets display formats detected by name
+     * 
+     * @param string $name
+     * @return Format[string]|NULL|Format
      */
-    public function formats() {
-        return $this->formats;
+    public function formats($name="") {
+        if(!$name) return $this->formats;
+        else return (isset($this->formats[$name])?$this->formats[$name]:null);
     }
 }

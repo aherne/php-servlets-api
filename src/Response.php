@@ -3,13 +3,13 @@ namespace Lucinda\MVC\STDOUT;
 
 require_once("response/ResponseStream.php");
 require_once("response/ResponseStatus.php");
-require_once("attributes/MutableAttributesFactory.php");
 
 /**
  * Compiles information about response
  */
 class Response {
-    private $headers;
+    private $headers = array();
+    private $attributes = array();
     private $status;
     private $viewPath;
     private $outputStream;
@@ -22,8 +22,7 @@ class Response {
      */
     public function __construct($contentType) {
         $this->outputStream	= new ResponseStream();
-        $this->headers = new MutableAttributesFactory(array("Content-Type"=>$contentType));
-        $this->attributes = new MutableAttributesFactory();
+        $this->headers["Content-Type"] = $contentType;
     }
 
     /**
@@ -34,15 +33,6 @@ class Response {
     public function getOutputStream() {
         return $this->outputStream;
     }
-    
-    /**
-     * Gets a pointer to factory that manages headers application will send back to user.
-     *
-     * @return MutableAttributesFactory
-     */
-    public function headers() {
-        return $this->headers;
-    }
 
     /**
      * Redirects to a new location.
@@ -51,7 +41,7 @@ class Response {
      * @param boolean $permanent
      * @param boolean $preventCaching
      */
-    public static function sendRedirect($location, $permanent=true, $preventCaching=false) {
+    public function redirect($location, $permanent=true, $preventCaching=false) {
         if($preventCaching) {
             header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
             header("Pragma: no-cache");
@@ -124,7 +114,7 @@ class Response {
 
         if(!$this->isDisabled) {
             // load headers
-            $headers = $this->headers->toArray();
+            $headers = $this->headers;
             if(sizeof($headers)>0) {
                 foreach($headers as $name=>$value) {
                     header($name.": ".$value);
@@ -137,11 +127,28 @@ class Response {
     }
     
     /**
-     * Gets a pointer to factory that encapsulates data that will be sent to views.
+     * Gets or sets response headers will send back to user.
      *
-     * @return MutableAttributesFactory
+     * @param string $key
+     * @param string $value
+     * @return string[string]|NULL|string
      */
-    public function attributes() {
-        return $this->attributes;
+    public function headers($key="", $value=null) {
+        if(!$key) return $this->headers;
+        else if($value===null) return (isset($this->headers[$key])?$this->headers[$key]:null);
+        else $this->headers[$key] = $value;
+    }
+    
+    /**
+     * Gets or sets data that will be sent to views.
+     *
+     * @param string $key
+     * @param string $value
+     * @return mixed[string]|NULL|mixed
+     */
+    public function attributes($key="", $value=null) {
+        if(!$key) return $this->attributes;
+        else if($value===null) return (isset($this->attributes[$key])?$this->attributes[$key]:null);
+        else $this->attributes[$key] = $value;
     }
 }

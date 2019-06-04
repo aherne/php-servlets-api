@@ -57,7 +57,7 @@ class FrontController {
 		// sets response object by matching validated user request information to that contained in XML 
 		$response = new Response($request->getValidator()->getContentType());
 		if(!$application->getAutoRouting()) {
-		    $view = $application->routes()->get($request->getValidator()->getPage())->getView();
+		    $view = $application->routes($request->getValidator()->getPage())->getView();
 		    if($view) {
 		        $response->setView($view);
 		    }
@@ -75,7 +75,7 @@ class FrontController {
 		if(!$response->isDisabled()) {
 			// locates a view resolver for response content type that populates output stream when ran
 			if($response->getOutputStream()->isEmpty()) {
-				$viewResolverLocator = new ViewResolverLocator($application, $response->headers()->get("Content-Type"));
+				$viewResolverLocator = new ViewResolverLocator($application, $response->headers("Content-Type"));
 				$className  = $viewResolverLocator->getClassName();
 				if($className) {
 				    $runnable = new $className($application, $response);

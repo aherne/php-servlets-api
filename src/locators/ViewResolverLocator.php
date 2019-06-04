@@ -32,7 +32,7 @@ class ViewResolverLocator {
 		
 		// detect resolver @ application
 		if($application->getViewResolversPath()) {
-			$formats = $application->formats()->toArray();			
+			$formats = $application->formats();			
 			foreach($formats as $format) {
 				$resolverClass = $format->getViewResolver();
 				if(strpos($contentType, $format->getContentType()) === 0 && $resolverClass) {

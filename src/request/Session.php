@@ -4,9 +4,9 @@ namespace Lucinda\MVC\STDOUT;
 require_once("SessionSecurityOptions.php");
 
 /**
- * Attributes factory enveloping operations with SESSION. 
+ * Encapsulates SESSION operations and parameters
 */
-class Session implements MutableAttributes {
+class Session {
 	/**
 	 * Starts session.
 	 * 
