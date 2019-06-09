@@ -5,57 +5,61 @@ namespace Lucinda\MVC\STDOUT;
  * Encapsulates information from $_FILES superglobal into a tree.
  */
 class RequestFilesParser {
-	private $contents;
-
-	/**
-	 * Parses through $_FILES superglobal and compiles a tree.
-	 */
-	public function __construct() {
-		$this->setResult();
-	}
-
-	/**
-	 * Constructs tree
-	 */
-	private function setResult() {
-		foreach($_FILES as $k1=>$v1) {
-			foreach($v1 as $name=>$value) {
-				if(is_array($value)) {
-					foreach($value as $k2=>$v2) {
-						$this->contents[$k1][$k2] = $this->parseRecursive($name, $v2, (isset($this->contents[$k1][$k2])?$this->contents[$k1][$k2]:array()));
-					}
-				} else {
-					$this->contents[$k1][$name] = $value;
-				}
-			}
-		}
-	}
-
-	/**
-	 * Recursively setResult() helper algorithm that merges information recursively.
-	 * 
-	 * @param string $name
-	 * @param array $v
-	 * @param array $oldArray
-	 */
-	private function parseRecursive($name, $part, $oldArray=array()) {
-		$output = $oldArray;
-		foreach($part as $key=>$value) {
-			if(is_array($value)) {
-				$output[$key] = $this->parseRecursive($name, $value, (!empty($oldArray)?$oldArray[$key]:array()));
-			} else {
-				$output[$key][$name] = $value;
-			}
-		}
-		return $output;
-	}
-
-	/**
-	 * Gets tree.
-	 * 
-	 * @return array
-	 */
-	public function getResult() {
-		return $this->contents;
-	}
+    private $contents;
+    
+    /**
+     * Parses through $_FILES superglobal and compiles a tree.
+     */
+    public function __construct() {
+        $this->setResult();
+    }
+    
+    /**
+     * Constructs tree
+     */
+    private function setResult() {
+        $result = array();
+        
+        $normalize = function($key, $value) use ($result){
+            foreach ($value as $param => $content) {
+                foreach ($content as $num => $val) {
+                    if (is_numeric($num)) {
+                        $result[$key][$num][$param] = $val;
+                        continue;
+                    }
+                    if (is_array($val)) {
+                        foreach ($val as $next => $one) {
+                            $result[$key][$num][$next][$param] = $one;
+                        }
+                        continue;
+                    }
+                    $result[$key][$num][$param] = $val;
+                }
+            }
+            return $result;
+        };
+        
+        foreach ($_FILES as $key => $value) {
+            if (isset($value['name'])) {
+                if (is_string($value['name'])) {
+                    $result[$key] = $value;
+                    continue;
+                }
+                if (is_array($value['name'])) {
+                    $result += $normalize($key, $value);
+                }
+            }
+        }
+        
+        $this->contents = $result;
+    }
+    
+    /**
+     * Gets tree.
+     *
+     * @return array
+     */
+    public function getResult() {
+        return $this->contents;
+    }
 }
