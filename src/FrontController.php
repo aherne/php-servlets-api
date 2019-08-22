@@ -18,7 +18,8 @@ require_once("listeners/ResponseListener.php");
 /**
  * Implements STDOUT front controller MVC functionality, integrating all API components as a whole.
  */
-class FrontController {
+class FrontController
+{
     /**
      * Performs all steps required to convert request to response in procedural mode, while delegating to subcomponents, to maximize performance
      *
@@ -29,7 +30,8 @@ class FrontController {
      * @throws FileUploadException If file upload failed due to server constraints.
      * @throws ServletException If any other situation where execution cannot continue.
      */
-    public function __construct($documentDescriptor="configuration.xml") {
+    public function __construct($documentDescriptor="configuration.xml")
+    {
         // sets application object based on user-defined XML
         $application = new Application($documentDescriptor);
 
@@ -38,7 +40,7 @@ class FrontController {
 
         // runs ApplicationListener instances found by locator in the order they were set in xml
         $listeners = $listenerLocator->getClassNames("ApplicationListener");
-        foreach($listeners as $className) {
+        foreach ($listeners as $className) {
             $runnable = new $className($application);
             $runnable->run();
         }
@@ -49,7 +51,7 @@ class FrontController {
 
         // runs RequestListener instances found by locator in the order they were set in xml
         $listeners = $listenerLocator->getClassNames("RequestListener");
-        foreach($listeners as $className) {
+        foreach ($listeners as $className) {
             $runnable = new $className($application, $request);
             $runnable->run();
         }
@@ -58,9 +60,9 @@ class FrontController {
         $format = $application->formats($request->getValidator()->getFormat());
         $contentType = $format->getContentType().($format->getCharacterEncoding()?"; charset=".$format->getCharacterEncoding():"");
         $response = new Response($contentType);
-        if(!$application->getAutoRouting()) {
+        if (!$application->getAutoRouting()) {
             $view = $application->routes($request->getValidator()->getPage())->getView();
-            if($view) {
+            if ($view) {
                 $response->setView($view);
             }
         }
@@ -68,18 +70,18 @@ class FrontController {
         // locates and runs page controller
         $controllerLocator = new ControllerLocator($application, $request->getValidator()->getPage());
         $className  = $controllerLocator->getClassName();
-        if($className) {
+        if ($className) {
             $runnable = new $className($application, $request, $response);
             $runnable->run();
         }
 
         // if response is not disabled, produce a view
-        if(!$response->isDisabled()) {
+        if (!$response->isDisabled()) {
             // locates a view resolver for response content type that populates output stream when ran
-            if($response->getOutputStream()->isEmpty()) {
+            if ($response->getOutputStream()->isEmpty()) {
                 $viewResolverLocator = new ViewResolverLocator($application, $request->getValidator()->getFormat());
                 $className  = $viewResolverLocator->getClassName();
-                if($className) {
+                if ($className) {
                     $runnable = new $className($application, $response);
                     $runnable->run();
                 }
@@ -87,7 +89,7 @@ class FrontController {
 
             // runs ResponseListener instances found by locator in the order they were set in xml
             $listeners = $listenerLocator->getClassNames("ResponseListener");
-            foreach($listeners as $className) {
+            foreach ($listeners as $className) {
                 $runnable = new $className($application, $request, $response);
                 $runnable->run();
             }

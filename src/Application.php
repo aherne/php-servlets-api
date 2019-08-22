@@ -9,13 +9,25 @@ require_once("application/Format.php");
 /**
  * Compiles information about application.
  */
-class Application {
+class Application
+{
     /**
      * @var \SimpleXMLElement
      */
     private $simpleXMLElement;
-    private	$defaultPage, $defaultFormat, $controllerPath, $listenerPath, $viewResolversPath, $viewsPath, $publicPath, $autoRouting, $version;
-    private $listeners = array(), $routes = array(), $formats = array(), $attributes = array();
+    private $defaultPage;
+    private $defaultFormat;
+    private $controllerPath;
+    private $listenerPath;
+    private $viewResolversPath;
+    private $viewsPath;
+    private $publicPath;
+    private $autoRouting;
+    private $version;
+    private $listeners = array();
+    private $routes = array();
+    private $formats = array();
+    private $attributes = array();
     
     /**
      * Populates attributes based on an XML file
@@ -24,15 +36,18 @@ class Application {
      * @throws ServletException If xml file wasn't found
      * @throws XMLException If xml content has failed validation.
      */
-    public function __construct($xmlFilePath) {
-        if(!file_exists($xmlFilePath)) throw new ServletException("XML file not found: ".$xmlFilePath);
+    public function __construct($xmlFilePath)
+    {
+        if (!file_exists($xmlFilePath)) {
+            throw new ServletException("XML file not found: ".$xmlFilePath);
+        }
         $this->simpleXMLElement = simplexml_load_file($xmlFilePath);
         
         $this->setApplicationInfo();
         
         $this->setListeners();
         
-        if(!$this->autoRouting) {
+        if (!$this->autoRouting) {
             $this->setRoutes();
         }
         
@@ -43,13 +58,20 @@ class Application {
      * Sets basic application info based on contents of "application" XML tag
      * @throws XMLException If xml content has failed validation.
      */
-    private function setApplicationInfo() {
+    private function setApplicationInfo()
+    {
         $xml = $this->getTag("application");
-        if(empty($xml)) throw new XMLException("Tag is mandatory: application");
+        if (empty($xml)) {
+            throw new XMLException("Tag is mandatory: application");
+        }
         $this->defaultPage = (string) $xml["default_page"];
-        if(!$this->defaultPage) throw new XMLException("Attribute 'default_page' is mandatory for 'application' tag");
+        if (!$this->defaultPage) {
+            throw new XMLException("Attribute 'default_page' is mandatory for 'application' tag");
+        }
         $this->defaultFormat = (string) $xml["default_format"];
-        if(!$this->defaultFormat) throw new XMLException("Attribute 'default_format' is mandatory for 'application' tag");
+        if (!$this->defaultFormat) {
+            throw new XMLException("Attribute 'default_format' is mandatory for 'application' tag");
+        }
         $this->listenerPath = (string) $xml->paths->listeners;
         $this->controllerPath = (string) $xml->paths->controllers;
         $this->viewResolversPath = (string) $xml->paths->resolvers;
@@ -62,12 +84,17 @@ class Application {
     /**
      * Sets user-defined event listeners based on contents of "listeners" XML tag
      */
-    private function setListeners() {
+    private function setListeners()
+    {
         $tmp = (array) $this->getTag("listeners");
-        if(empty($tmp["listener"])) return;
+        if (empty($tmp["listener"])) {
+            return;
+        }
         $list = (is_array($tmp["listener"])?$tmp["listener"]:[$tmp["listener"]]);
-        foreach($list as $info) {
-            if(empty($info['class'])) throw new XMLException("Attribute 'class' is mandatory for 'listener' tag");
+        foreach ($list as $info) {
+            if (empty($info['class'])) {
+                throw new XMLException("Attribute 'class' is mandatory for 'listener' tag");
+            }
             $this->listeners[] = (string) $info['class'];
         }
     }
@@ -77,37 +104,54 @@ class Application {
      * NOTICE: Only executed when auto_routing=0
      * @throws XMLException If xml content has failed validation.
      */
-    private function setRoutes() {
+    private function setRoutes()
+    {
         $tmp = (array) $this->getTag("routes");
-        if(empty($tmp["route"])) throw new XMLException("Tag 'routes' missing 'route' subtags");
+        if (empty($tmp["route"])) {
+            throw new XMLException("Tag 'routes' missing 'route' subtags");
+        }
         $list = (is_array($tmp["route"])?$tmp["route"]:[$tmp["route"]]);
-        foreach($list as $info) {
-            if(empty($info['url'])) throw new XMLException("Attribute 'url' is mandatory for 'route' tag");
+        foreach ($list as $info) {
+            if (empty($info['url'])) {
+                throw new XMLException("Attribute 'url' is mandatory for 'route' tag");
+            }
             $url = (string) $info['url'];
             $this->routes[$url] = new Route($url, (string) $info['controller'], (string) $info['view'], (string) $info['format']);
         }
-        if(empty($this->routes)) throw new XMLException("Tag 'routes' is mandatory");
+        if (empty($this->routes)) {
+            throw new XMLException("Tag 'routes' is mandatory");
+        }
     }
     
     /**
      * Sets user-defined file response formats that will be used by application based on contents of "formats" XML tag
      * @throws XMLException If xml content has failed validation.
      */
-    private function setFormats() {
+    private function setFormats()
+    {
         $tmp = (array) $this->getTag("formats");
-        if(empty($tmp["format"])) throw new XMLException("Tag 'format' child of 'formats' tag is mandatory");
+        if (empty($tmp["format"])) {
+            throw new XMLException("Tag 'format' child of 'formats' tag is mandatory");
+        }
         $list = (is_array($tmp["format"])?$tmp["format"]:[$tmp["format"]]);
-        foreach($list as $info) {
-            if(empty($info['name'])) throw new XMLException("Attribute 'name' is mandatory for 'format' tag");
-            if(empty($info['content_type'])) throw new XMLException("Attribute 'content_type' is mandatory for 'format' tag");
+        foreach ($list as $info) {
+            if (empty($info['name'])) {
+                throw new XMLException("Attribute 'name' is mandatory for 'format' tag");
+            }
+            if (empty($info['content_type'])) {
+                throw new XMLException("Attribute 'content_type' is mandatory for 'format' tag");
+            }
             $name = (string) $info['name'];
             $this->formats[$name] = new Format(
                 $name,
                 (string) $info['content_type'],
                 (isset($info['charset'])?(string) $info['charset']:""),
-                (isset($info['class'])?(string) $info['class']:""));
+                (isset($info['class'])?(string) $info['class']:"")
+            );
         }
-        if(empty($this->formats)) throw new XMLException("Tag 'formats' is mandatory");
+        if (empty($this->formats)) {
+            throw new XMLException("Tag 'formats' is mandatory");
+        }
     }
     
     /**
@@ -115,7 +159,8 @@ class Application {
      *
      * @return string
      */
-    public function getDefaultPage() {
+    public function getDefaultPage()
+    {
         return $this->defaultPage;
     }
     
@@ -124,7 +169,8 @@ class Application {
      *
      * @return string
      */
-    public function getDefaultFormat() {
+    public function getDefaultFormat()
+    {
         return $this->defaultFormat;
     }
     
@@ -133,7 +179,8 @@ class Application {
      *
      * @return string
      */
-    public function getControllersPath() {
+    public function getControllersPath()
+    {
         return $this->controllerPath;
     }
     
@@ -142,7 +189,8 @@ class Application {
      *
      * @return string
      */
-    public function getListenersPath() {
+    public function getListenersPath()
+    {
         return $this->listenerPath;
     }
     
@@ -151,7 +199,8 @@ class Application {
      *
      * @return string
      */
-    public function getViewResolversPath() {
+    public function getViewResolversPath()
+    {
         return $this->viewResolversPath;
     }
     
@@ -160,7 +209,8 @@ class Application {
      *
      * @return string
      */
-    public function getViewsPath() {
+    public function getViewsPath()
+    {
         return $this->viewsPath;
     }
     
@@ -169,8 +219,10 @@ class Application {
      *
      * @return string
      */
-    public function getPublicPath() {
-        return $this->publicPath;;
+    public function getPublicPath()
+    {
+        return $this->publicPath;
+        ;
     }
     
     /**
@@ -180,7 +232,8 @@ class Application {
      * 		true: Controllers will be automatically discovered based on route requested
      * 		false: Routes to controllers have been explicitly set in routes:route @ XML.
      */
-    public function getAutoRouting() {
+    public function getAutoRouting()
+    {
         return $this->autoRouting;
     }
     
@@ -190,7 +243,8 @@ class Application {
      *
      * @return string
      */
-    public function getVersion() {
+    public function getVersion()
+    {
         return $this->version;
     }
     
@@ -199,7 +253,8 @@ class Application {
      *
      * @return string[]	List of class names
      */
-    public function getListeners() {
+    public function getListeners()
+    {
         return $this->listeners;
     }
     
@@ -210,12 +265,15 @@ class Application {
      * @throws ServletException If "ref" points to a nonexistent file.
      * @return \SimpleXMLElement
      */
-    public function getTag($name) {
+    public function getTag($name)
+    {
         $xml = $this->simpleXMLElement->{$name};
         $xmlFilePath = (string) $xml["ref"];
-        if($xmlFilePath) {
+        if ($xmlFilePath) {
             $xmlFilePath .= ".xml";
-            if(!file_exists($xmlFilePath)) throw new ServletException("XML file not found: ".$xmlFilePath);
+            if (!file_exists($xmlFilePath)) {
+                throw new ServletException("XML file not found: ".$xmlFilePath);
+            }
             $subXML = simplexml_load_file($xmlFilePath);
             return $subXML->{$name};
         } else {
@@ -230,31 +288,44 @@ class Application {
      * @param mixed $value
      * @return mixed[string]|NULL|mixed
      */
-    public function attributes($key="", $value=null) {
-        if(!$key) return $this->attributes;
-        else if($value===null) return (isset($this->attributes[$key])?$this->attributes[$key]:null);
-        else $this->attributes[$key] = $value;
+    public function attributes($key="", $value=null)
+    {
+        if (!$key) {
+            return $this->attributes;
+        } elseif ($value===null) {
+            return (isset($this->attributes[$key])?$this->attributes[$key]:null);
+        } else {
+            $this->attributes[$key] = $value;
+        }
     }
     
     /**
      * Gets routes detected by optional url
-     * 
+     *
      * @param string $url
      * @return Route[string]|NULL|Route
      */
-    public function routes($url="") {
-        if(!$url) return $this->routes;
-        else return (isset($this->routes[$url])?$this->routes[$url]:null);
+    public function routes($url="")
+    {
+        if (!$url) {
+            return $this->routes;
+        } else {
+            return (isset($this->routes[$url])?$this->routes[$url]:null);
+        }
     }
     
     /**
      * Gets display formats detected by name
-     * 
+     *
      * @param string $name
      * @return Format[string]|NULL|Format
      */
-    public function formats($name="") {
-        if(!$name) return $this->formats;
-        else return (isset($this->formats[$name])?$this->formats[$name]:null);
+    public function formats($name="")
+    {
+        if (!$name) {
+            return $this->formats;
+        } else {
+            return (isset($this->formats[$name])?$this->formats[$name]:null);
+        }
     }
 }

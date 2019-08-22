@@ -4,8 +4,9 @@ namespace Lucinda\MVC\STDOUT;
 /**
  * Encapsulates HTTP response status logic in accordance to HTTP/1.1 specifications
  */
-class ResponseStatus {
-	const HTTP_STATUSES = array(
+class ResponseStatus
+{
+    const HTTP_STATUSES = array(
         100=>'Continue',
         101=>'Switching Protocols',
         102=>'Processing',
@@ -71,7 +72,7 @@ class ResponseStatus {
         599=>'Network Connect Timeout Error',
     );
 
-	private $id;
+    private $id;
 
     /**
      * Sets response HTTP status by its numeric code
@@ -79,9 +80,12 @@ class ResponseStatus {
      * @param integer $code
      * @throws ServletException If incorrect numeric code is supplied.
      */
-	public function __construct($code) {
-	    if(!array_key_exists($code, self::HTTP_STATUSES)) throw new ServletException("Unsupported HTTP status: ".$code);
-	    $this->id = $code;
+    public function __construct($code)
+    {
+        if (!array_key_exists($code, self::HTTP_STATUSES)) {
+            throw new ServletException("Unsupported HTTP status: ".$code);
+        }
+        $this->id = $code;
     }
 
     /**
@@ -89,8 +93,9 @@ class ResponseStatus {
      *
      * @return integer
      */
-    public function getId() {
-	    return $this->id;
+    public function getId()
+    {
+        return $this->id;
     }
 
     /**
@@ -98,7 +103,8 @@ class ResponseStatus {
      *
      * @return string
      */
-    public function getDescription() {
-	    return self::HTTP_STATUSES[$this->id];
+    public function getDescription()
+    {
+        return self::HTTP_STATUSES[$this->id];
     }
 }

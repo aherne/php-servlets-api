@@ -4,23 +4,26 @@ namespace Lucinda\MVC\STDOUT;
 /**
  * Encapsulates information from $_FILES superglobal into a tree.
  */
-class RequestFilesParser {
+class RequestFilesParser
+{
     private $contents;
     
     /**
      * Parses through $_FILES superglobal and compiles a tree.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->setResult();
     }
     
     /**
      * Constructs tree
      */
-    private function setResult() {
+    private function setResult()
+    {
         $result = array();
         
-        $normalize = function($key, $value) use ($result){
+        $normalize = function ($key, $value) use ($result) {
             foreach ($value as $param => $content) {
                 foreach ($content as $num => $val) {
                     if (is_numeric($num)) {
@@ -59,7 +62,8 @@ class RequestFilesParser {
      *
      * @return array
      */
-    public function getResult() {
+    public function getResult()
+    {
         return $this->contents;
     }
 }

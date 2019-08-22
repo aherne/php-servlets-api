@@ -4,7 +4,8 @@ namespace Lucinda\MVC\STDOUT;
 /**
  * Locates view resolver based on response format name of page requested.
  */
-class ViewResolverLocator {
+class ViewResolverLocator
+{
     private $className;
 
     /**
@@ -14,7 +15,8 @@ class ViewResolverLocator {
      * @param string $format
      * @throws ServletException If view resolver file could not be located on disk.
      */
-    public function __construct(Application $application, $format) {
+    public function __construct(Application $application, $format)
+    {
         $this->setClassName($application, $format);
     }
 
@@ -25,32 +27,41 @@ class ViewResolverLocator {
      * @param string $format
      * @throws ServletException If view resolver file could not be located on disk.
      */
-    private function setClassName(Application $application, $format) {
+    private function setClassName(Application $application, $format)
+    {
         // get listener path
         $resolverClass = "";
         $resolverLocation = "";
 
         // detect resolver @ application
-        if($application->getViewResolversPath()) {
+        if ($application->getViewResolversPath()) {
             $format = $application->formats($format);
             $resolverClass = $format->getViewResolver();
-            if($resolverClass) {
+            if ($resolverClass) {
                 $resolverLocation = $application->getViewResolversPath()."/".$resolverClass.".php";
-                if(!file_exists($resolverLocation)) throw new ServletException("View resolver not found: ".$resolverLocation);
+                if (!file_exists($resolverLocation)) {
+                    throw new ServletException("View resolver not found: ".$resolverLocation);
+                }
                 require_once($resolverLocation);
             }
         }
 
         // if no resolver was defined, do nothing
-        if(!$resolverLocation) return;
+        if (!$resolverLocation) {
+            return;
+        }
 
         // validate resolver found or use default
-        if(!class_exists($resolverClass)) throw new ServletException("View resolver class not defined: ".$resolverClass);
+        if (!class_exists($resolverClass)) {
+            throw new ServletException("View resolver class not defined: ".$resolverClass);
+        }
 
         $this->className = $resolverClass;
 
         // checks if it is a subclass of Controller
-        if(!is_subclass_of($this->className, __NAMESPACE__."\\"."ViewResolver")) throw new ServletException($this->className." must be a subclass of ViewResolver");
+        if (!is_subclass_of($this->className, __NAMESPACE__."\\"."ViewResolver")) {
+            throw new ServletException($this->className." must be a subclass of ViewResolver");
+        }
     }
 
     /**
@@ -58,7 +69,8 @@ class ViewResolverLocator {
      *
      * @return string
      */
-    public function getClassName() {
+    public function getClassName()
+    {
         return $this->className;
     }
 }
