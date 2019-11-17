@@ -1,8 +1,8 @@
 <?php
 namespace Lucinda\MVC\STDOUT;
 
-require_once("UploadedFile.php");
-require_once("RequestFilesParser.php");
+require("UploadedFile.php");
+require("RequestFilesParser.php");
  
 /**
  * Encapsulates information of files sent via multipart forms into UploadedFile objects.

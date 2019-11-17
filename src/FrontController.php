@@ -1,19 +1,19 @@
 <?php
 namespace Lucinda\MVC\STDOUT;
 
-require_once("Runnable.php");
-require_once("Controller.php");
-require_once("Application.php");
-require_once("Request.php");
-require_once("Response.php");
-require_once("request/PageValidator.php");
-require_once("response/ViewResolver.php");
-require_once("locators/ListenerLocator.php");
-require_once("locators/ControllerLocator.php");
-require_once("locators/ViewResolverLocator.php");
-require_once("listeners/ApplicationListener.php");
-require_once("listeners/RequestListener.php");
-require_once("listeners/ResponseListener.php");
+require("Runnable.php");
+require("Controller.php");
+require("Application.php");
+require("Request.php");
+require("Response.php");
+require("request/PageValidator.php");
+require("response/ViewResolver.php");
+require("locators/ListenerLocator.php");
+require("locators/ControllerLocator.php");
+require("locators/ViewResolverLocator.php");
+require("listeners/ApplicationListener.php");
+require("listeners/RequestListener.php");
+require("listeners/ResponseListener.php");
 
 /**
  * Implements STDOUT front controller MVC functionality, integrating all API components as a whole.

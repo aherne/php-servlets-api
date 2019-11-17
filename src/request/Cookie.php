@@ -1,7 +1,7 @@
 <?php
 namespace Lucinda\MVC\STDOUT;
 
-require_once("CookieSecurityOptions.php");
+require("CookieSecurityOptions.php");
 
 /**
  * Encapsulates COOKIE operations and parameters

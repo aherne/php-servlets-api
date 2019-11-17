@@ -1,10 +1,8 @@
 <?php
 namespace Lucinda\MVC\STDOUT;
 
-require_once("exceptions/XMLException.php");
-require_once("exceptions/ServletException.php");
-require_once("application/Route.php");
-require_once("application/Format.php");
+require("application/Route.php");
+require("application/Format.php");
 
 /**
  * Compiles information about application.

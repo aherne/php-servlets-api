@@ -42,7 +42,7 @@ class ViewResolverLocator
                 if (!file_exists($resolverLocation)) {
                     throw new ServletException("View resolver not found: ".$resolverLocation);
                 }
-                require_once($resolverLocation);
+                require($resolverLocation);
             }
         }
 

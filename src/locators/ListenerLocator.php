@@ -38,7 +38,7 @@ class ListenerLocator
             if (!file_exists($file)) {
                 throw new ServletException("Listener file not found: ".$file);
             }
-            require_once($file);
+            require($file);
                 
             // verify class
             if (!class_exists($className)) {

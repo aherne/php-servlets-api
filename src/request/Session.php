@@ -1,7 +1,7 @@
 <?php
 namespace Lucinda\MVC\STDOUT;
 
-require_once("SessionSecurityOptions.php");
+require("SessionSecurityOptions.php");
 
 /**
  * Encapsulates SESSION operations and parameters

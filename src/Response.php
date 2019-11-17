@@ -1,8 +1,8 @@
 <?php
 namespace Lucinda\MVC\STDOUT;
 
-require_once("response/ResponseStream.php");
-require_once("response/ResponseStatus.php");
+require("response/ResponseStream.php");
+require("response/ResponseStatus.php");
 
 /**
  * Compiles information about response

@@ -65,7 +65,7 @@ class ControllerLocator
         if (!file_exists($file)) {
             throw new ServletException("Controller not found: ".$class);
         }
-        require_once($file);
+        require($file);
 
         // validates and sets controller class
         if (!class_exists($class)) {

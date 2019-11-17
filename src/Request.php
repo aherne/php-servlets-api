@@ -1,13 +1,13 @@
 <?php
 namespace Lucinda\MVC\STDOUT;
 
-require_once("request/RequestClient.php");
-require_once("request/RequestServer.php");
-require_once("request/RequestURI.php");
-require_once("request/UploadedFileTree.php");
-require_once("request/Session.php");
-require_once("request/Cookie.php");
-require_once("request/RequestValidator.php");
+require("request/RequestClient.php");
+require("request/RequestServer.php");
+require("request/RequestURI.php");
+require("request/UploadedFileTree.php");
+require("request/Session.php");
+require("request/Cookie.php");
+require("request/RequestValidator.php");
 
 /**
  * Detects information about request from $_SERVER, $_GET, $_POST, $_FILES. Once detected, parameters are immutable.
