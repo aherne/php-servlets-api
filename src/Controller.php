@@ -48,7 +48,7 @@ abstract class Controller implements Runnable
      * @param View $view
      * @param Request $request
      */
-    public function __construct(Attributes $attributes, Application $application, Request $request, Session $session, Cookies $cookies, View $view)
+    public function __construct(Attributes $attributes, Application $application, Request $request, Session $session, Cookies $cookies, View $view): void
     {
         $this->attributes = $attributes;
         $this->application = $application;

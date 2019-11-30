@@ -49,7 +49,7 @@ abstract class Cookies implements Runnable
      * @param \Lucinda\STDOUT\Cookies $cookies
      * @param Response $response
      */
-    public function __construct(Attributes $attributes, Application $application, Request $request, Session $session, \Lucinda\STDOUT\Cookies $cookies)
+    public function __construct(Attributes $attributes, Application $application, Request $request, Session $session, \Lucinda\STDOUT\Cookies $cookies): void
     {
         $this->attributes = $attributes;
         $this->application = $application;

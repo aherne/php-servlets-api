@@ -17,7 +17,7 @@ class ViewResolverLocator extends ServiceLocator
      * @param Attributes $attributes
      * @throws Exception If view resolver file could not be located on disk.
      */
-    protected function setClassName(Application $application, Attributes $attributes)
+    protected function setClassName(Application $application, Attributes $attributes): void
     {
         // get listener path
         $resolverClass = "";

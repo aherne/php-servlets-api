@@ -16,7 +16,7 @@ class File
      *
      * @param array $values
      */
-    public function __construct($values)
+    public function __construct(array $values): void
     {
         if ($values['error']!=0) {
             throw new Exception($this->getErrorMessage($values['error'], $values['name']));
@@ -35,7 +35,7 @@ class File
      * @param string $fileName
      * @return string
      */
-    private function getErrorMessage($errorCode, $fileName)
+    private function getErrorMessage(int $errorCode, string $fileName): string
     {
         switch ($errorCode) {
             case UPLOAD_ERR_INI_SIZE:
@@ -67,7 +67,7 @@ class File
      *
      * @param string $name
      */
-    private function setName($name)
+    private function setName(string $name): void
     {
         $this->name = $name;
     }
@@ -77,7 +77,7 @@ class File
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -87,7 +87,7 @@ class File
      *
      * @param string $location
      */
-    private function setLocation($location)
+    private function setLocation(string $location): void
     {
         $this->location = $location;
     }
@@ -98,7 +98,7 @@ class File
      * @param string $location
      * @return string
      */
-    public function getLocation()
+    public function getLocation(): string
     {
         return $this->location;
     }
@@ -107,9 +107,8 @@ class File
      * Sets file mime type.
      *
      * @param string $contentType
-     * @return void
      */
-    private function setContentType($contentType)
+    private function setContentType(string $contentType): void
     {
         $this->contentType = $contentType;
     }
@@ -119,7 +118,7 @@ class File
      *
      * @return string
      */
-    public function getContentType()
+    public function getContentType(): string
     {
         return $this->contentType;
     }
@@ -128,9 +127,8 @@ class File
      * Sets file size.
      *
      * @param integer $size
-     * @return void
      */
-    private function setSize($size)
+    private function setSize(int $size): void
     {
         $this->size = $size;
     }
@@ -138,9 +136,9 @@ class File
     /**
      * Gets file size.
      *
-     * @return int
+     * @return integer
      */
-    public function getSize()
+    public function getSize(): int
     {
         return $this->size;
     }
@@ -151,7 +149,7 @@ class File
      * @param string $destination
      * @return boolean
      */
-    public function move($destination)
+    public function move(string $destination): bool
     {
         return move_uploaded_file($this->location, $destination);
     }
@@ -161,9 +159,8 @@ class File
      *
      * @return boolean
      */
-    public function delete()
+    public function delete(): bool
     {
         return unlink($this->location);
     }
 }
-

@@ -13,7 +13,7 @@ class SecurityOptions
      *
      * @param string $path
      */
-    public function setSavePath($path)
+    public function setSavePath(string $path): void
     {
         $this->settings["session.save_path"] = $path;
     }
@@ -23,7 +23,7 @@ class SecurityOptions
      *
      * @param string $name
      */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->settings["session.name"] = $name;
     }
@@ -33,7 +33,7 @@ class SecurityOptions
      *
      * @param integer $seconds
      */
-    public function setExpiredTime($seconds)
+    public function setExpiredTime(int $seconds): void
     {
         $this->settings["session.gc_maxlifetime"] = $seconds;
     }
@@ -43,7 +43,7 @@ class SecurityOptions
      *
      * @param boolean $value
      */
-    public function setExpiredOnBrowserClose($value=false)
+    public function setExpiredOnBrowserClose(bool $value=false): void
     {
         $this->settings["session.cookie_lifetime"] = ($value?1:0);
     }
@@ -53,7 +53,7 @@ class SecurityOptions
      *
      * @param boolean $value
      */
-    public function setSecuredByHTTPS($value=false)
+    public function setSecuredByHTTPS(bool $value=false): void
     {
         $this->settings["session.cookie_secure"] = ($value?1:0);
     }
@@ -62,7 +62,7 @@ class SecurityOptions
      * Toggles restricting sessions to HTTP headers only. If ON: cookies not sent via HTTP headers will be ignored by server.
      * @param boolean $value
      */
-    public function setSecuredByHTTPheaders($value=false)
+    public function setSecuredByHTTPheaders(bool $value=false): void
     {
         $this->settings["session.cookie_httponly"] = ($value?1:0);
     }
@@ -72,7 +72,7 @@ class SecurityOptions
      *
      * @param string $keyword
      */
-    public function setSecuredByReferrerCheck($keyword)
+    public function setSecuredByReferrerCheck(string $keyword): void
     {
         $this->settings["session.referer_check"] = $keyword;
     }
@@ -80,7 +80,7 @@ class SecurityOptions
     /**
      * Saves settings to php ini
      */
-    public function save()
+    public function save(): void
     {
         foreach ($this->settings as $key=>$value) {
             ini_set($key, $value);

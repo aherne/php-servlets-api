@@ -13,7 +13,7 @@ class Client
     /**
      * Detects info based on values in $_SERVER superglobal
      */
-    public function __construct()
+    public function __construct(): void
     {
         $this->setName();
         $this->setIP();
@@ -23,7 +23,7 @@ class Client
     /**
      * Sets host name.
      */
-    public function setName()
+    public function setName(): void
     {
         $this->iP = (isset($_SERVER["REMOTE_HOST"])?$_SERVER["REMOTE_HOST"]:"");
     }
@@ -33,7 +33,7 @@ class Client
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -41,7 +41,7 @@ class Client
     /**
      * Sets IP address.
      */
-    private function setIP()
+    private function setIP(): void
     {
         $this->iP = $_SERVER["REMOTE_ADDR"];
     }
@@ -51,7 +51,7 @@ class Client
      *
      * @return string
      */
-    public function getIP()
+    public function getIP(): string
     {
         return $this->iP;
     }
@@ -59,7 +59,7 @@ class Client
     /**
      * Sets  port
      */
-    private function setPort()
+    private function setPort(): void
     {
         $this->port = $_SERVER["REMOTE_PORT"];
     }
@@ -67,9 +67,9 @@ class Client
     /**
      * Gets  port
      *
-     * @return int
+     * @return integer
      */
-    public function getPort()
+    public function getPort(): int
     {
         return $this->port;
     }

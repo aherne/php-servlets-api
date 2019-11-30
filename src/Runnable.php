@@ -9,5 +9,5 @@ interface Runnable
     /**
      * Executes logic of a Runnable
      */
-    public function run();
+    public function run(): void;
 }

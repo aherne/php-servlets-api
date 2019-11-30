@@ -14,7 +14,7 @@ class Session
      * @param SecurityOptions $securityOptions Added here to hint where to inject.
      * @param \SessionHandlerInterface $sessionHandler	If null, built-in session handler is used.
      */
-    public function start(SecurityOptions $securityOptions = null, \SessionHandlerInterface $sessionHandler = null)
+    public function start(SecurityOptions $securityOptions = null, \SessionHandlerInterface $sessionHandler = null): void
     {
         if ($securityOptions!=null) {
             $securityOptions->save();
@@ -30,7 +30,7 @@ class Session
      *
      * @return boolean
      */
-    public function isStarted()
+    public function isStarted(): bool
     {
         return (session_id() != "");
     }
@@ -38,7 +38,7 @@ class Session
     /**
      * Closes session.
      */
-    public function destroy()
+    public function destroy(): void
     {
         session_destroy();
     }
@@ -50,7 +50,7 @@ class Session
      * @param mixed $value
      * @throws Exception	If session not started.
      */
-    public function set($key, $value)
+    public function set(string $key, mixed $value): void
     {
         $_SESSION[$key] = $value;
     }
@@ -61,7 +61,7 @@ class Session
      * @param string $key
      * @return mixed
      */
-    public function get($key)
+    public function get(string $key): mixed
     {
         return $_SESSION[$key];
     }
@@ -72,7 +72,7 @@ class Session
      * @param string $key
      * @return mixed
      */
-    public function contains($key)
+    public function contains(string $key): mixed
     {
         return isset($_SESSION[$key]);
     }
@@ -82,7 +82,7 @@ class Session
      *
      * @param string $key
      */
-    public function remove($key)
+    public function remove(string $key): void
     {
         unset($_SESSION[$key]);
     }

@@ -11,4 +11,3 @@ class EventType
     const RESPONSE = "response";
     const END = "end";
 }
-

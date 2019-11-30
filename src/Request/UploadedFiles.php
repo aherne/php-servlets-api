@@ -1,6 +1,6 @@
 <?php
 namespace Lucinda\STDOUT\Request;
- 
+
 use Lucinda\STDOUT\Request\UploadedFiles\File;
 use Lucinda\STDOUT\Request\UploadedFiles\Parser;
 
@@ -14,7 +14,7 @@ class UploadedFiles
     /**
      * Converts information in $_FILES superglobal into a tree of UploadedFile objects
      */
-    public function __construct()
+    public function __construct(): void
     {
         if (sizeof($_FILES)==0) {
             return;
@@ -28,7 +28,7 @@ class UploadedFiles
      *
      * @param array $array
      */
-    private function makeObjects($array)
+    private function makeObjects(array $array): void
     {
         $ret = array();
         foreach ($array as $k => $v) {
@@ -50,7 +50,7 @@ class UploadedFiles
      *
      * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->attributes;
     }

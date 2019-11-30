@@ -33,7 +33,7 @@ abstract class Request implements Runnable
      * @param Application $application
      * @param \Lucinda\STDOUT\Request $request
      */
-    public function __construct(Attributes $attributes, Application $application, \Lucinda\STDOUT\Request $request)
+    public function __construct(Attributes $attributes, Application $application, \Lucinda\STDOUT\Request $request): void
     {
         $this->attributes = $attributes;
         $this->application = $application;

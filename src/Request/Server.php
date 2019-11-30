@@ -15,7 +15,7 @@ class Server
     /**
      * Detects info based on values in $_SERVER superglobal
      */
-    public function __construct()
+    public function __construct(): void
     {
         $this->setIP();
         $this->setName();
@@ -27,7 +27,7 @@ class Server
     /**
      * Sets server host name.
      */
-    private function setName()
+    private function setName(): void
     {
         $this->name = $_SERVER["SERVER_NAME"];
     }
@@ -37,7 +37,7 @@ class Server
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -45,7 +45,7 @@ class Server
     /**
      * Sets server IP address.
      */
-    private function setIP()
+    private function setIP(): void
     {
         $this->iP = $_SERVER["SERVER_ADDR"];
     }
@@ -55,7 +55,7 @@ class Server
      *
      * @return string
      */
-    public function getIP()
+    public function getIP(): string
     {
         return $this->iP;
     }
@@ -64,7 +64,7 @@ class Server
     /**
      * Sets server port
      */
-    private function setPort()
+    private function setPort(): void
     {
         $this->port = $_SERVER["SERVER_PORT"];
     }
@@ -72,9 +72,9 @@ class Server
     /**
      * Gets server port
      *
-     * @return int
+     * @return integer
      */
-    public function getPort()
+    public function getPort(): int
     {
         return $this->port;
     }
@@ -82,7 +82,7 @@ class Server
     /**
      * Sets server admin email.
      */
-    private function setEmail()
+    private function setEmail(): void
     {
         $this->email = $_SERVER["SERVER_ADMIN"];
     }
@@ -92,7 +92,7 @@ class Server
      *
      * @return string
      */
-    public function getEmail()
+    public function getEmail(): string
     {
         return $this->email;
     }
@@ -100,7 +100,7 @@ class Server
     /**
      * Sets software web server is using.
      */
-    private function setSoftware()
+    private function setSoftware(): void
     {
         $this->software = $_SERVER["SERVER_SOFTWARE"];
     }
@@ -110,7 +110,7 @@ class Server
      *
      * @return string
      */
-    public function getSoftware()
+    public function getSoftware(): string
     {
         return $this->software;
     }

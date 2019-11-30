@@ -31,7 +31,7 @@ class Application
      * @throws Exception If xml file wasn't found
      * @throws XMLException If xml content has failed validation.
      */
-    public function __construct($xmlFilePath)
+    public function __construct(string $xmlFilePath): void
     {
         if (!file_exists($xmlFilePath)) {
             throw new Exception("XML file not found: ".$xmlFilePath);
@@ -51,7 +51,7 @@ class Application
      * Sets basic application info based on contents of "application" XML tag
      * @throws XMLException If xml content has failed validation.
      */
-    private function setApplicationInfo()
+    private function setApplicationInfo(): void
     {
         $xml = $this->getTag("application");
         if (empty($xml)) {
@@ -78,7 +78,7 @@ class Application
      * NOTICE: Only executed when auto_routing=0
      * @throws XMLException If xml content has failed validation.
      */
-    private function setRoutes()
+    private function setRoutes(): void
     {
         $tmp = (array) $this->getTag("routes");
         if (empty($tmp["route"])) {
@@ -101,7 +101,7 @@ class Application
      * Sets user-defined file response formats that will be used by application based on contents of "formats" XML tag
      * @throws XMLException If xml content has failed validation.
      */
-    private function setFormats()
+    private function setFormats(): void
     {
         $tmp = (array) $this->getTag("formats");
         if (empty($tmp["format"])) {
@@ -133,7 +133,7 @@ class Application
      *
      * @return string
      */
-    public function getDefaultPage()
+    public function getDefaultPage(): string
     {
         return $this->defaultPage;
     }
@@ -143,7 +143,7 @@ class Application
      *
      * @return string
      */
-    public function getDefaultFormat()
+    public function getDefaultFormat(): string
     {
         return $this->defaultFormat;
     }
@@ -153,7 +153,7 @@ class Application
      *
      * @return string
      */
-    public function getControllersPath()
+    public function getControllersPath(): string
     {
         return $this->controllerPath;
     }
@@ -163,7 +163,7 @@ class Application
      *
      * @return string
      */
-    public function getViewResolversPath()
+    public function getViewResolversPath(): string
     {
         return $this->viewResolversPath;
     }
@@ -173,7 +173,7 @@ class Application
      *
      * @return string
      */
-    public function getViewsPath()
+    public function getViewsPath(): string
     {
         return $this->viewsPath;
     }
@@ -183,7 +183,7 @@ class Application
      *
      * @return string
      */
-    public function getPublicPath()
+    public function getPublicPath(): string
     {
         return $this->publicPath;
         ;
@@ -196,7 +196,7 @@ class Application
      * 		true: Controllers will be automatically discovered based on route requested
      * 		false: Routes to controllers have been explicitly set in routes:route @ XML.
      */
-    public function getAutoRouting()
+    public function getAutoRouting(): bool
     {
         return $this->autoRouting;
     }
@@ -207,7 +207,7 @@ class Application
      *
      * @return string
      */
-    public function getVersion()
+    public function getVersion(): string
     {
         return $this->version;
     }
@@ -219,7 +219,7 @@ class Application
      * @throws Exception If "ref" points to a nonexistent file.
      * @return \SimpleXMLElement
      */
-    public function getTag($name)
+    public function getTag(string $name): \SimpleXMLElement
     {
         $xml = $this->simpleXMLElement->{$name};
         $xmlFilePath = (string) $xml["ref"];
@@ -241,7 +241,7 @@ class Application
      * @param string $url
      * @return Route[string]|NULL|Route
      */
-    public function routes($url="")
+    public function routes(string $url=""): array
     {
         if (!$url) {
             return $this->routes;
@@ -256,7 +256,7 @@ class Application
      * @param string $name
      * @return Format[string]|NULL|Format
      */
-    public function formats($name="")
+    public function formats(string $name=""): array
     {
         if (!$name) {
             return $this->formats;

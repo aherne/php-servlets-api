@@ -17,11 +17,11 @@ class FrontController implements Runnable
     
     /**
      * Starts API front controller, setting up necessary variables
-     *  
+     *
      * @param Attributes $attributes
      * @param string $documentDescriptor
      */
-    public function __construct(Attributes $attributes, $documentDescriptor = "stdout.xml")
+    public function __construct(Attributes $attributes, string $documentDescriptor = "stdout.xml"): void
     {
         $this->documentDescriptor = $documentDescriptor;
         $this->attributes = $attributes;
@@ -39,12 +39,12 @@ class FrontController implements Runnable
     
     /**
      * Adds an event listener
-     * 
+     *
      * @param string $type One of EventType enum values
-     * @param string $className Absolute location of class file or relative to project root without php extension
+     * @param string $classPath Absolute location of class file or relative to project root without php extension
      * @param string $namespace Namespace class belongs to, unless it belongs to global namespace
      */
-    public function addEventListener($type, $classPath, $namespace="")
+    public function addEventListener(string $type, string $classPath, string $namespace=""): void
     {
         $this->events[$type][] = [$classPath=>$namespace];
     }
@@ -57,10 +57,10 @@ class FrontController implements Runnable
      * @throws FileUploadException If file upload failed due to server constraints.
      * @throws Exception If any other situation where execution cannot continue.
      */
-    public function run()
+    public function run(): void
     {
         // execute events for START
-        foreach($this->events[EventType::START] as $path=>$namespace) {
+        foreach ($this->events[EventType::START] as $path=>$namespace) {
             $eventLocator = new EventListenerLocator($path, $namespace, "\\Lucinda\\STDOUT\\EventListeners\\Start");
             $className = $eventLocator->getClassName();
             $runnable = new $className($this->attributes);
@@ -71,7 +71,7 @@ class FrontController implements Runnable
         $application = new Application($this->documentDescriptor);
         
         // execute events for APPLICATION
-        foreach($this->events[EventType::APPLICATION] as $path=>$namespace) {
+        foreach ($this->events[EventType::APPLICATION] as $path=>$namespace) {
             $eventLocator = new EventListenerLocator($path, $namespace, "\\Lucinda\\STDOUT\\EventListeners\\Application");
             $className = $eventLocator->getClassName();
             $runnable = new $className($this->attributes, $application);
@@ -82,7 +82,7 @@ class FrontController implements Runnable
         $request = new Request();
         
         // execute events for REQUEST
-        foreach($this->events[EventType::REQUEST] as $path=>$namespace) {
+        foreach ($this->events[EventType::REQUEST] as $path=>$namespace) {
             $eventLocator = new EventListenerLocator($path, $namespace, "\\Lucinda\\STDOUT\\EventListeners\\Request");
             $className = $eventLocator->getClassName();
             $runnable = new $className($this->attributes, $application, $request);
@@ -93,7 +93,7 @@ class FrontController implements Runnable
         $session = new Session();
         
         // execute events for SESSION
-        foreach($this->events[EventType::SESSION] as $path=>$namespace) {
+        foreach ($this->events[EventType::SESSION] as $path=>$namespace) {
             $eventLocator = new EventListenerLocator($path, $namespace, "\\Lucinda\\STDOUT\\EventListeners\\Session");
             $className = $eventLocator->getClassName();
             $runnable = new $className($this->attributes, $application, $request, $session);
@@ -104,7 +104,7 @@ class FrontController implements Runnable
         $cookies = new Cookies();
         
         // execute events for COOKIES
-        foreach($this->events[EventType::COOKIES] as $path=>$namespace) {
+        foreach ($this->events[EventType::COOKIES] as $path=>$namespace) {
             $eventLocator = new EventListenerLocator($path, $namespace, "\\Lucinda\\STDOUT\\EventListeners\\Cookies");
             $className = $eventLocator->getClassName();
             $runnable = new $className($this->attributes, $application, $request, $session, $cookies);
@@ -134,7 +134,7 @@ class FrontController implements Runnable
         }
         
         // execute events for RESPONSE
-        foreach($this->events[EventType::RESPONSE] as $path=>$namespace) {
+        foreach ($this->events[EventType::RESPONSE] as $path=>$namespace) {
             $eventLocator = new EventListenerLocator($path, $namespace, "\\Lucinda\\STDOUT\\EventListeners\\Response");
             $className = $eventLocator->getClassName();
             $runnable = new $className($this->attributes, $application, $request, $session, $cookies, $response);
@@ -145,7 +145,7 @@ class FrontController implements Runnable
         $response->commit();
         
         // execute events for END
-        foreach($this->events[EventType::END] as $path=>$namespace) {
+        foreach ($this->events[EventType::END] as $path=>$namespace) {
             $eventLocator = new EventListenerLocator($path, $namespace, "\\Lucinda\\STDOUT\\EventListeners\\End");
             $className = $eventLocator->getClassName();
             $runnable = new $className($this->attributes, $application, $request, $session, $cookies, $response);
@@ -155,11 +155,11 @@ class FrontController implements Runnable
     
     /**
      * Gets response template file
-     * 
+     *
      * @param Application $application
      * @return string
      */
-    private function getTemplateFile(Application $application)
+    private function getTemplateFile(Application $application): string
     {
         if (!$application->getAutoRouting()) {
             $template = $application->routes($this->attributes->getRequestedPage())->getView();
@@ -172,12 +172,12 @@ class FrontController implements Runnable
     
     /**
      * Gets response content type
-     * 
+     *
      * @param Application $application
      * @return string
      */
-    private function getContentType(Application $application)
-    {        
+    private function getContentType(Application $application): string
+    {
         $format = $application->formats($this->attributes->getRequestedResponseFormat());
         return $format->getContentType().($format->getCharacterEncoding()?"; charset=".$format->getCharacterEncoding():"");
     }

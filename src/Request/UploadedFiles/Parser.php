@@ -11,7 +11,7 @@ class Parser
     /**
      * Parses through $_FILES superglobal and compiles a tree.
      */
-    public function __construct()
+    public function __construct(): void
     {
         $this->setResult();
     }
@@ -19,7 +19,7 @@ class Parser
     /**
      * Constructs tree
      */
-    private function setResult()
+    private function setResult(): void
     {
         $result = array();
         
@@ -62,7 +62,7 @@ class Parser
      *
      * @return array
      */
-    public function getResult()
+    public function getResult(): array
     {
         return $this->contents;
     }

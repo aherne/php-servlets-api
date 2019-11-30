@@ -13,7 +13,7 @@ use Lucinda\STDOUT\Response;
  * Defines blueprint of an event that executes when application ends execution (after response is committed to client)
  */
 abstract class End implements Runnable
-{    
+{
     /**
      * @var Attributes
      */
@@ -55,7 +55,7 @@ abstract class End implements Runnable
      * @param Cookies $cookies
      * @param Response $response
      */
-    public function __construct(Attributes $attributes, Application $application, Request $request, Session $session, Cookies $cookies, Response $response)
+    public function __construct(Attributes $attributes, Application $application, Request $request, Session $session, Cookies $cookies, Response $response): void
     {
         $this->attributes = $attributes;
         $this->application = $application;

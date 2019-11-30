@@ -12,7 +12,7 @@ class RequestValidator extends Request
     /**
      * Performs request validation
      */
-    public function run()
+    public function run(): void
     {
         $url = $this->request->getURI()->getPage();
         if ($url=="") {
@@ -62,7 +62,7 @@ class RequestValidator extends Request
 
         if ($this->application->formats($extension)===null) {
             throw new FormatNotFoundException("Format could not be matched to formats.format tag @ XML: ".$extension);
-        } 
+        }
         
         $this->attributes->setRequestedResponseFormat($extension);
     }

@@ -15,17 +15,17 @@ class Request
     private $server;
     private $uRI;
     private $method;
-    private $protocol;    
+    private $protocol;
     private $headers = array();
     private $parameters = array();
     private $uploadedFiles = array();
     
     /**
      * Detects all aspects of a request.
-     * 
+     *
      * @throws Exception
      */
-    public function __construct()
+    public function __construct(): void
     {
         if (!isset($_SERVER["REQUEST_URI"])) {
             throw new Exception("ServletsAPI requires overriding paths!");
@@ -44,7 +44,7 @@ class Request
     /**
      * Sets information about client that made the request.
      */
-    private function setClient()
+    private function setClient(): void
     {
         $this->client = new Client();
     }
@@ -53,7 +53,7 @@ class Request
      * Gets information about client that made the request.
      * @return Client
      */
-    public function getClient()
+    public function getClient(): Client
     {
         return $this->client;
     }
@@ -61,7 +61,7 @@ class Request
     /**
      * Sets information about server that received the request.
      */
-    private function setServer()
+    private function setServer(): void
     {
         $this->server = new Server();
     }
@@ -70,7 +70,7 @@ class Request
      * Gets information about server that received the request.
      * @return Server
      */
-    public function getServer()
+    public function getServer(): Server
     {
         return $this->server;
     }
@@ -78,7 +78,7 @@ class Request
     /**
      * Sets information about URI client requested (host, page, url, etc).
      */
-    private function setURI()
+    private function setURI(): void
     {
         $this->uRI = new URI();
     }
@@ -87,7 +87,7 @@ class Request
      * Gets information about URI client requested (host, page, url, etc).
      * @return URI
      */
-    public function getURI()
+    public function getURI(): URI
     {
         return $this->uRI;
     }
@@ -95,7 +95,7 @@ class Request
     /**
      * Sets headers sent by client.
      */
-    private function setHeaders()
+    private function setHeaders(): void
     {
         foreach ($_SERVER as $name => $value) {
             if (strpos($name, "HTTP_") === 0) {
@@ -110,7 +110,7 @@ class Request
      * @param string $name
      * @return string[string]|NULL|string
      */
-    public function headers($name="")
+    public function headers(string $name=""): array
     {
         if (!$name) {
             return $this->headers;
@@ -122,7 +122,7 @@ class Request
     /**
      * Sets parameters sent by client in accordance to HTTP request method.
      */
-    private function setParameters()
+    private function setParameters(): void
     {
         switch ($_SERVER["REQUEST_METHOD"]) {
             case "GET":
@@ -149,7 +149,7 @@ class Request
      * @param string $name
      * @return mixed
      */
-    public function parameters($name="")
+    public function parameters(string $name=""): mixed
     {
         if (!$name) {
             return $this->parameters;
@@ -163,7 +163,7 @@ class Request
      * - uploaded file attributes (name, type, tmp_name, etc) are encapsulated into an UploadedFile instance
      * - array structure information is saved to follows exactly structure set in file input @ form.
      */
-    private function setUploadedFiles()
+    private function setUploadedFiles(): void
     {
         $files = new UploadedFiles();
         $this->uploadedFiles = $files->toArray();
@@ -175,7 +175,7 @@ class Request
      * @param string $name
      * @return mixed
      */
-    public function uploadedFiles($name="")
+    public function uploadedFiles(string $name=""): mixed
     {
         if (!$name) {
             return $this->uploadedFiles;
@@ -186,10 +186,8 @@ class Request
 
     /**
      * Sets HTTP request method in which URI was requested.
-     *
-     * @return void
      */
-    private function setMethod()
+    private function setMethod(): void
     {
         $this->method=$_SERVER["REQUEST_METHOD"];
     }
@@ -200,7 +198,7 @@ class Request
      * @example GET
      * @return string
      */
-    public function getMethod()
+    public function getMethod(): string
     {
         return $this->method;
     }
@@ -208,7 +206,7 @@ class Request
     /**
      * Sets protocol for which URI was requested.
      */
-    private function setProtocol()
+    private function setProtocol(): void
     {
         $this->protocol = (!empty($_SERVER['HTTPS'])?"https":"http");
     }
@@ -219,7 +217,7 @@ class Request
      * @example https
      * @return string
      */
-    public function getProtocol()
+    public function getProtocol(): string
     {
         return $this->protocol;
     }
@@ -229,7 +227,7 @@ class Request
      *
      * @return string
      */
-    public function getInputStream()
+    public function getInputStream(): string
     {
         return file_get_contents("php://input");
     }

@@ -11,10 +11,10 @@ class View
     
     /**
      * Sets path to template that will be the foundation of view
-     * 
+     *
      * @param string $file
      */
-    public function __construct($file)
+    public function __construct(string $file): void
     {
         $this->file = $file;
     }
@@ -22,9 +22,9 @@ class View
     /**
      * Sets path to template that will be the foundation of view
      *
-     * @param string $viewPath
+     * @param string $path
      */
-    public function setTemplate($path)
+    public function setTemplate(string $path): void
     {
         $this->file = $path;
     }
@@ -34,7 +34,7 @@ class View
      *
      * @return string
      */
-    public function getTemplate()
+    public function getTemplate(): string
     {
         return $this->file;
     }
@@ -46,7 +46,7 @@ class View
      * @param string $value
      * @return mixed[string]|NULL|mixed
      */
-    public function data($key="", $value=null)
+    public function data(string $key="", string $value=null): array
     {
         if (!$key) {
             return $this->data;
@@ -57,4 +57,3 @@ class View
         }
     }
 }
-

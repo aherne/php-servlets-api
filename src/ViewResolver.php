@@ -28,7 +28,7 @@ abstract class ViewResolver implements Runnable
      * @param View $view
      * @param Response $response
      */
-    public function __construct(Application $application, View $view, Response $response)
+    public function __construct(Application $application, View $view, Response $response): void
     {
         $this->application = $application;
         $this->view = $view;
@@ -38,7 +38,7 @@ abstract class ViewResolver implements Runnable
     /**
      * Feeds response body with content generated from view by resolver
      */
-    public function run()
+    public function run(): void
     {
         $this->response->setBody($this->getContent());
     }
@@ -48,5 +48,5 @@ abstract class ViewResolver implements Runnable
      *
      * @return mixed Content to display: string for html/json/xml response formats.
      */
-    abstract protected function getContent();
+    abstract protected function getContent(): mixed;
 }

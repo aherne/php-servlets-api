@@ -8,7 +8,7 @@ use Lucinda\STDOUT\Attributes;
  * Defines blueprint of an event that executes when application starts execution (before XML is read)
  */
 abstract class Start implements Runnable
-{    
+{
     /**
      * @var Attributes
      */
@@ -20,7 +20,7 @@ abstract class Start implements Runnable
      *
      * @param Attributes $attributes
      */
-    public function __construct(Attributes $attributes)
+    public function __construct(Attributes $attributes): void
     {
         $this->attributes = $attributes;
     }

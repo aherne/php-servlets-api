@@ -17,7 +17,7 @@ class SecurityOptions
      *
      * @param integer $seconds
      */
-    public function setExpiredTime($seconds)
+    public function setExpiredTime(int $seconds): void
     {
         $this->expiredTime = time() + $seconds;
     }
@@ -27,7 +27,7 @@ class SecurityOptions
      *
      * @return integer
      */
-    public function getExpiredTime()
+    public function getExpiredTime(): int
     {
         return $this->expiredTime;
     }
@@ -37,7 +37,7 @@ class SecurityOptions
      *
      * @param boolean $value
      */
-    public function setSecuredByHTTPS($value=false)
+    public function setSecuredByHTTPS(bool $value=false): void
     {
         $this->isHTTPS = (boolean) $value;
     }
@@ -47,7 +47,7 @@ class SecurityOptions
      *
      * @return boolean
      */
-    public function isSecuredByHTTPS()
+    public function isSecuredByHTTPS(): bool
     {
         return $this->isHTTPS;
     }
@@ -56,7 +56,7 @@ class SecurityOptions
      * Toggles restricting cookies to HTTP headers only. If ON: cookies not sent via HTTP headers will be ignored by server.
      * @param boolean $value
      */
-    public function setSecuredByHTTPheaders($value=false)
+    public function setSecuredByHTTPheaders(bool $value=false): void
     {
         $this->isHTTPHeadersOnly = (boolean) $value;
     }
@@ -66,7 +66,7 @@ class SecurityOptions
      *
      * @return boolean
      */
-    public function isSecuredByHTTPheaders()
+    public function isSecuredByHTTPheaders(): bool
     {
         return $this->isHTTPHeadersOnly;
     }
@@ -76,7 +76,7 @@ class SecurityOptions
      *
      * @param string $path
      */
-    public function setPath($path = "")
+    public function setPath(string $path = ""): void
     {
         $this->path = $path;
     }
@@ -86,7 +86,7 @@ class SecurityOptions
      *
      * @return string
      */
-    public function getPath()
+    public function getPath(): string
     {
         return $this->path;
     }
@@ -96,7 +96,7 @@ class SecurityOptions
      *
      * @param string $domain
      */
-    public function setDomain($domain = "")
+    public function setDomain(string $domain = ""): void
     {
         $this->domain = $domain;
     }
@@ -106,7 +106,7 @@ class SecurityOptions
      *
      * @return string
      */
-    public function getDomain()
+    public function getDomain(): string
     {
         return $this->domain;
     }

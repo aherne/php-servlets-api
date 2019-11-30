@@ -16,7 +16,7 @@ class Cookies
      * @param SecurityOptions $securityOptions
      * @throws Exception
      */
-    public function set($key, $value, SecurityOptions $securityOptions=null)
+    public function set(string $key, mixed $value, SecurityOptions $securityOptions=null): void
     {
         $answer = false;
         if ($securityOptions) {
@@ -35,7 +35,7 @@ class Cookies
      * @param string $key
      * @return mixed
      */
-    public function get($key)
+    public function get(string $key): mixed
     {
         return $_COOKIE[$key];
     }
@@ -46,7 +46,7 @@ class Cookies
      * @param string $key
      * @return boolean
      */
-    public function contains($key)
+    public function contains(string $key): bool
     {
         return isset($_COOKIE[$key]);
     }
@@ -56,7 +56,7 @@ class Cookies
      *
      * @param string $key
      */
-    public function remove($key)
+    public function remove(string $key): void
     {
         setcookie($key, "", 1);
         setcookie($key, false);

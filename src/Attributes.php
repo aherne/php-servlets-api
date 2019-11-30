@@ -12,10 +12,10 @@ class Attributes
     
     /**
      * Sets requested page detected by matching original requested to XML directives
-     * 
+     *
      * @param string $page
      */
-    public function setRequestedPage($page)
+    public function setRequestedPage(string $page): void
     {
         $this->requestedPage = $page;
     }
@@ -26,7 +26,7 @@ class Attributes
      * @example /asd/def
      * @return string
      */
-    public function getRequestedPage()
+    public function getRequestedPage(): string
     {
         return $this->requestedPage;
     }
@@ -36,7 +36,7 @@ class Attributes
      *
      * @param string[string] $parameters
      */
-    public function setPathParameters($parameters)
+    public function setPathParameters(array $parameters): void
     {
         $this->pathParameters = $parameters;
     }
@@ -47,7 +47,7 @@ class Attributes
      * @param string $name
      * @return string[string]|NULL|string
      */
-    public function getPathParameters($name="")
+    public function getPathParameters(string $name=""): array
     {
         if (!$name) {
             return $this->pathParameters;
@@ -61,7 +61,7 @@ class Attributes
      *
      * @param string $format
      */
-    public function setRequestedResponseFormat($format)
+    public function setRequestedResponseFormat(string $format): void
     {
         $this->requestedResponseFormat = $format;
     }
@@ -72,7 +72,7 @@ class Attributes
      * @example html
      * @return string
      */
-    public function getRequestedResponseFormat()
+    public function getRequestedResponseFormat(): string
     {
         return $this->requestedResponseFormat;
     }

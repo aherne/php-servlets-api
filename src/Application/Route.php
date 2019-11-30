@@ -6,10 +6,6 @@ namespace Lucinda\STDOUT\Application;
  * - url: relative path requested
  * - cpntroller: path to controller (relative to application/controllers folder)
  * - view: path to view (relative to application/views folder)
- *
- * Utility @ Application class.
- *
- * @author aherne
  */
 class Route
 {
@@ -26,7 +22,7 @@ class Route
      * @param string $viewFile
      * @param string $format
      */
-    public function __construct($path, $controllerFile, $viewFile, $format)
+    public function __construct(string $path, string $controllerFile, string $viewFile, string $format): void
     {
         $this->path = $path;
         $this->controllerFile = $controllerFile;
@@ -41,7 +37,7 @@ class Route
      * @example test/mine		without path parameters
      * @example test/{a}/{b}	with path parameters
      */
-    public function getPath()
+    public function getPath(): string
     {
         return $this->path;
     }
@@ -52,7 +48,7 @@ class Route
      * @return string
      * @example TestController
      */
-    public function getController()
+    public function getController(): string
     {
         return $this->controllerFile;
     }
@@ -63,7 +59,7 @@ class Route
      * @return string
      * @example asd/fgh.html
      */
-    public function getView()
+    public function getView(): string
     {
         return $this->viewFile;
     }
@@ -74,7 +70,7 @@ class Route
      * @return string
      * @example json
      */
-    public function getFormat()
+    public function getFormat(): string
     {
         return $this->format;
     }

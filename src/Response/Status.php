@@ -82,7 +82,7 @@ class Status
      * @param integer $code
      * @throws Exception If incorrect numeric code is supplied.
      */
-    public function __construct($code)
+    public function __construct(int $code): void
     {
         if (!array_key_exists($code, self::HTTP_STATUSES)) {
             throw new Exception("Unsupported HTTP status: ".$code);
@@ -95,7 +95,7 @@ class Status
      *
      * @return integer
      */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
@@ -105,7 +105,7 @@ class Status
      *
      * @return string
      */
-    public function getDescription()
+    public function getDescription(): string
     {
         return self::HTTP_STATUSES[$this->id];
     }

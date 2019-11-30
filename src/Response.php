@@ -17,7 +17,7 @@ class Response
      *
      * @param string $contentType Value of content type header that will be sent in response
      */
-    public function __construct($contentType)
+    public function __construct(string $contentType): void
     {
         $this->headers["Content-Type"] = $contentType;
     }
@@ -25,10 +25,10 @@ class Response
     /**
      * Sets HTTP response status by its numeric code.
      *
-     * @param int $code
+     * @param integer $code
      * @throws Exception If status code is invalid.
      */
-    public function setStatus($code)
+    public function setStatus(int $code): void
     {
         $this->status = new Status($code);
     }
@@ -38,7 +38,7 @@ class Response
      *
      * @return Status
      */
-    public function getStatus()
+    public function getStatus(): Status
     {
         return $this->status;
     }
@@ -50,7 +50,7 @@ class Response
      * @param string $value
      * @return string[string]|NULL|string
      */
-    public function headers($key="", $value=null)
+    public function headers(string $key="", string $value=null): array
     {
         if (!$key) {
             return $this->headers;
@@ -63,20 +63,20 @@ class Response
     
     /**
      * Sets response body
-     * 
+     *
      * @param string $body
      */
-    public function setBody($body)
+    public function setBody(string $body): void
     {
         $this->body = $body;
     }
     
     /**
      * Gets response body
-     * 
+     *
      * @return string
      */
-    public function getBody()
+    public function getBody(): string
     {
         return $this->body;
     }
@@ -88,7 +88,7 @@ class Response
      * @param boolean $permanent
      * @param boolean $preventCaching
      */
-    public static function redirect($location, $permanent=true, $preventCaching=false)
+    public static function redirect(string $location, bool $permanent=true, bool $preventCaching=false): void
     {
         if ($preventCaching) {
             header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
@@ -102,7 +102,7 @@ class Response
     /**
      * Commits response to client.
      */
-    public function commit()
+    public function commit(): void
     {
         if (!headers_sent() && $this->status) {
             header("HTTP/1.1 ".$this->status->getId()." ".$this->status->getDescription());

@@ -10,25 +10,25 @@ class EventListenerLocator
 {
     /**
      * Locates event listener class on disk based on arguments
-     * 
+     *
      * @param string $classPath
      * @param string $namespace
      * @param string $extends
      */
-    public function __construct($classPath, $namespace, $extends)
+    public function __construct(string $classPath, string $namespace, string $extends): void
     {
         $this->setClassName($classPath, $namespace, $extends);
     }
     
     /**
      * Locates event listener class on disk based on arguments
-     * 
+     *
      * @param string $classPath
      * @param string $namespace
      * @param string $extends
      * @throws Exception
      */
-    private function setClassName($classPath, $namespace, $extends)
+    private function setClassName(string $classPath, string $namespace, string $extends): void
     {
         $className = $namespace."\\".substr($classPath, strrpos($classPath, "/")+1);
         
@@ -45,7 +45,7 @@ class EventListenerLocator
         if (!is_subclass_of($className, $extends)) {
             throw new Exception($className." must be a subclass of ".$extends);
         }
-        $this->className = $className;        
+        $this->className = $className;
     }
     
     /**
@@ -53,7 +53,7 @@ class EventListenerLocator
      *
      * @return string
      */
-    public function getClassName()
+    public function getClassName(): string
     {
         return $this->className;
     }

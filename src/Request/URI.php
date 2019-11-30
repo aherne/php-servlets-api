@@ -14,7 +14,7 @@ class URI
     /**
      * Detects info based on values in $_SERVER superglobal
      */
-    public function __construct()
+    public function __construct(): void
     {
         $this->setContextPath();
         $this->setPage();
@@ -25,7 +25,7 @@ class URI
     /**
      * Sets context path from requested URL.
      */
-    private function setContextPath()
+    private function setContextPath(): void
     {
         $this->contextPath = str_replace(array($_SERVER["DOCUMENT_ROOT"],"/index.php"), "", $_SERVER["SCRIPT_FILENAME"]);
     }
@@ -36,7 +36,7 @@ class URI
      * @example "/servlets/" when url is "http://www.test.com/servlets/test.html?a=b&c=d"
      * @return string
      */
-    public function getContextPath()
+    public function getContextPath(): string
     {
         return $this->contextPath;
     }
@@ -44,8 +44,8 @@ class URI
     /**
      * Sets original page requested path based on REQUEST_URI
      */
-    private function setPage()
-    {        
+    private function setPage(): void
+    {
         $urlCombined = substr($_SERVER["REQUEST_URI"], strlen($this->contextPath));
         $questionPosition = strpos($urlCombined, "?");
         if ($questionPosition!==false) {
@@ -60,7 +60,7 @@ class URI
      * @example "mypage.json" when url is "http://www.test.com/servlets/mypage.json?a=b&c=d"
      * @return string
      */
-    public function getPage()
+    public function getPage(): string
     {
         return $this->page;
     }
@@ -68,7 +68,7 @@ class URI
     /**
      * Sets query string part from requested URL
      */
-    private function setQueryString()
+    private function setQueryString(): void
     {
         $this->queryString = $_SERVER["QUERY_STRING"];
     }
@@ -79,7 +79,7 @@ class URI
      * @example "a=b&c=d" when url is "http://www.test.com/servlets/mypage.json?a=b&c=d"
      * @return string
      */
-    public function getQueryString()
+    public function getQueryString(): string
     {
         return $this->queryString;
     }
@@ -90,7 +90,7 @@ class URI
      * @param string $name
      * @return mixed[string]|NULL|mixed
      */
-    public function parameters($name="")
+    public function parameters(string $name=""): array
     {
         if (!$name) {
             return $this->parameters;

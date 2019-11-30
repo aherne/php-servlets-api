@@ -7,9 +7,6 @@ namespace Lucinda\STDOUT\Application;
  * - content type: content type that corresponds to above file format
  * - character encoding: charset associated to content type
  * - view resolver: (optional) view resolver class name. If not set, framework will resolve into an empty view with headers only.
- * Utility @ Application class.
- *
- * @author aherne
  */
 class Format
 {
@@ -26,7 +23,7 @@ class Format
      * @param string $characterEncoding
      * @param string $viewResolverClass
      */
-    public function __construct($name, $contentType, $characterEncoding="", $viewResolverClass="")
+    public function __construct(string $name, string $contentType, string $characterEncoding="", string $viewResolverClass=""): void
     {
         $this->name = $name;
         $this->contentType = $contentType;
@@ -40,7 +37,7 @@ class Format
      * @return string
      * @example json
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -51,7 +48,7 @@ class Format
      * @return string
      * @example application/json
      */
-    public function getContentType()
+    public function getContentType(): string
     {
         return $this->contentType;
     }
@@ -61,7 +58,7 @@ class Format
      *
      * @return string
      */
-    public function getCharacterEncoding()
+    public function getCharacterEncoding(): string
     {
         return $this->characterEncoding;
     }
@@ -72,7 +69,7 @@ class Format
      * @return string
      * @example JsonResolver
      */
-    public function getViewResolver()
+    public function getViewResolver(): string
     {
         return $this->viewResolverClass;
     }
