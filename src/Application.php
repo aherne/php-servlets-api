@@ -1,8 +1,8 @@
 <?php
-namespace Lucinda\MVC\STDOUT;
+namespace Lucinda\STDOUT;
 
-require("application/Route.php");
-require("application/Format.php");
+use Lucinda\STDOUT\Application\Route;
+use Lucinda\STDOUT\Application\Format;
 
 /**
  * Compiles information about application.
@@ -16,34 +16,29 @@ class Application
     private $defaultPage;
     private $defaultFormat;
     private $controllerPath;
-    private $listenerPath;
     private $viewResolversPath;
     private $viewsPath;
     private $publicPath;
     private $autoRouting;
     private $version;
-    private $listeners = array();
     private $routes = array();
     private $formats = array();
-    private $attributes = array();
     
     /**
      * Populates attributes based on an XML file
      *
      * @param string $xmlFilePath XML file url
-     * @throws ServletException If xml file wasn't found
+     * @throws Exception If xml file wasn't found
      * @throws XMLException If xml content has failed validation.
      */
     public function __construct($xmlFilePath)
     {
         if (!file_exists($xmlFilePath)) {
-            throw new ServletException("XML file not found: ".$xmlFilePath);
+            throw new Exception("XML file not found: ".$xmlFilePath);
         }
         $this->simpleXMLElement = simplexml_load_file($xmlFilePath);
         
         $this->setApplicationInfo();
-        
-        $this->setListeners();
         
         if (!$this->autoRouting) {
             $this->setRoutes();
@@ -70,31 +65,12 @@ class Application
         if (!$this->defaultFormat) {
             throw new XMLException("Attribute 'default_format' is mandatory for 'application' tag");
         }
-        $this->listenerPath = (string) $xml->paths->listeners;
         $this->controllerPath = (string) $xml->paths->controllers;
         $this->viewResolversPath = (string) $xml->paths->resolvers;
         $this->viewsPath = (string) $xml->paths->views;
         $this->publicPath = (string) $xml->paths->public;
         $this->autoRouting = (int) $xml["auto_routing"];
         $this->version = (string) $xml["version"];
-    }
-    
-    /**
-     * Sets user-defined event listeners based on contents of "listeners" XML tag
-     */
-    private function setListeners()
-    {
-        $tmp = (array) $this->getTag("listeners");
-        if (empty($tmp["listener"])) {
-            return;
-        }
-        $list = (is_array($tmp["listener"])?$tmp["listener"]:[$tmp["listener"]]);
-        foreach ($list as $info) {
-            if (empty($info['class'])) {
-                throw new XMLException("Attribute 'class' is mandatory for 'listener' tag");
-            }
-            $this->listeners[] = (string) $info['class'];
-        }
     }
     
     /**
@@ -183,16 +159,6 @@ class Application
     }
     
     /**
-     * Gets path to listeners folder.
-     *
-     * @return string
-     */
-    public function getListenersPath()
-    {
-        return $this->listenerPath;
-    }
-    
-    /**
      * Gets path to view resolvers folder.
      *
      * @return string
@@ -247,20 +213,10 @@ class Application
     }
     
     /**
-     * Gets user-defined listeners. They will be executed in exactly the order set by user.
-     *
-     * @return string[]	List of class names
-     */
-    public function getListeners()
-    {
-        return $this->listeners;
-    }
-    
-    /**
      * Gets tag based on name from main XML root or referenced XML file if "ref" attribute was set
      *
      * @param string $name
-     * @throws ServletException If "ref" points to a nonexistent file.
+     * @throws Exception If "ref" points to a nonexistent file.
      * @return \SimpleXMLElement
      */
     public function getTag($name)
@@ -270,30 +226,12 @@ class Application
         if ($xmlFilePath) {
             $xmlFilePath .= ".xml";
             if (!file_exists($xmlFilePath)) {
-                throw new ServletException("XML file not found: ".$xmlFilePath);
+                throw new Exception("XML file not found: ".$xmlFilePath);
             }
             $subXML = simplexml_load_file($xmlFilePath);
             return $subXML->{$name};
         } else {
             return $xml;
-        }
-    }
-        
-    /**
-     * Gets or sets application attributes
-     *
-     * @param string $key
-     * @param mixed $value
-     * @return mixed[string]|NULL|mixed
-     */
-    public function attributes($key="", $value=null)
-    {
-        if (!$key) {
-            return $this->attributes;
-        } elseif ($value===null) {
-            return (isset($this->attributes[$key])?$this->attributes[$key]:null);
-        } else {
-            $this->attributes[$key] = $value;
         }
     }
     

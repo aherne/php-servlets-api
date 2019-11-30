@@ -1,5 +1,5 @@
 <?php
-namespace Lucinda\MVC\STDOUT;
+namespace Lucinda\STDOUT;
 
 /**
  * Defines blueprints of an object that can be ran by FrontController

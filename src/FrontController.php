@@ -1,101 +1,184 @@
 <?php
-namespace Lucinda\MVC\STDOUT;
+namespace Lucinda\STDOUT;
 
-require("Runnable.php");
-require("Controller.php");
-require("Application.php");
-require("Request.php");
-require("Response.php");
-require("request/PageValidator.php");
-require("response/ViewResolver.php");
-require("locators/ListenerLocator.php");
-require("locators/ControllerLocator.php");
-require("locators/ViewResolverLocator.php");
-require("listeners/ApplicationListener.php");
-require("listeners/RequestListener.php");
-require("listeners/ResponseListener.php");
+use Lucinda\STDOUT\Request\UploadedFiles\Exception as FileUploadException;
+use Lucinda\STDOUT\Locators\ControllerLocator;
+use Lucinda\STDOUT\Locators\ViewResolverLocator;
+use Lucinda\STDOUT\Locators\EventListenerLocator;
 
 /**
  * Implements STDOUT front controller MVC functionality, integrating all API components as a whole.
  */
-class FrontController
+class FrontController implements Runnable
 {
+    private $documentDescriptor;
+    private $attributes;
+    private $events = [];
+    
+    /**
+     * Starts API front controller, setting up necessary variables
+     *  
+     * @param Attributes $attributes
+     * @param string $documentDescriptor
+     */
+    public function __construct(Attributes $attributes, $documentDescriptor = "stdout.xml")
+    {
+        $this->documentDescriptor = $documentDescriptor;
+        $this->attributes = $attributes;
+        // initialize events
+        $this->events = [
+            EventType::START=>[],
+            EventType::APPLICATION=>[],
+            EventType::REQUEST=>[[__DIR__."/EventListeners/RequestValidator"=>"\\Lucinda\\STDOUT\\EventListeners"]],
+            EventType::SESSION=>[],
+            EventType::COOKIES=>[],
+            EventType::RESPONSE=>[],
+            EventType::END=>[]
+        ];
+    }
+    
+    /**
+     * Adds an event listener
+     * 
+     * @param string $type One of EventType enum values
+     * @param string $className Absolute location of class file or relative to project root without php extension
+     * @param string $namespace Namespace class belongs to, unless it belongs to global namespace
+     */
+    public function addEventListener($type, $classPath, $namespace="")
+    {
+        $this->events[$type][] = [$classPath=>$namespace];
+    }
+    
     /**
      * Performs all steps required to convert request to response in procedural mode, while delegating to subcomponents, to maximize performance
      *
-     * @param string $documentDescriptor Path to XML file that configures API
-     * @throws XMLException If xml contents fail validation checks.
      * @throws FormatNotFoundException If an invalid response format was setup by developer in XML for route requested by client.
      * @throws PathNotFoundException If an invalid route was requested from client or setup by developer in XML.
      * @throws FileUploadException If file upload failed due to server constraints.
-     * @throws ServletException If any other situation where execution cannot continue.
+     * @throws Exception If any other situation where execution cannot continue.
      */
-    public function __construct($documentDescriptor="configuration.xml")
+    public function run()
     {
-        // sets application object based on user-defined XML
-        $application = new Application($documentDescriptor);
-
-        // instances library that finds event listeners for each lifecycle event
-        $listenerLocator = new ListenerLocator($application);
-
-        // runs ApplicationListener instances found by locator in the order they were set in xml
-        $listeners = $listenerLocator->getClassNames("ApplicationListener");
-        foreach ($listeners as $className) {
-            $runnable = new $className($application);
+        // execute events for START
+        foreach($this->events[EventType::START] as $path=>$namespace) {
+            $eventLocator = new EventListenerLocator($path, $namespace, "\\Lucinda\\STDOUT\\EventListeners\\Start");
+            $className = $eventLocator->getClassName();
+            $runnable = new $className($this->attributes);
             $runnable->run();
         }
-
-        // sets request object based on user request information matched with that in XML
+        
+        // reads XML configuration file
+        $application = new Application($this->documentDescriptor);
+        
+        // execute events for APPLICATION
+        foreach($this->events[EventType::APPLICATION] as $path=>$namespace) {
+            $eventLocator = new EventListenerLocator($path, $namespace, "\\Lucinda\\STDOUT\\EventListeners\\Application");
+            $className = $eventLocator->getClassName();
+            $runnable = new $className($this->attributes, $application);
+            $runnable->run();
+        }
+        
+        // reads user request
         $request = new Request();
-        $request->setValidator(new PageValidator($request->getURI()->getPage(), $application));
-
-        // runs RequestListener instances found by locator in the order they were set in xml
-        $listeners = $listenerLocator->getClassNames("RequestListener");
-        foreach ($listeners as $className) {
-            $runnable = new $className($application, $request);
+        
+        // execute events for REQUEST
+        foreach($this->events[EventType::REQUEST] as $path=>$namespace) {
+            $eventLocator = new EventListenerLocator($path, $namespace, "\\Lucinda\\STDOUT\\EventListeners\\Request");
+            $className = $eventLocator->getClassName();
+            $runnable = new $className($this->attributes, $application, $request);
             $runnable->run();
         }
-
-        // sets response object by matching validated user request information to that contained in XML
-        $format = $application->formats($request->getValidator()->getFormat());
-        $contentType = $format->getContentType().($format->getCharacterEncoding()?"; charset=".$format->getCharacterEncoding():"");
-        $response = new Response($contentType);
-        if (!$application->getAutoRouting()) {
-            $view = $application->routes($request->getValidator()->getPage())->getView();
-            if ($view) {
-                $response->setView($view);
-            }
+        
+        // encapsulates session operations
+        $session = new Session();
+        
+        // execute events for SESSION
+        foreach($this->events[EventType::SESSION] as $path=>$namespace) {
+            $eventLocator = new EventListenerLocator($path, $namespace, "\\Lucinda\\STDOUT\\EventListeners\\Session");
+            $className = $eventLocator->getClassName();
+            $runnable = new $className($this->attributes, $application, $request, $session);
+            $runnable->run();
         }
+        
+        // encapsulates cookies operations
+        $cookies = new Cookies();
+        
+        // execute events for COOKIES
+        foreach($this->events[EventType::COOKIES] as $path=>$namespace) {
+            $eventLocator = new EventListenerLocator($path, $namespace, "\\Lucinda\\STDOUT\\EventListeners\\Cookies");
+            $className = $eventLocator->getClassName();
+            $runnable = new $className($this->attributes, $application, $request, $session, $cookies);
+            $runnable->run();
+        }
+                
+        // sets view
+        $view = new View($this->getTemplateFile($application));
 
         // locates and runs page controller
-        $controllerLocator = new ControllerLocator($application, $request->getValidator()->getPage());
+        $controllerLocator = new ControllerLocator($application, $this->attributes);
         $className  = $controllerLocator->getClassName();
         if ($className) {
-            $runnable = new $className($application, $request, $response);
+            $runnable = new $className($this->attributes, $application, $request, $session, $cookies, $view);
+            $runnable->run();
+        }
+        
+        // sets response object by matching validated user request information to that contained in XML
+        $response = new Response($this->getContentType($application));
+
+        // set up response based on view
+        $viewResolverLocator = new ViewResolverLocator($application, $this->attributes);
+        $className  = $viewResolverLocator->getClassName();
+        if ($className) {
+            $runnable = new $className($application, $view);
+            $runnable->run();
+        }
+        
+        // execute events for RESPONSE
+        foreach($this->events[EventType::RESPONSE] as $path=>$namespace) {
+            $eventLocator = new EventListenerLocator($path, $namespace, "\\Lucinda\\STDOUT\\EventListeners\\Response");
+            $className = $eventLocator->getClassName();
+            $runnable = new $className($this->attributes, $application, $request, $session, $cookies, $response);
             $runnable->run();
         }
 
-        // if response is not disabled, produce a view
-        if (!$response->isDisabled()) {
-            // locates a view resolver for response content type that populates output stream when ran
-            if ($response->getOutputStream()->isEmpty()) {
-                $viewResolverLocator = new ViewResolverLocator($application, $request->getValidator()->getFormat());
-                $className  = $viewResolverLocator->getClassName();
-                if ($className) {
-                    $runnable = new $className($application, $response);
-                    $runnable->run();
-                }
-            }
-
-            // runs ResponseListener instances found by locator in the order they were set in xml
-            $listeners = $listenerLocator->getClassNames("ResponseListener");
-            foreach ($listeners as $className) {
-                $runnable = new $className($application, $request, $response);
-                $runnable->run();
+        // commits response to caller
+        $response->commit();
+        
+        // execute events for END
+        foreach($this->events[EventType::END] as $path=>$namespace) {
+            $eventLocator = new EventListenerLocator($path, $namespace, "\\Lucinda\\STDOUT\\EventListeners\\End");
+            $className = $eventLocator->getClassName();
+            $runnable = new $className($this->attributes, $application, $request, $session, $cookies, $response);
+            $runnable->run();
+        }
+    }
+    
+    /**
+     * Gets response template file
+     * 
+     * @param Application $application
+     * @return string
+     */
+    private function getTemplateFile(Application $application)
+    {
+        if (!$application->getAutoRouting()) {
+            $template = $application->routes($this->attributes->getRequestedPage())->getView();
+            if ($template) {
+                return $template;
             }
         }
-
-        // commits response to requester
-        $response->commit();
+        return null;
+    }
+    
+    /**
+     * Gets response content type
+     * 
+     * @param Application $application
+     * @return string
+     */
+    private function getContentType(Application $application)
+    {        
+        $format = $application->formats($this->attributes->getRequestedResponseFormat());
+        return $format->getContentType().($format->getCharacterEncoding()?"; charset=".$format->getCharacterEncoding():"");
     }
 }

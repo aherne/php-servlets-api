@@ -1,0 +1,79 @@
+<?php
+namespace Lucinda\STDOUT;
+
+/**
+ * Encapsulates transport layer that collects variables to be passed through API objects
+ */
+class Attributes
+{
+    private $requestedPage;
+    private $requestedResponseFormat;
+    private $pathParameters=array();
+    
+    /**
+     * Sets requested page detected by matching original requested to XML directives
+     * 
+     * @param string $page
+     */
+    public function setRequestedPage($page)
+    {
+        $this->requestedPage = $page;
+    }
+    
+    /**
+     * Gets requested page detected by matching original requested to XML directives
+     *
+     * @example /asd/def
+     * @return string
+     */
+    public function getRequestedPage()
+    {
+        return $this->requestedPage;
+    }
+    
+    /**
+     * Gets path parameters detected from requested page, optionally by parameter name
+     *
+     * @param string[string] $parameters
+     */
+    public function setPathParameters($parameters)
+    {
+        $this->pathParameters = $parameters;
+    }
+        
+    /**
+     * Gets path parameters detected from requested page, optionally by parameter name
+     *
+     * @param string $name
+     * @return string[string]|NULL|string
+     */
+    public function getPathParameters($name="")
+    {
+        if (!$name) {
+            return $this->pathParameters;
+        } else {
+            return (isset($this->pathParameters[$name])?$this->pathParameters[$name]:null);
+        }
+    }
+    
+    /**
+     * Gets requested response format detected by matching original to XML directives
+     *
+     * @param string $format
+     */
+    public function setRequestedResponseFormat($format)
+    {
+        $this->requestedResponseFormat = $format;
+    }
+    
+    /**
+     * Gets requested response format detected by matching original requested to XML directives
+     *
+     * @example html
+     * @return string
+     */
+    public function getRequestedResponseFormat()
+    {
+        return $this->requestedResponseFormat;
+    }
+}

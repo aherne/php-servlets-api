@@ -1,13 +1,10 @@
 <?php
-namespace Lucinda\MVC\STDOUT;
+namespace Lucinda\STDOUT;
 
-require("request/RequestClient.php");
-require("request/RequestServer.php");
-require("request/RequestURI.php");
-require("request/UploadedFileTree.php");
-require("request/Session.php");
-require("request/Cookie.php");
-require("request/RequestValidator.php");
+use Lucinda\STDOUT\Request\Client;
+use Lucinda\STDOUT\Request\Server;
+use Lucinda\STDOUT\Request\URI;
+use Lucinda\STDOUT\Request\UploadedFiles;
 
 /**
  * Detects information about request from $_SERVER, $_GET, $_POST, $_FILES. Once detected, parameters are immutable.
@@ -18,30 +15,27 @@ class Request
     private $server;
     private $uRI;
     private $method;
-    private $protocol;
-    
-    private $cookie;
-    private $session;
+    private $protocol;    
     private $headers = array();
     private $parameters = array();
-    private $uploadedFiles;
-    
-    private $validator;
-    private $attributes = array();
+    private $uploadedFiles = array();
     
     /**
      * Detects all aspects of a request.
+     * 
+     * @throws Exception
      */
     public function __construct()
     {
+        if (!isset($_SERVER["REQUEST_URI"])) {
+            throw new Exception("ServletsAPI requires overriding paths!");
+        }
+        
         $this->setClient();
         $this->setServer();
         $this->setMethod();
         $this->setProtocol();
         $this->setURI();
-        // set params
-        $this->setCookie();
-        $this->setSession();
         $this->setHeaders();
         $this->setParameters();
         $this->setUploadedFiles();
@@ -52,12 +46,12 @@ class Request
      */
     private function setClient()
     {
-        $this->client = new RequestClient();
+        $this->client = new Client();
     }
 
     /**
      * Gets information about client that made the request.
-     * @return RequestClient
+     * @return Client
      */
     public function getClient()
     {
@@ -69,12 +63,12 @@ class Request
      */
     private function setServer()
     {
-        $this->server = new RequestServer();
+        $this->server = new Server();
     }
 
     /**
      * Gets information about server that received the request.
-     * @return RequestServer
+     * @return Server
      */
     public function getServer()
     {
@@ -86,12 +80,12 @@ class Request
      */
     private function setURI()
     {
-        $this->uRI = new RequestURI();
+        $this->uRI = new URI();
     }
 
     /**
      * Gets information about URI client requested (host, page, url, etc).
-     * @return RequestURI
+     * @return URI
      */
     public function getURI()
     {
@@ -107,6 +101,21 @@ class Request
             if (strpos($name, "HTTP_") === 0) {
                 $this->headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
             }
+        }
+    }
+    
+    /**
+     * Gets request headers detected by optional name
+     *
+     * @param string $name
+     * @return string[string]|NULL|string
+     */
+    public function headers($name="")
+    {
+        if (!$name) {
+            return $this->headers;
+        } else {
+            return (isset($this->headers[$name])?$this->headers[$name]:null);
         }
     }
 
@@ -135,61 +144,44 @@ class Request
     }
     
     /**
+     * Gets request parameters detected by optional name
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function parameters($name="")
+    {
+        if (!$name) {
+            return $this->parameters;
+        } else {
+            return (isset($this->parameters[$name])?$this->parameters[$name]:null);
+        }
+    }
+    
+    /**
      * Sets files uploaded by client via form based on PHP superglobal $_FILES with two structural changes:
      * - uploaded file attributes (name, type, tmp_name, etc) are encapsulated into an UploadedFile instance
      * - array structure information is saved to follows exactly structure set in file input @ form.
      */
     private function setUploadedFiles()
     {
-        $files = new UploadedFileTree();
+        $files = new UploadedFiles();
         $this->uploadedFiles = $files->toArray();
     }
     
     /**
-     * Gets files uploaded as tree of UploadedFile objects following request structure.
+     * Gets uploaded files detected by optional request parameter name
      *
-     * @return array
+     * @param string $name
+     * @return mixed
      */
-    public function getUploadedFiles()
+    public function uploadedFiles($name="")
     {
-        return $this->uploadedFiles;
-    }
-    
-    /**
-     * Encapsulates parameters received as $_COOKIE
-     */
-    private function setCookie()
-    {
-        $this->cookie = new Cookie();
-    }
-
-    /**
-     * Gets pointer to cookie (to be used in gettin/setting cookie params)
-     *
-     * @return Cookie
-     */
-    public function getCookie()
-    {
-        return $this->cookie;
-    }
-
-    /**
-     * Encapsulates parameters received as $_SESSION
-     */
-    private function setSession()
-    {
-        $this->session = new Session();
-    }
-
-
-    /**
-     * Gets pointer to cookie (to be used in gettin/setting session params)
-     *
-     * @return Session
-     */
-    public function getSession()
-    {
-        return $this->session;
+        if (!$name) {
+            return $this->uploadedFiles;
+        } else {
+            return (isset($this->uploadedFiles[$name])?$this->uploadedFiles[$name]:null);
+        }
     }
 
     /**
@@ -240,79 +232,5 @@ class Request
     public function getInputStream()
     {
         return file_get_contents("php://input");
-    }
-    
-    /**
-     * Sets class able to process request and extract information about:
-     * - actual page requested
-     * - content type requested
-     * - path parameters present in request
-     *
-     * @param RequestValidator $validator
-     */
-    public function setValidator(RequestValidator $validator)
-    {
-        $this->validator = $validator;
-    }
-    
-    /**
-     * Gets class to extract information about:
-     * - actual page requested
-     * - content type requested
-     * - path parameters present in request
-     *
-     * @return RequestValidator
-     */
-    public function getValidator()
-    {
-        return $this->validator;
-    }
-    
-    /**
-     * Gets or sets request attributes
-     *
-     * @param string $key
-     * @param mixed $value
-     * @return mixed[string]|NULL|mixed
-     */
-    public function attributes($key="", $value=null)
-    {
-        if (!$key) {
-            return $this->attributes;
-        } elseif ($value===null) {
-            return (isset($this->attributes[$key])?$this->attributes[$key]:null);
-        } else {
-            $this->attributes[$key] = $value;
-        }
-    }
-    
-    /**
-     * Gets request headers detected by optional name
-     *
-     * @param string $name
-     * @return string[string]|NULL|string
-     */
-    public function headers($name="")
-    {
-        if (!$name) {
-            return $this->headers;
-        } else {
-            return (isset($this->headers[$name])?$this->headers[$name]:null);
-        }
-    }
-    
-    /**
-     * Gets request parameters detected by optional name
-     *
-     * @param string $name
-     * @return mixed[string]|NULL|mixed
-     */
-    public function parameters($name="")
-    {
-        if (!$name) {
-            return $this->parameters;
-        } else {
-            return (isset($this->parameters[$name])?$this->parameters[$name]:null);
-        }
     }
 }
