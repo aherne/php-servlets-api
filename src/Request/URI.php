@@ -90,7 +90,7 @@ class URI
      * @param string $name
      * @return mixed[string]|NULL|mixed
      */
-    public function parameters(string $name=""): array
+    public function parameters(string $name="")
     {
         if (!$name) {
             return $this->parameters;

@@ -110,7 +110,7 @@ class Request
      * @param string $name
      * @return string[string]|NULL|string
      */
-    public function headers(string $name=""): array
+    public function headers(string $name="")
     {
         if (!$name) {
             return $this->headers;

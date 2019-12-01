@@ -241,7 +241,7 @@ class Application
      * @param string $url
      * @return Route[string]|NULL|Route
      */
-    public function routes(string $url=""): array
+    public function routes(string $url="")
     {
         if (!$url) {
             return $this->routes;
@@ -256,7 +256,7 @@ class Application
      * @param string $name
      * @return Format[string]|NULL|Format
      */
-    public function formats(string $name=""): array
+    public function formats(string $name="")
     {
         if (!$name) {
             return $this->formats;

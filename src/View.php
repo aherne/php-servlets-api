@@ -46,7 +46,7 @@ class View
      * @param string $value
      * @return mixed[string]|NULL|mixed
      */
-    public function data(string $key="", string $value=null): array
+    public function data(string $key="", string $value=null)
     {
         if (!$key) {
             return $this->data;

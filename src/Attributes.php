@@ -47,7 +47,7 @@ class Attributes
      * @param string $name
      * @return string[string]|NULL|string
      */
-    public function getPathParameters(string $name=""): array
+    public function getPathParameters(string $name="")
     {
         if (!$name) {
             return $this->pathParameters;
