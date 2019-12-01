@@ -45,7 +45,7 @@ class Attributes
      * Gets path parameters detected from requested page, optionally by parameter name
      *
      * @param string $name
-     * @return string[string]|NULL|string
+     * @return string|array|null
      */
     public function getPathParameters(string $name="")
     {

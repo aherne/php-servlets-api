@@ -5,6 +5,7 @@ use Lucinda\STDOUT\Request\Client;
 use Lucinda\STDOUT\Request\Server;
 use Lucinda\STDOUT\Request\URI;
 use Lucinda\STDOUT\Request\UploadedFiles;
+use Lucinda\STDOUT\Request\UploadedFiles\File;
 
 /**
  * Detects information about request from $_SERVER, $_GET, $_POST, $_FILES. Once detected, parameters are immutable.
@@ -108,7 +109,7 @@ class Request
      * Gets request headers detected by optional name
      *
      * @param string $name
-     * @return string[string]|NULL|string
+     * @return string|array|null
      */
     public function headers(string $name="")
     {
@@ -147,9 +148,9 @@ class Request
      * Gets request parameters detected by optional name
      *
      * @param string $name
-     * @return mixed
+     * @return string|array|null
      */
-    public function parameters(string $name=""): mixed
+    public function parameters(string $name="")
     {
         if (!$name) {
             return $this->parameters;
@@ -173,9 +174,9 @@ class Request
      * Gets uploaded files detected by optional request parameter name
      *
      * @param string $name
-     * @return mixed
+     * @return File|array|null
      */
-    public function uploadedFiles(string $name=""): mixed
+    public function uploadedFiles(string $name="")
     {
         if (!$name) {
             return $this->uploadedFiles;

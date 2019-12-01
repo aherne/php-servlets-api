@@ -129,7 +129,7 @@ class FrontController implements Runnable
         $viewResolverLocator = new ViewResolverLocator($application, $this->attributes);
         $className  = $viewResolverLocator->getClassName();
         if ($className) {
-            $runnable = new $className($application, $view);
+            $runnable = new $className($application, $view, $response);
             $runnable->run();
         }
         

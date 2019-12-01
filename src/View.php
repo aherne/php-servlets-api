@@ -44,7 +44,7 @@ class View
      *
      * @param string $key
      * @param string $value
-     * @return mixed[string]|NULL|mixed
+     * @return mixed|array|null
      */
     public function data(string $key="", string $value=null)
     {

@@ -50,7 +50,7 @@ class Session
      * @param mixed $value
      * @throws Exception	If session not started.
      */
-    public function set(string $key, mixed $value): void
+    public function set(string $key, $value): void
     {
         $_SESSION[$key] = $value;
     }
@@ -61,7 +61,7 @@ class Session
      * @param string $key
      * @return mixed
      */
-    public function get(string $key): mixed
+    public function get(string $key)
     {
         return $_SESSION[$key];
     }
@@ -72,7 +72,7 @@ class Session
      * @param string $key
      * @return mixed
      */
-    public function contains(string $key): mixed
+    public function contains(string $key)
     {
         return isset($_SESSION[$key]);
     }

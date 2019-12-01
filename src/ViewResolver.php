@@ -48,5 +48,5 @@ abstract class ViewResolver implements Runnable
      *
      * @return mixed Content to display: string for html/json/xml response formats.
      */
-    abstract protected function getContent(): mixed;
+    abstract protected function getContent();
 }

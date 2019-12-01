@@ -239,7 +239,7 @@ class Application
      * Gets routes detected by optional url
      *
      * @param string $url
-     * @return Route[string]|NULL|Route
+     * @return Route|array|null
      */
     public function routes(string $url="")
     {
@@ -254,7 +254,7 @@ class Application
      * Gets display formats detected by name
      *
      * @param string $name
-     * @return Format[string]|NULL|Format
+     * @return Format|array|null
      */
     public function formats(string $name="")
     {

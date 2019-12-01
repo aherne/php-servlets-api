@@ -88,7 +88,7 @@ class URI
      * Gets query string parameters detected by optional name
      *
      * @param string $name
-     * @return mixed[string]|NULL|mixed
+     * @return string|array|null
      */
     public function parameters(string $name="")
     {

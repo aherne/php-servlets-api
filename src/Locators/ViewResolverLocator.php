@@ -11,6 +11,18 @@ use Lucinda\STDOUT\Exception;
 class ViewResolverLocator extends ServiceLocator
 {
     /**
+     * Triggers service location.
+     *
+     * @param Application $application
+     * @param Attributes $attributes
+     * @throws Exception If controller file could not be located on disk.
+     */
+    public function __construct(Application $application, Attributes $attributes): void
+    {
+        $this->setClassName($application, $attributes);
+    }
+    
+    /**
      * Gets resolver class name.
      *
      * @param Application $application

@@ -6,7 +6,7 @@ use Lucinda\STDOUT\Exception;
 /**
  * Locates and loads EventListener class based on its absolute/relative file path and namespace
  */
-class EventListenerLocator
+class EventListenerLocator extends ServiceLocator
 {
     /**
      * Locates event listener class on disk based on arguments
@@ -46,15 +46,5 @@ class EventListenerLocator
             throw new Exception($className." must be a subclass of ".$extends);
         }
         $this->className = $className;
-    }
-    
-    /**
-     * Gets event listener class name.
-     *
-     * @return string
-     */
-    public function getClassName(): string
-    {
-        return $this->className;
     }
 }

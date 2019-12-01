@@ -10,7 +10,20 @@ use Lucinda\STDOUT\XMLException;
  * Locates and loads Controller class based on information collected by Application and Attributes objects
  */
 class ControllerLocator extends ServiceLocator
-{
+{    
+    /**
+     * Triggers service location.
+     *
+     * @param Application $application
+     * @param Attributes $attributes
+     * @throws Exception If controller file could not be located on disk.
+     * @throws XMLException If XML is misconfigured
+     */
+    public function __construct(Application $application, Attributes $attributes): void
+    {
+        $this->setClassName($application, $attributes);
+    }
+    
     /**
      * Sets controller class name.
      *

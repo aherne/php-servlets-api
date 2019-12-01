@@ -48,7 +48,7 @@ class Response
      *
      * @param string $key
      * @param string $value
-     * @return string[string]|NULL|string
+     * @return string|array|null
      */
     public function headers(string $key="", string $value=null)
     {
@@ -104,19 +104,18 @@ class Response
      */
     public function commit(): void
     {
-        if (!headers_sent() && $this->status) {
-            header("HTTP/1.1 ".$this->status->getId()." ".$this->status->getDescription());
-        }
-        
-        // load headers
-        $headers = $this->headers;
-        if (sizeof($headers)>0) {
-            foreach ($headers as $name=>$value) {
+        // sends headers
+        if (!headers_sent()) {
+            if ($this->status) {
+                header("HTTP/1.1 ".$this->status->getId()." ".$this->status->getDescription());
+            }
+            
+            foreach ($this->headers as $name=>$value) {
                 header($name.": ".$value);
             }
         }
         
-        // show output
+        // displays body
         echo $this->body;
     }
 }
