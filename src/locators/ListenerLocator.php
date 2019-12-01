@@ -1,6 +1,8 @@
 <?php
 namespace Lucinda\MVC\STDOUT;
 
+require_once("ClassFinder.php");
+
 /**
  * Locates all event listeners based on data in XML tag <listeners>.
  */
@@ -27,24 +29,13 @@ class ListenerLocator
      */
     private function setClassNames(Application $application)
     {
-        $listenerPath = $application->getListenersPath();
-        $listeners = $application->getListeners();
         
         // gets classes
         $output = array();
+        $classFinder = new ClassFinder($application->getListenersPath());
+        $listeners = $application->getListeners();
         foreach ($listeners as $className) {
-            // load file
-            $file = $listenerPath."/".$className.".php";
-            if (!file_exists($file)) {
-                throw new ServletException("Listener file not found: ".$file);
-            }
-            require($file);
-                
-            // verify class
-            if (!class_exists($className)) {
-                throw new ServletException("Listener class not found: ".$className);
-            }
-            $output[] = $className;
+            $output[] = $classFinder->find($className);
         }
         
         $this->classNames = $output;

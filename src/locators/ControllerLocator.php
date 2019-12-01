@@ -1,6 +1,8 @@
 <?php
 namespace Lucinda\MVC\STDOUT;
 
+require_once("ClassFinder.php");
+
 /**
  * Locates controller by matching page requested by client to data in XML tag "route".
  */
@@ -39,42 +41,27 @@ class ControllerLocator
         $url = $pagePath;
     
         // get controller class name
-        $file = "";
-        $class = "";
         if (!$application->getAutoRouting()) {
-            $path = $application->routes($url)->getController();
-            if (!$path) {
-                return;
-            }
-            $file = ($folder?$folder."/":"").$path.".php";
-            $slashPosition = strrpos($path, "/");
-            if ($slashPosition!==false) {
-                $class = substr($path, $slashPosition+1);
-                if (!$class) {
-                    throw new XMLException("Invalid controller set for route: ".$url);
-                }
-            } else {
-                $class = $path;
-            }
+            $className = $application->routes($url)->getController();
+            $classFinder = new ClassFinder($folder);
+            $this->className = $classFinder->find($className);
         } else {
             $class = str_replace(" ", "", ucwords(str_replace(array("/","-"), " ", strtolower($url))))."Controller";
             $file = $folder."/".$class.".php";
+            
+            // loads controller file
+            if (!file_exists($file)) {
+                throw new ServletException("Controller not found: ".$class);
+            }
+            require_once($file);
+            
+            // validates and sets controller class
+            if (!class_exists($class)) {
+                throw new ServletException("Controller class not found: ".$class);
+            }
+            
+            $this->className = $class;
         }
-        
-        // loads controller file
-        if (!file_exists($file)) {
-            throw new ServletException("Controller not found: ".$class);
-        }
-        require($file);
-
-        // validates and sets controller class
-        if (!class_exists($class)) {
-            throw new ServletException("Controller class not found: ".$class);
-        }
-        if (!is_subclass_of($class, __NAMESPACE__."\\"."Controller")) {
-            throw new ServletException($class." must be a subclass of Controller");
-        }
-        $this->className = $class;
     }
 
     /**
