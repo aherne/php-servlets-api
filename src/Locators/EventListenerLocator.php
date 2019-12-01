@@ -4,7 +4,7 @@ namespace Lucinda\STDOUT\Locators;
 use Lucinda\STDOUT\Exception;
 
 /**
- * Locates and loads EventListener class based on its absolute/relative file path and namespace
+ * Locates and loads EventListener class based on its absolute/relative file path and name
  */
 class EventListenerLocator extends ServiceLocator
 {
@@ -12,39 +12,23 @@ class EventListenerLocator extends ServiceLocator
      * Locates event listener class on disk based on arguments
      *
      * @param string $classPath
-     * @param string $namespace
-     * @param string $extends
+     * @param string $className
      */
-    public function __construct(string $classPath, string $namespace, string $extends): void
+    public function __construct(string $classPath, string $className): void
     {
-        $this->setClassName($classPath, $namespace, $extends);
+        $this->setClassName($classPath, $className);
     }
     
     /**
      * Locates event listener class on disk based on arguments
      *
      * @param string $classPath
-     * @param string $namespace
-     * @param string $extends
+     * @param string $className
      * @throws Exception
      */
-    private function setClassName(string $classPath, string $namespace, string $extends): void
+    private function setClassName(string $classPath, string $className): void
     {
-        $className = $namespace."\\".substr($classPath, strrpos($classPath, "/")+1);
-        
-        // loads event class
-        if (!file_exists($classPath.".php")) {
-            throw new Exception("Event listener not found: ".$className);
-        }
-        require_once($classPath.".php");
-        
-        // validates and sets controller class
-        if (!class_exists($className)) {
-            throw new Exception("Class not found: ".$className);
-        }
-        if (!is_subclass_of($className, $extends)) {
-            throw new Exception($className." must be a subclass of ".$extends);
-        }
-        $this->className = $className;
+        $classFinder = new ClassFinder($classPath);
+        $this->className = $classFinder->find($className);
     }
 }

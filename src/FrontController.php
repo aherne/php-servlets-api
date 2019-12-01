@@ -29,7 +29,7 @@ class FrontController implements Runnable
         $this->events = [
             EventType::START=>[],
             EventType::APPLICATION=>[],
-            EventType::REQUEST=>[[__DIR__."/EventListeners/RequestValidator"=>"\\Lucinda\\STDOUT\\EventListeners"]],
+            EventType::REQUEST=>[["\\Lucinda\\STDOUT\\EventListeners\\RequestValidator"=>__DIR__."/EventListeners"]],
             EventType::SESSION=>[],
             EventType::COOKIES=>[],
             EventType::RESPONSE=>[],
@@ -41,12 +41,11 @@ class FrontController implements Runnable
      * Adds an event listener
      *
      * @param string $type One of EventType enum values
-     * @param string $classPath Absolute location of class file or relative to project root without php extension
-     * @param string $namespace Namespace class belongs to, unless it belongs to global namespace
+     * @param string $className Name of event listener class (including namespace and subfolder, if any)
      */
-    public function addEventListener(string $type, string $classPath, string $namespace=""): void
+    public function addEventListener(string $type, string $className): void
     {
-        $this->events[$type][] = [$classPath=>$namespace];
+        $this->events[$type][] = [$className=>$this->attributes->getEventsFolder()];
     }
     
     /**
@@ -60,8 +59,8 @@ class FrontController implements Runnable
     public function run(): void
     {
         // execute events for START
-        foreach ($this->events[EventType::START] as $path=>$namespace) {
-            $eventLocator = new EventListenerLocator($path, $namespace, "\\Lucinda\\STDOUT\\EventListeners\\Start");
+        foreach ($this->events[EventType::START] as $class=>$path) {
+            $eventLocator = new EventListenerLocator($path, $class);
             $className = $eventLocator->getClassName();
             $runnable = new $className($this->attributes);
             $runnable->run();
@@ -71,8 +70,8 @@ class FrontController implements Runnable
         $application = new Application($this->documentDescriptor);
         
         // execute events for APPLICATION
-        foreach ($this->events[EventType::APPLICATION] as $path=>$namespace) {
-            $eventLocator = new EventListenerLocator($path, $namespace, "\\Lucinda\\STDOUT\\EventListeners\\Application");
+        foreach ($this->events[EventType::APPLICATION] as $class=>$path) {
+            $eventLocator = new EventListenerLocator($path, $class);
             $className = $eventLocator->getClassName();
             $runnable = new $className($this->attributes, $application);
             $runnable->run();
@@ -82,8 +81,8 @@ class FrontController implements Runnable
         $request = new Request();
         
         // execute events for REQUEST
-        foreach ($this->events[EventType::REQUEST] as $path=>$namespace) {
-            $eventLocator = new EventListenerLocator($path, $namespace, "\\Lucinda\\STDOUT\\EventListeners\\Request");
+        foreach ($this->events[EventType::REQUEST] as $class=>$path) {
+            $eventLocator = new EventListenerLocator($path, $class);
             $className = $eventLocator->getClassName();
             $runnable = new $className($this->attributes, $application, $request);
             $runnable->run();
@@ -93,8 +92,8 @@ class FrontController implements Runnable
         $session = new Session();
         
         // execute events for SESSION
-        foreach ($this->events[EventType::SESSION] as $path=>$namespace) {
-            $eventLocator = new EventListenerLocator($path, $namespace, "\\Lucinda\\STDOUT\\EventListeners\\Session");
+        foreach ($this->events[EventType::SESSION] as $class=>$path) {
+            $eventLocator = new EventListenerLocator($path, $class);
             $className = $eventLocator->getClassName();
             $runnable = new $className($this->attributes, $application, $request, $session);
             $runnable->run();
@@ -104,8 +103,8 @@ class FrontController implements Runnable
         $cookies = new Cookies();
         
         // execute events for COOKIES
-        foreach ($this->events[EventType::COOKIES] as $path=>$namespace) {
-            $eventLocator = new EventListenerLocator($path, $namespace, "\\Lucinda\\STDOUT\\EventListeners\\Cookies");
+        foreach ($this->events[EventType::COOKIES] as $class=>$path) {
+            $eventLocator = new EventListenerLocator($path, $class);
             $className = $eventLocator->getClassName();
             $runnable = new $className($this->attributes, $application, $request, $session, $cookies);
             $runnable->run();
@@ -134,8 +133,8 @@ class FrontController implements Runnable
         }
         
         // execute events for RESPONSE
-        foreach ($this->events[EventType::RESPONSE] as $path=>$namespace) {
-            $eventLocator = new EventListenerLocator($path, $namespace, "\\Lucinda\\STDOUT\\EventListeners\\Response");
+        foreach ($this->events[EventType::RESPONSE] as $class=>$path) {
+            $eventLocator = new EventListenerLocator($path, $class);
             $className = $eventLocator->getClassName();
             $runnable = new $className($this->attributes, $application, $request, $session, $cookies, $response);
             $runnable->run();
@@ -145,8 +144,8 @@ class FrontController implements Runnable
         $response->commit();
         
         // execute events for END
-        foreach ($this->events[EventType::END] as $path=>$namespace) {
-            $eventLocator = new EventListenerLocator($path, $namespace, "\\Lucinda\\STDOUT\\EventListeners\\End");
+        foreach ($this->events[EventType::END] as $class=>$path) {
+            $eventLocator = new EventListenerLocator($path, $class);
             $className = $eventLocator->getClassName();
             $runnable = new $className($this->attributes, $application, $request, $session, $cookies, $response);
             $runnable->run();

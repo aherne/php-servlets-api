@@ -32,37 +32,11 @@ class ViewResolverLocator extends ServiceLocator
     protected function setClassName(Application $application, Attributes $attributes): void
     {
         // get listener path
-        $resolverClass = "";
-        $resolverLocation = "";
+        $resolverClass = $application->formats($attributes->getRequestedResponseFormat())->getViewResolver();
+        $resolverLocation = $application->getViewResolversPath();
 
         // detect resolver @ application
-        if ($application->getViewResolversPath()) {
-            $format = $application->formats($attributes->getRequestedResponseFormat());
-            $resolverClass = $format->getViewResolver();
-            if ($resolverClass) {
-                $resolverLocation = $application->getViewResolversPath()."/".$resolverClass.".php";
-                if (!file_exists($resolverLocation)) {
-                    throw new Exception("View resolver not found: ".$resolverLocation);
-                }
-                require_once($resolverLocation);
-            }
-        }
-
-        // if no resolver was defined, do nothing
-        if (!$resolverLocation) {
-            return;
-        }
-
-        // validate resolver found or use default
-        if (!class_exists($resolverClass)) {
-            throw new Exception("View resolver class not defined: ".$resolverClass);
-        }
-
-        $this->className = $resolverClass;
-
-        // checks if it is a subclass of Controller
-        if (!is_subclass_of($this->className, "\\Lucinda\\STDOUT\\ViewResolver")) {
-            throw new Exception($this->className." must be a subclass of ViewResolver");
-        }
+        $classFinder = new ClassFinder($resolverLocation);
+        $this->className = $classFinder->find($resolverClass);
     }
 }
