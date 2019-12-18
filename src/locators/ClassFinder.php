@@ -15,7 +15,7 @@ class ClassFinder
      */
     public function __construct($folder)
     {
-        $this->folder = $folder;
+        $this->folder = ($folder?$folder:".");
     }
     
     /**
