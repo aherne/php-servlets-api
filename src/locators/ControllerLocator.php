@@ -47,7 +47,7 @@ class ControllerLocator
             $this->className = $classFinder->find($className);
         } else {
             $class = str_replace(" ", "", ucwords(str_replace(array("/","-"), " ", strtolower($url))))."Controller";
-            $file = $folder."/".$class.".php";
+            $file = ($folder?$folder."/":"").$class.".php";
             
             // loads controller file
             if (!file_exists($file)) {
