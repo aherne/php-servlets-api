@@ -26,7 +26,7 @@ class Request
      *
      * @throws Exception
      */
-    public function __construct(): void
+    public function __construct()
     {
         if (!isset($_SERVER["REQUEST_URI"])) {
             throw new Exception("ServletsAPI requires overriding paths!");

@@ -17,7 +17,7 @@ class ViewResolverLocator extends ServiceLocator
      * @param Attributes $attributes
      * @throws Exception If controller file could not be located on disk.
      */
-    public function __construct(Application $application, Attributes $attributes): void
+    public function __construct(Application $application, Attributes $attributes)
     {
         $this->setClassName($application, $attributes);
     }

@@ -21,7 +21,7 @@ class FrontController implements Runnable
      * @param Attributes $attributes
      * @param string $documentDescriptor
      */
-    public function __construct(Attributes $attributes, string $documentDescriptor = "stdout.xml"): void
+    public function __construct(Attributes $attributes, string $documentDescriptor = "stdout.xml")
     {
         $this->documentDescriptor = $documentDescriptor;
         $this->attributes = $attributes;
@@ -109,26 +109,22 @@ class FrontController implements Runnable
             $runnable = new $className($this->attributes, $application, $request, $session, $cookies);
             $runnable->run();
         }
-                
-        // sets view
-        $view = new View($this->getTemplateFile($application));
+        // initializes response
+        $response = new Response($this->getContentType($application), $this->getTemplateFile($application));
 
         // locates and runs page controller
         $controllerLocator = new ControllerLocator($application, $this->attributes);
         $className  = $controllerLocator->getClassName();
         if ($className) {
-            $runnable = new $className($this->attributes, $application, $request, $session, $cookies, $view);
+            $runnable = new $className($this->attributes, $application, $request, $session, $cookies, $response);
             $runnable->run();
-        }
-        
-        // sets response object by matching validated user request information to that contained in XML
-        $response = new Response($this->getContentType($application));
+        }        
 
-        // set up response based on view
+        // resolves view into response body
         $viewResolverLocator = new ViewResolverLocator($application, $this->attributes);
         $className  = $viewResolverLocator->getClassName();
         if ($className) {
-            $runnable = new $className($application, $view, $response);
+            $runnable = new $className($application, $response);
             $runnable->run();
         }
         

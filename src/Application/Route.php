@@ -22,7 +22,7 @@ class Route
      * @param string $viewFile
      * @param string $format
      */
-    public function __construct(string $path, string $controllerFile, string $viewFile, string $format): void
+    public function __construct(string $path, string $controllerFile, string $viewFile, string $format)
     {
         $this->path = $path;
         $this->controllerFile = $controllerFile;

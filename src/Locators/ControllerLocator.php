@@ -19,7 +19,7 @@ class ControllerLocator extends ServiceLocator
      * @throws Exception If controller file could not be located on disk.
      * @throws XMLException If XML is misconfigured
      */
-    public function __construct(Application $application, Attributes $attributes): void
+    public function __construct(Application $application, Attributes $attributes)
     {
         $this->setClassName($application, $attributes);
     }

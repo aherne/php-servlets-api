@@ -40,7 +40,7 @@ abstract class Session implements Runnable
      * @param Request $request
      * @param \Lucinda\STDOUT\Session $session
      */
-    public function __construct(Attributes $attributes, Application $application, Request $request, Session $session): void
+    public function __construct(Attributes $attributes, Application $application, Request $request, Session $session)
     {
         $this->attributes = $attributes;
         $this->application = $application;

@@ -23,7 +23,7 @@ class Format
      * @param string $characterEncoding
      * @param string $viewResolverClass
      */
-    public function __construct(string $name, string $contentType, string $characterEncoding="", string $viewResolverClass=""): void
+    public function __construct(string $name, string $contentType, string $characterEncoding="", string $viewResolverClass="")
     {
         $this->name = $name;
         $this->contentType = $contentType;

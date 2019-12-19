@@ -14,7 +14,7 @@ class UploadedFiles
     /**
      * Converts information in $_FILES superglobal into a tree of UploadedFile objects
      */
-    public function __construct(): void
+    public function __construct()
     {
         if (sizeof($_FILES)==0) {
             return;

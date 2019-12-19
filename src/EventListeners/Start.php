@@ -20,7 +20,7 @@ abstract class Start implements Runnable
      *
      * @param Attributes $attributes
      */
-    public function __construct(Attributes $attributes): void
+    public function __construct(Attributes $attributes)
     {
         $this->attributes = $attributes;
     }

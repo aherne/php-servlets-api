@@ -14,7 +14,7 @@ class EventListenerLocator extends ServiceLocator
      * @param string $classPath
      * @param string $className
      */
-    public function __construct(string $classPath, string $className): void
+    public function __construct(string $classPath, string $className)
     {
         $this->setClassName($classPath, $className);
     }

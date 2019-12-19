@@ -11,7 +11,7 @@ class Parser
     /**
      * Parses through $_FILES superglobal and compiles a tree.
      */
-    public function __construct(): void
+    public function __construct()
     {
         $this->setResult();
     }

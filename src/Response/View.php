@@ -1,5 +1,5 @@
 <?php
-namespace Lucinda\STDOUT;
+namespace Lucinda\STDOUT\Response;
 
 /**
  * Compiles criterias that will be used in generating response body
@@ -14,7 +14,7 @@ class View
      *
      * @param string $file
      */
-    public function __construct(string $file): void
+    public function __construct(string $file)
     {
         $this->file = $file;
     }
@@ -24,7 +24,7 @@ class View
      *
      * @param string $path
      */
-    public function setTemplate(string $path): void
+    public function setFile(string $path): void
     {
         $this->file = $path;
     }
@@ -34,7 +34,7 @@ class View
      *
      * @return string
      */
-    public function getTemplate(): string
+    public function getFile(): string
     {
         return $this->file;
     }

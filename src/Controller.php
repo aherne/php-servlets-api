@@ -27,16 +27,15 @@ abstract class Controller implements Runnable
     protected $cookies;
     
     /**
-     * @var View
+     * @var Response
      */
-    protected $view;
+    protected $response;
     
     /**
      * @var Attributes
      */
     protected $attributes;
-    
-    
+        
     /**
      * Saves objects to be available in implemented run() methods.
      *
@@ -45,16 +44,15 @@ abstract class Controller implements Runnable
      * @param Request $request
      * @param Session $session
      * @param Cookies $cookies
-     * @param View $view
-     * @param Request $request
+     * @param Response $response
      */
-    public function __construct(Attributes $attributes, Application $application, Request $request, Session $session, Cookies $cookies, View $view): void
+    public function __construct(Attributes $attributes, Application $application, Request $request, Session $session, Cookies $cookies, Response $response)
     {
         $this->attributes = $attributes;
         $this->application = $application;
         $this->request = $request;
         $this->session = $session;
         $this->cookies = $cookies;
-        $this->view = $view;
+        $this->response = $response;
     }
 }

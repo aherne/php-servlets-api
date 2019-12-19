@@ -13,7 +13,7 @@ class Client
     /**
      * Detects info based on values in $_SERVER superglobal
      */
-    public function __construct(): void
+    public function __construct()
     {
         $this->setName();
         $this->setIP();

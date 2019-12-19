@@ -14,7 +14,7 @@ class URI
     /**
      * Detects info based on values in $_SERVER superglobal
      */
-    public function __construct(): void
+    public function __construct()
     {
         $this->setContextPath();
         $this->setPage();

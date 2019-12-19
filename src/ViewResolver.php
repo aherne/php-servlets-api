@@ -12,11 +12,6 @@ abstract class ViewResolver implements Runnable
     protected $application;
     
     /**
-     * @var View
-     */
-    protected $view;
-    
-    /**
      * @var Response
      */
     protected $response;
@@ -25,13 +20,11 @@ abstract class ViewResolver implements Runnable
      * Saves objects to be available in implemented getContent() methods.
      *
      * @param Application $application
-     * @param View $view
      * @param Response $response
      */
-    public function __construct(Application $application, View $view, Response $response): void
+    public function __construct(Application $application, Response $response)
     {
         $this->application = $application;
-        $this->view = $view;
         $this->response = $response;
     }
     

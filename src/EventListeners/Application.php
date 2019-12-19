@@ -26,7 +26,7 @@ abstract class Application implements Runnable
      * @param Attributes $attributes
      * @param \Lucinda\STDOUT\Application $application
      */
-    public function __construct(Attributes $attributes, \Lucinda\STDOUT\Application $application): void
+    public function __construct(Attributes $attributes, \Lucinda\STDOUT\Application $application)
     {
         $this->application = $application;
         $this->attributes = $attributes;

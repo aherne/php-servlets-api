@@ -55,7 +55,7 @@ abstract class End implements Runnable
      * @param Cookies $cookies
      * @param Response $response
      */
-    public function __construct(Attributes $attributes, Application $application, Request $request, Session $session, Cookies $cookies, Response $response): void
+    public function __construct(Attributes $attributes, Application $application, Request $request, Session $session, Cookies $cookies, Response $response)
     {
         $this->attributes = $attributes;
         $this->application = $application;

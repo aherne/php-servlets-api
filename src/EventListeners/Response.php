@@ -54,7 +54,7 @@ abstract class Response implements Runnable
      * @param Cookies $cookies
      * @param \Lucinda\STDOUT\Response $response
      */
-    public function __construct(Attributes $attributes, Application $application, Request $request, Session $session, Cookies $cookies, \Lucinda\STDOUT\Response $response): void
+    public function __construct(Attributes $attributes, Application $application, Request $request, Session $session, Cookies $cookies, \Lucinda\STDOUT\Response $response)
     {
         $this->attributes = $attributes;
         $this->application = $application;

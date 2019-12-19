@@ -16,7 +16,7 @@ class File
      *
      * @param array $values
      */
-    public function __construct(array $values): void
+    public function __construct(array $values)
     {
         if ($values['error']!=0) {
             throw new Exception($this->getErrorMessage($values['error'], $values['name']));

@@ -2,6 +2,7 @@
 namespace Lucinda\STDOUT;
 
 use Lucinda\STDOUT\Response\Status;
+use Lucinda\STDOUT\Response\View;
 
 /**
  * Compiles information about response
@@ -10,16 +11,19 @@ class Response
 {
     private $status;
     private $headers = array();
-    private $body;
+    private $body;    
+    private $view;
 
     /**
      * Constructs an empty response based on content type
      *
      * @param string $contentType Value of content type header that will be sent in response
+     * @param string $templateFile Value of view template file that will form the basis of response
      */
-    public function __construct(string $contentType): void
+    public function __construct(string $contentType, string $templateFile)
     {
         $this->headers["Content-Type"] = $contentType;
+        $this->view = new View($templateFile);
     }
 
     /**
@@ -41,6 +45,16 @@ class Response
     public function getStatus(): Status
     {
         return $this->status;
+    }
+    
+    /**
+     * Gets a pointer to View
+     * 
+     * @return View
+     */
+    public function view(): View
+    {
+        return $this->view;
     }
     
     /**

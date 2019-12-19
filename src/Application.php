@@ -31,7 +31,7 @@ class Application
      * @throws Exception If xml file wasn't found
      * @throws XMLException If xml content has failed validation.
      */
-    public function __construct(string $xmlFilePath): void
+    public function __construct(string $xmlFilePath)
     {
         if (!file_exists($xmlFilePath)) {
             throw new Exception("XML file not found: ".$xmlFilePath);
