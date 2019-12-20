@@ -43,6 +43,9 @@ class ControllerLocator
         // get controller class name
         if (!$application->getAutoRouting()) {
             $className = $application->routes($url)->getController();
+            if (!$className) {
+                return;
+            }
             $classFinder = new ClassFinder($folder);
             $this->className = $classFinder->find($className);
         } else {
