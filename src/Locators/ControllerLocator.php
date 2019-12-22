@@ -44,9 +44,15 @@ class ControllerLocator extends ServiceLocator
         $className = "";
         if (!$application->getAutoRouting()) {
             $className = $application->routes($url)->getController();
+            
+            // it is ok not to have a controller
+            if (!$className) {
+                return;
+            }
         } else {
             $className = str_replace(" ", "", ucwords(str_replace(array("/","-"), " ", strtolower($url))))."Controller";
         }
+        
         
         // loads and locates class
         $classFinder = new ClassFinder($folder);
