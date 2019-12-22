@@ -11,7 +11,7 @@ class Response
 {
     private $status;
     private $headers = array();
-    private $body;    
+    private $body;
     private $view;
 
     /**
@@ -49,7 +49,7 @@ class Response
     
     /**
      * Gets a pointer to View
-     * 
+     *
      * @return View
      */
     public function view(): View

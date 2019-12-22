@@ -10,7 +10,7 @@ use Lucinda\STDOUT\XMLException;
  * Locates and loads Controller class based on information collected by Application and Attributes objects
  */
 class ControllerLocator extends ServiceLocator
-{    
+{
     /**
      * Triggers service location.
      *

@@ -13,7 +13,7 @@ class Attributes
     
     /**
      * Sets path to event listeners classes
-     * 
+     *
      * @param string $eventsFolder
      */
     public function __construct($eventsFolder)
@@ -23,7 +23,7 @@ class Attributes
     
     /**
      * Gets path to event listeners classes
-     * 
+     *
      * @return string
      */
     public function getEventsFolder()

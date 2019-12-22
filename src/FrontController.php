@@ -118,7 +118,7 @@ class FrontController implements Runnable
         if ($className) {
             $runnable = new $className($this->attributes, $application, $request, $session, $cookies, $response);
             $runnable->run();
-        }        
+        }
 
         // resolves view into response body
         $viewResolverLocator = new ViewResolverLocator($application, $this->attributes);
