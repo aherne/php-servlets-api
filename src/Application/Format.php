@@ -1,6 +1,7 @@
 <?php
 namespace Lucinda\STDOUT\Application;
 
+use Lucinda\STDOUT\XMLException;
 /**
  * Encapsulates file format information:
  * - format: file format / name
@@ -18,17 +19,23 @@ class Format
     /**
      * Saves response format data detected from XML tag "format".
      *
-     * @param string $name
-     * @param string $contentType
-     * @param string $characterEncoding
-     * @param string $viewResolverClass
+     * @param \SimpleXMLElement $info
      */
-    public function __construct(string $name, string $contentType, string $characterEncoding="", string $viewResolverClass="")
+    public function __construct(\SimpleXMLElement $info)
     {
-        $this->name = $name;
-        $this->contentType = $contentType;
-        $this->characterEncoding= $characterEncoding;
-        $this->viewResolverClass = $viewResolverClass;
+        $this->name = (string) $info["name"];
+        
+        $this->contentType = (string) $info["content_type"];
+        if (!$this->contentType) {
+            throw new XMLException("Attribute 'content_type' is mandatory for 'format' tag");
+        }
+        
+        $this->characterEncoding = (string) $info["charset"];
+        
+        $this->viewResolverClass = (string) $info['class'];
+        if (!$this->viewResolverClass) {
+            throw new XMLException("Attribute 'class' is mandatory for 'format' tag");
+        }
     }
 
     /**

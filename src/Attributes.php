@@ -10,6 +10,7 @@ class Attributes
     private $requestedPage;
     private $requestedResponseFormat;
     private $pathParameters=array();
+    private $validParameters=array();
     
     /**
      * Sets path to event listeners classes
@@ -61,7 +62,7 @@ class Attributes
     {
         $this->pathParameters = $parameters;
     }
-        
+    
     /**
      * Gets path parameters detected from requested page, optionally by parameter name
      *
@@ -74,6 +75,31 @@ class Attributes
             return $this->pathParameters;
         } else {
             return (isset($this->pathParameters[$name])?$this->pathParameters[$name]:null);
+        }
+    }
+    
+    /**
+     * Sets route/request parameter validation results for requested page, optionally by parameter name
+     *
+     * @param string[string] $parameters
+     */
+    public function setValidParameters(array $parameters): void
+    {
+        $this->validParameters = $parameters;
+    }
+    
+    /**
+     * Gets route/request parameter validation results for requested page, optionally by parameter name
+     *
+     * @param string $name
+     * @return string|array|null
+     */
+    public function getValidParameters(string $name="")
+    {
+        if (!$name) {
+            return $this->validParameters;
+        } else {
+            return (isset($this->validParameters[$name])?$this->validParameters[$name]:null);
         }
     }
     

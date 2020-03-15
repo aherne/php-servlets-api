@@ -29,7 +29,7 @@ class Request
     public function __construct()
     {
         if (!isset($_SERVER["REQUEST_URI"])) {
-            throw new Exception("ServletsAPI requires overriding paths!");
+            throw new Exception("API requires overriding paths!");
         }
         
         $this->setClient();

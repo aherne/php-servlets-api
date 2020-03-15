@@ -28,7 +28,7 @@ class UploadedFiles
      *
      * @param array $array
      */
-    private function makeObjects(array $array): void
+    private function makeObjects(array $array)
     {
         $ret = array();
         foreach ($array as $k => $v) {
@@ -38,7 +38,7 @@ class UploadedFiles
                 if ($array["error"]!=UPLOAD_ERR_NO_FILE) {
                     return new File($array);
                 } else {
-                    return null; // having no file uploaded is a non-error situation
+                    return []; // having no file uploaded is a non-error situation
                 }
             }
         }

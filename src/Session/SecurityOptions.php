@@ -39,13 +39,13 @@ class SecurityOptions
     }
     
     /**
-     * Toggles session expiration on browser close.
+     * Sets session expiration time on browser close.
      *
-     * @param boolean $value
+     * @param int $seconds
      */
-    public function setExpiredOnBrowserClose(bool $value=false): void
+    public function setExpiredOnBrowserClose(int $seconds): void
     {
-        $this->settings["session.cookie_lifetime"] = ($value?1:0);
+        $this->settings["session.cookie_lifetime"] = $seconds;
     }
     
     /**

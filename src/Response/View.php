@@ -4,7 +4,7 @@ namespace Lucinda\STDOUT\Response;
 /**
  * Compiles criterias that will be used in generating response body
  */
-class View
+class View implements \ArrayAccess
 {
     private $file;
     private $data = [];
@@ -40,20 +40,54 @@ class View
     }
     
     /**
-     * Gets or sets data that will be bound to template or will become the view itself.
+     * Gets data that will be bound to template or will become the view itself.
      *
-     * @param string $key
-     * @param string $value
-     * @return mixed|array|null
+     * @return array
      */
-    public function data(string $key="", string $value=null)
+    public function getData(): array
     {
-        if (!$key) {
-            return $this->data;
-        } elseif ($value===null) {
-            return (isset($this->data[$key])?$this->data[$key]:null);
-        } else {
-            $this->data[$key] = $value;
-        }
+        return $this->data;
+    }
+    
+    /**
+     * Checks if value was sent to view by offset
+     *
+     * @param mixed $offset
+     * @return bool
+     */
+    public function offsetExists($offset): bool
+    {
+        return isset($this->data[$offset]);
+    }
+    
+    /**
+     * Gets value sent to view by offset or null if offset not found
+     *
+     * @param mixed $offset
+     * @return NULL|mixed
+     */
+    public function offsetGet($offset)
+    {
+        return (isset($this->data[$offset])?$this->data[$offset]:null);
+    }
+    
+    /**
+     * Sets value to view by offset
+     *
+     * @param mixed $offset
+     * @param mixed $value
+     */
+    public function offsetSet($offset, $value): void
+    {
+        $this->data[$offset] = $value;
+    }
+    
+    /**
+     * Removes value from view by offset
+     * @param mixed $offset
+     */
+    public function offsetUnset($offset): void
+    {
+        unset($this->data[$offset]);
     }
 }

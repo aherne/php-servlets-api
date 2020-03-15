@@ -18,7 +18,7 @@ class Application
     private $controllerPath;
     private $viewResolversPath;
     private $viewsPath;
-    private $publicPath;
+    private $validatorsPath;
     private $autoRouting;
     private $version;
     private $routes = array();
@@ -65,12 +65,12 @@ class Application
         if (!$this->defaultFormat) {
             throw new XMLException("Attribute 'default_format' is mandatory for 'application' tag");
         }
-        $this->controllerPath = (string) $xml->paths->controllers;
-        $this->viewResolversPath = (string) $xml->paths->resolvers;
-        $this->viewsPath = (string) $xml->paths->views;
-        $this->publicPath = (string) $xml->paths->public;
         $this->autoRouting = (int) $xml["auto_routing"];
         $this->version = (string) $xml["version"];
+        $this->controllerPath = (string) $xml->paths["controllers"];
+        $this->viewResolversPath = (string) $xml->paths["resolvers"];
+        $this->validatorsPath = (string) $xml->paths["validators"];
+        $this->viewsPath = (string) $xml->paths["views"];
     }
     
     /**
@@ -80,20 +80,20 @@ class Application
      */
     private function setRoutes(): void
     {
-        $tmp = (array) $this->getTag("routes");
-        if (empty($tmp["route"])) {
-            throw new XMLException("Tag 'routes' missing 'route' subtags");
+        $xml = $this->simpleXMLElement->routes;
+        if ($xml===null) {
+            throw new XMLException("Tag 'routes' is mandatory");
         }
-        $list = (is_array($tmp["route"])?$tmp["route"]:[$tmp["route"]]);
+        $list = $xml->xpath("//route");
         foreach ($list as $info) {
-            if (empty($info['url'])) {
+            $url = (string) $info["url"];
+            if (!$url) {
                 throw new XMLException("Attribute 'url' is mandatory for 'route' tag");
             }
-            $url = (string) $info['url'];
-            $this->routes[$url] = new Route($url, (string) $info['controller'], (string) $info['view'], (string) $info['format']);
+            $this->routes[$url] = new Route($info);
         }
         if (empty($this->routes)) {
-            throw new XMLException("Tag 'routes' is mandatory");
+            throw new Exception("Tag 'routes' is empty");
         }
     }
     
@@ -103,28 +103,20 @@ class Application
      */
     private function setFormats(): void
     {
-        $tmp = (array) $this->getTag("formats");
-        if (empty($tmp["format"])) {
-            throw new XMLException("Tag 'format' child of 'formats' tag is mandatory");
+        $xml = $this->simpleXMLElement->formats;
+        if ($xml===null) {
+            throw new XMLException("Tag 'formats' is mandatory");
         }
-        $list = (is_array($tmp["format"])?$tmp["format"]:[$tmp["format"]]);
+        $list = $xml->xpath("//format");
         foreach ($list as $info) {
-            if (empty($info['name'])) {
+            $name = (string) $info["name"];
+            if (!$name) {
                 throw new XMLException("Attribute 'name' is mandatory for 'format' tag");
             }
-            if (empty($info['content_type'])) {
-                throw new XMLException("Attribute 'content_type' is mandatory for 'format' tag");
-            }
-            $name = (string) $info['name'];
-            $this->formats[$name] = new Format(
-                $name,
-                (string) $info['content_type'],
-                (isset($info['charset'])?(string) $info['charset']:""),
-                (isset($info['class'])?(string) $info['class']:"")
-            );
+            $this->formats[$name] = new Format($info);
         }
         if (empty($this->formats)) {
-            throw new XMLException("Tag 'formats' is mandatory");
+            throw new Exception("Tag 'formats' is empty");
         }
     }
     
@@ -169,6 +161,16 @@ class Application
     }
     
     /**
+     * Gets path to parameter validators folder.
+     *
+     * @return string
+     */
+    public function getValidatorsPath(): string
+    {
+        return $this->validatorsPath;
+    }
+    
+    /**
      * Gets path to views folder.
      *
      * @return string
@@ -176,17 +178,6 @@ class Application
     public function getViewsPath(): string
     {
         return $this->viewsPath;
-    }
-    
-    /**
-     * Gets path to public folder. Contents of this folder are directly available to outside world.
-     *
-     * @return string
-     */
-    public function getPublicPath(): string
-    {
-        return $this->publicPath;
-        ;
     }
     
     /**

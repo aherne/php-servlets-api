@@ -8,6 +8,8 @@ use Lucinda\STDOUT\Cookies\SecurityOptions;
  */
 class Cookies
 {
+    const DEFAULT_EXPIRATION_TIME = 3600;
+    
     /**
      * Adds/updates a cookie param.
      *
@@ -21,8 +23,10 @@ class Cookies
         $answer = false;
         if ($securityOptions) {
             $answer = setcookie($key, $value, $securityOptions->getExpiredTime(), $securityOptions->getPath(), $securityOptions->getDomain(), $securityOptions->isSecuredByHTTPS(), $securityOptions->isSecuredByHTTPheaders());
+            $_COOKIE[$key] = $value;
         } else {
-            $answer = setcookie($key, $value);
+            $answer = setcookie($key, $value, time()+self::DEFAULT_EXPIRATION_TIME);
+            $_COOKIE[$key] = $value;
         }
         if (!$answer) {
             throw new Exception("Cookie could not be set!");

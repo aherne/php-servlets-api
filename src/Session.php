@@ -36,14 +36,6 @@ class Session
     }
     
     /**
-     * Closes session.
-     */
-    public function destroy(): void
-    {
-        session_destroy();
-    }
-    
-    /**
      * Adds/updates a session param.
      *
      * @param string $key
@@ -85,5 +77,13 @@ class Session
     public function remove(string $key): void
     {
         unset($_SESSION[$key]);
+    }
+    
+    /**
+     * Closes session.
+     */
+    public function destroy(): void
+    {
+        session_destroy();
     }
 }

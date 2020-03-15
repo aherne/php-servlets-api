@@ -21,15 +21,17 @@ class FrontController implements Runnable
      * @param Attributes $attributes
      * @param string $documentDescriptor
      */
-    public function __construct(Attributes $attributes, string $documentDescriptor = "stdout.xml")
+    public function __construct(string $documentDescriptor, Attributes $attributes)
     {
+        // saves arguments
         $this->documentDescriptor = $documentDescriptor;
         $this->attributes = $attributes;
+        
         // initialize events
         $this->events = [
             EventType::START=>[],
             EventType::APPLICATION=>[],
-            EventType::REQUEST=>[["\\Lucinda\\STDOUT\\EventListeners\\RequestValidator"=>__DIR__."/EventListeners"]],
+            EventType::REQUEST=>["\\Lucinda\\STDOUT\\EventListeners\\RequestValidator"=>__DIR__."/EventListeners"],
             EventType::SESSION=>[],
             EventType::COOKIES=>[],
             EventType::RESPONSE=>[],
@@ -45,7 +47,7 @@ class FrontController implements Runnable
      */
     public function addEventListener(string $type, string $className): void
     {
-        $this->events[$type][] = [$className=>$this->attributes->getEventsFolder()];
+        $this->events[$type][$className]=$this->attributes->getEventsFolder();
     }
     
     /**
@@ -158,11 +160,10 @@ class FrontController implements Runnable
     {
         if (!$application->getAutoRouting()) {
             $template = $application->routes($this->attributes->getRequestedPage())->getView();
-            if ($template) {
-                return $template;
-            }
+            return ($template?$application->getViewsPath()."/".$template:"");
+        } else {
+            return $application->getViewsPath()."/".$this->attributes->getRequestedPage();
         }
-        return null;
     }
     
     /**

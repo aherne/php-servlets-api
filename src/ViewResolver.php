@@ -27,19 +27,4 @@ abstract class ViewResolver implements Runnable
         $this->application = $application;
         $this->response = $response;
     }
-    
-    /**
-     * Feeds response body with content generated from view by resolver
-     */
-    public function run(): void
-    {
-        $this->response->setBody($this->getContent());
-    }
-    
-    /**
-     * Gets body to feed response with
-     *
-     * @return mixed Content to display: string for html/json/xml response formats.
-     */
-    abstract protected function getContent();
 }

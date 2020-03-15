@@ -1,6 +1,9 @@
 <?php
 namespace Lucinda\STDOUT;
 
+/**
+ * Enum of events supported by API for whom listeners can be attached
+ */
 class EventType
 {
     const START = "start";

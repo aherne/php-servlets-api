@@ -7,7 +7,7 @@ namespace Lucinda\STDOUT\Request;
 class Client
 {
     private $name;
-    private $iP;
+    private $ip;
     private $port;
     
     /**
@@ -23,9 +23,9 @@ class Client
     /**
      * Sets host name.
      */
-    public function setName(): void
+    private function setName(): void
     {
-        $this->iP = (isset($_SERVER["REMOTE_HOST"])?$_SERVER["REMOTE_HOST"]:"");
+        $this->name = (isset($_SERVER["REMOTE_HOST"])?$_SERVER["REMOTE_HOST"]:"");
     }
 
     /**
@@ -43,7 +43,7 @@ class Client
      */
     private function setIP(): void
     {
-        $this->iP = $_SERVER["REMOTE_ADDR"];
+        $this->ip = $_SERVER["REMOTE_ADDR"];
     }
     
     /**
@@ -53,7 +53,7 @@ class Client
      */
     public function getIP(): string
     {
-        return $this->iP;
+        return $this->ip;
     }
     
     /**

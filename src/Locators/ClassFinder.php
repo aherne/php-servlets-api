@@ -27,7 +27,7 @@ class ClassFinder
      * @throws Exception
      * @return string
      */
-    public function find($className)
+    public function find($className): string
     {
         $classPath = $this->folder;
         

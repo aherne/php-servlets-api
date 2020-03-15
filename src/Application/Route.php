@@ -1,6 +1,8 @@
 <?php
 namespace Lucinda\STDOUT\Application;
 
+use Lucinda\STDOUT\Application\Route\Parameter;
+
 /**
  * Encapsulates route information:
  * - url: relative path requested
@@ -13,21 +15,25 @@ class Route
     private $controllerFile;
     private $viewFile;
     private $format;
+    private $requestMethod;
+    private $parameters = [];
     
     /**
      * Saves response format data detected from XML tag "route".
      *
-     * @param string $path
-     * @param string $controllerFile
-     * @param string $viewFile
-     * @param string $format
+     * @param \SimpleXMLElement $info
      */
-    public function __construct(string $path, string $controllerFile, string $viewFile, string $format)
+    public function __construct(\SimpleXMLElement $info)
     {
-        $this->path = $path;
-        $this->controllerFile = $controllerFile;
-        $this->viewFile = $viewFile;
-        $this->format = $format;
+        $this->path = (string) $info["url"];
+        $this->controllerFile = (string) $info["controller"];
+        $this->viewFile = (string) $info["view"];
+        $this->format = (string) $info["format"];
+        $this->requestMethod = (string) $info["method"];
+        $parameters = $info->xpath("parameter");
+        foreach ($parameters as $parameter) {
+            $this->parameters[(string) $parameter["name"]] = new Parameter($parameter);
+        }
     }
     
     /**
@@ -48,7 +54,7 @@ class Route
      * @return string
      * @example TestController
      */
-    public function getController(): string
+    public function getController(): ?string
     {
         return $this->controllerFile;
     }
@@ -59,7 +65,7 @@ class Route
      * @return string
      * @example asd/fgh.html
      */
-    public function getView(): string
+    public function getView(): ?string
     {
         return $this->viewFile;
     }
@@ -70,8 +76,29 @@ class Route
      * @return string
      * @example json
      */
-    public function getFormat(): string
+    public function getFormat(): ?string
     {
         return $this->format;
+    }
+    
+    /**
+     * Gets valid request method for current route
+     * 
+     * @return string|NULL
+     */
+    public function getValidRequestMethod(): ?string
+    {
+        return $this->requestMethod;
+    }
+    
+    /**
+     * Gets validator for route/request parameter by its name for current route
+     * 
+     * @param string $name
+     * @return Parameter|NULL
+     */
+    public function getValidParameters(): array
+    {
+        return $this->parameters;
     }
 }

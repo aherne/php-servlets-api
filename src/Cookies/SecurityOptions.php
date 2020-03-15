@@ -39,7 +39,7 @@ class SecurityOptions
      */
     public function setSecuredByHTTPS(bool $value=false): void
     {
-        $this->isHTTPS = (boolean) $value;
+        $this->isHTTPS = $value;
     }
     
     /**
@@ -58,7 +58,7 @@ class SecurityOptions
      */
     public function setSecuredByHTTPheaders(bool $value=false): void
     {
-        $this->isHTTPHeadersOnly = (boolean) $value;
+        $this->isHTTPHeadersOnly = $value;
     }
     
     /**
