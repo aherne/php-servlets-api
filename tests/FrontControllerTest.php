@@ -5,7 +5,6 @@ use Lucinda\STDOUT\FrontController;
 use Lucinda\STDOUT\EventType;
 use Lucinda\UnitTest\Result;
 
-// TODO: readd Mutable/immutable factory (?)
 class FrontControllerTest
 {
     

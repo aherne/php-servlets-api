@@ -17,7 +17,7 @@ class Attributes
      *
      * @param string $eventsFolder
      */
-    public function __construct($eventsFolder)
+    public function __construct(string $eventsFolder)
     {
         $this->eventsFolder = $eventsFolder;
     }
@@ -27,7 +27,7 @@ class Attributes
      *
      * @return string
      */
-    public function getEventsFolder()
+    public function getEventsFolder(): string
     {
         return $this->eventsFolder;
     }
