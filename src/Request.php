@@ -20,7 +20,7 @@ class Request
     private $headers = array();
     private $parameters = array();
     private $uploadedFiles = array();
-    
+
     /**
      * Detects all aspects of a request.
      *
@@ -31,7 +31,7 @@ class Request
         if (!isset($_SERVER["REQUEST_URI"])) {
             throw new Exception("API requires overriding paths!");
         }
-        
+
         $this->setClient();
         $this->setServer();
         $this->setMethod();
@@ -41,7 +41,7 @@ class Request
         $this->setParameters();
         $this->setUploadedFiles();
     }
-    
+
     /**
      * Sets information about client that made the request.
      */
@@ -92,7 +92,7 @@ class Request
     {
         return $this->uRI;
     }
-    
+
     /**
      * Sets headers sent by client.
      */
@@ -104,7 +104,7 @@ class Request
             }
         }
     }
-    
+
     /**
      * Gets request headers detected by optional name
      *
@@ -143,14 +143,14 @@ class Request
                 break;
         }
     }
-    
+
     /**
      * Gets request parameters detected by optional name
      *
-     * @param string $name
+     * @param string|integer $name
      * @return string|array|null
      */
-    public function parameters(string $name="")
+    public function parameters($name="")
     {
         if (!$name) {
             return $this->parameters;
@@ -158,7 +158,7 @@ class Request
             return (isset($this->parameters[$name])?$this->parameters[$name]:null);
         }
     }
-    
+
     /**
      * Sets files uploaded by client via form based on PHP superglobal $_FILES with two structural changes:
      * - uploaded file attributes (name, type, tmp_name, etc) are encapsulated into an UploadedFile instance
@@ -169,14 +169,14 @@ class Request
         $files = new UploadedFiles();
         $this->uploadedFiles = $files->toArray();
     }
-    
+
     /**
      * Gets uploaded files detected by optional request parameter name
      *
-     * @param string $name
+     * @param string|integer $name
      * @return File|array|null
      */
-    public function uploadedFiles(string $name="")
+    public function uploadedFiles($name="")
     {
         if (!$name) {
             return $this->uploadedFiles;
@@ -192,7 +192,7 @@ class Request
     {
         $this->method=$_SERVER["REQUEST_METHOD"];
     }
-    
+
     /**
      * Gets HTTP request method in which URI was requested.
      *
@@ -203,7 +203,7 @@ class Request
     {
         return $this->method;
     }
-    
+
     /**
      * Sets protocol for which URI was requested.
      */
@@ -211,7 +211,7 @@ class Request
     {
         $this->protocol = (!empty($_SERVER['HTTPS'])?"https":"http");
     }
-    
+
     /**
      * Gets protocol for which URI was requested.
      *
@@ -222,7 +222,7 @@ class Request
     {
         return $this->protocol;
     }
-    
+
     /**
      * Gets input stream contents.
      *

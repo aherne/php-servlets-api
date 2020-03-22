@@ -10,7 +10,7 @@ class URI
     private $page;
     private $queryString;
     private $parameters;
-    
+
     /**
      * Detects info based on values in $_SERVER superglobal
      */
@@ -21,7 +21,7 @@ class URI
         $this->setQueryString();
         $this->parameters = $_GET;
     }
-    
+
     /**
      * Sets context path from requested URL.
      */
@@ -29,7 +29,7 @@ class URI
     {
         $this->contextPath = str_replace(array($_SERVER["DOCUMENT_ROOT"],"/index.php"), "", $_SERVER["SCRIPT_FILENAME"]);
     }
-    
+
     /**
      * Gets context path from requested URL.
      *
@@ -40,7 +40,7 @@ class URI
     {
         return $this->contextPath;
     }
-    
+
     /**
      * Sets original page requested path based on REQUEST_URI
      */
@@ -53,7 +53,7 @@ class URI
         }
         $this->page = (strpos($urlCombined, "/")===0?substr($urlCombined, 1):$urlCombined); // remove trailing slash
     }
-    
+
     /**
      * Gets original page requested path.
      *
@@ -64,7 +64,7 @@ class URI
     {
         return $this->page;
     }
-    
+
     /**
      * Sets query string part from requested URL
      */
@@ -72,7 +72,7 @@ class URI
     {
         $this->queryString = $_SERVER["QUERY_STRING"];
     }
-    
+
     /**
      * Gets query string part from requested URL.
      *
@@ -83,14 +83,14 @@ class URI
     {
         return $this->queryString;
     }
-    
+
     /**
      * Gets query string parameters detected by optional name
      *
-     * @param string $name
+     * @param string|integer $name
      * @return string|array|null
      */
-    public function parameters(string $name="")
+    public function parameters($name="")
     {
         if (!$name) {
             return $this->parameters;
