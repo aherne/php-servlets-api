@@ -13,7 +13,7 @@ class FormatValidator
     
     /**
      * Performs detection process
-     * 
+     *
      * @param Application $application
      * @param string $url
      * @throws FormatNotFoundException
@@ -26,7 +26,7 @@ class FormatValidator
             if ($route->getFormat()) {
                 $extension = $route->getFormat();
             }
-        }        
+        }
         
         if ($application->formats($extension)===null) {
             throw new FormatNotFoundException("Format could not be matched to formats.format tag @ XML: ".$extension);
@@ -37,7 +37,7 @@ class FormatValidator
     
     /**
      * Gets final response format
-     * 
+     *
      * @return string
      */
     public function getFormat(): string
@@ -45,4 +45,3 @@ class FormatValidator
         return $this->format;
     }
 }
-

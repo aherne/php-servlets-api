@@ -1,6 +1,6 @@
 <?php
 namespace Test\Lucinda\STDOUT;
-    
+
 use Lucinda\STDOUT\Attributes;
 use Lucinda\UnitTest\Result;
 
@@ -70,6 +70,4 @@ class AttributesTest
     {
         return new Result($this->object->getValidParameters("name")==1);
     }
-        
-
 }

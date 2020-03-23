@@ -1,6 +1,6 @@
 <?php
 namespace Test\Lucinda\STDOUT\Request;
-    
+
 use Lucinda\STDOUT\Request\URI;
 use Lucinda\UnitTest\Result;
 
@@ -19,7 +19,7 @@ class URITest
         ];
         $_GET = ["asd"=>"fgh"];
         $this->object = new URI();
-    }  
+    }
 
     public function getContextPath()
     {
@@ -43,6 +43,4 @@ class URITest
     {
         return new Result($this->object->parameters("asd")=="fgh");
     }
-        
-
 }

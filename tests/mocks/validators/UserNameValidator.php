@@ -10,4 +10,3 @@ class UserNameValidator implements ParameterValidator
         return (isset($this->users_db[$value])?$this->users_db[$value]:null);
     }
 }
-

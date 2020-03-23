@@ -1,6 +1,6 @@
 <?php
 namespace Test\Lucinda\STDOUT\Session;
-    
+
 use Lucinda\STDOUT\Session\SecurityOptions;
 use Lucinda\UnitTest\Result;
 
@@ -15,7 +15,7 @@ class SecurityOptionsTest
         
         $fields = [
             "session.save_path",
-            "session.name", 
+            "session.name",
             "session.gc_maxlifetime",
             "session.cookie_lifetime",
             "session.cookie_secure",
@@ -92,6 +92,4 @@ class SecurityOptionsTest
         ini_set("session.save_path", $this->settings["session.save_path"]);
         return new Result($new == "asd");
     }
-        
-
 }

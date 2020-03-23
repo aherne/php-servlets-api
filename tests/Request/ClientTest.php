@@ -1,6 +1,6 @@
 <?php
 namespace Test\Lucinda\STDOUT\Request;
-    
+
 use Lucinda\STDOUT\Request\Client;
 use Lucinda\UnitTest\Result;
 
@@ -16,7 +16,7 @@ class ClientTest
             "REMOTE_PORT"=>59300
         ];
         $this->object = new Client();
-    }        
+    }
 
     public function getName()
     {
@@ -34,6 +34,4 @@ class ClientTest
     {
         return new Result($this->object->getPort()==59300);
     }
-        
-
 }

@@ -1,13 +1,12 @@
 <?php
 namespace Test\Lucinda\STDOUT;
-    
+
 use Lucinda\STDOUT\FrontController;
 use Lucinda\STDOUT\EventType;
 use Lucinda\UnitTest\Result;
 
 class FrontControllerTest
 {
-    
     private $object;
     private $attributes;
     
@@ -61,6 +60,4 @@ class FrontControllerTest
         $results[] = new Result($this->attributes->getStartTime() && $this->attributes->getEndTime() && $this->attributes->getEndTime()>$this->attributes->getStartTime(), "tested event listeners");
         return $results;
     }
-        
-
 }

@@ -2,6 +2,7 @@
 namespace Lucinda\STDOUT\Application;
 
 use Lucinda\STDOUT\XMLException;
+
 /**
  * Encapsulates file format information:
  * - format: file format / name

@@ -1,6 +1,6 @@
 <?php
 namespace Test\Lucinda\STDOUT;
-    
+
 use Lucinda\STDOUT\Application;
 use Lucinda\UnitTest\Result;
 
@@ -77,6 +77,4 @@ class ApplicationTest
     {
         return new Result($this->object->formats("html")!==null);
     }
-        
-
 }

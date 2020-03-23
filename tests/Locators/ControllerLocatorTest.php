@@ -1,6 +1,6 @@
 <?php
 namespace Test\Lucinda\STDOUT\Locators;
-    
+
 use Lucinda\STDOUT\Locators\ControllerLocator;
 use Lucinda\STDOUT\Application;
 use Lucinda\STDOUT\Attributes;

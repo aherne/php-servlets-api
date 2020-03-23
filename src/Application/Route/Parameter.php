@@ -14,7 +14,7 @@ class Parameter
     
     /**
      * Saves validation settings from XML tag 'parameter'
-     * 
+     *
      * @param \SimpleXMLElement $info
      * @throws XMLException
      */
@@ -38,7 +38,7 @@ class Parameter
     
     /**
      * Gets parameter name
-     * 
+     *
      * @return string
      */
     public function getName(): string
@@ -48,7 +48,7 @@ class Parameter
     
     /**
      * Gets class that will be used for validating parameter value
-     * 
+     *
      * @return string
      */
     public function getValidator(): string
@@ -58,7 +58,7 @@ class Parameter
     
     /**
      * Checks whether or not parameter is mandatory
-     * 
+     *
      * @return boolean
      */
     public function isMandatory(): bool
@@ -66,4 +66,3 @@ class Parameter
         return $this->isMandatory;
     }
 }
-

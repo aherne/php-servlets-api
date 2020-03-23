@@ -7,4 +7,3 @@ namespace Lucinda\STDOUT;
 class ValidationFailedException extends \Exception
 {
 }
-

@@ -1,6 +1,6 @@
 <?php
 namespace Test\Lucinda\STDOUT\Request\UploadedFiles;
-    
+
 use Lucinda\STDOUT\Request\UploadedFiles\File;
 use Lucinda\UnitTest\Result;
 
@@ -55,6 +55,4 @@ class FileTest
         $this->object->delete();
         return new Result(!file_exists(dirname(__DIR__, 3)."/testfile.txt"));
     }
-        
-
 }

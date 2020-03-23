@@ -13,7 +13,7 @@ class RequestValidator extends Request
      * Performs request validation
      */
     public function run(): void
-    {        
+    {
         $routeValidator = new RouteValidator($this->application, $this->request);
         $this->attributes->setRequestedPage($routeValidator->getUrl());
         $this->attributes->setPathParameters($routeValidator->getPathParameters());

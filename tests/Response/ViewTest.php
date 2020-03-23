@@ -55,6 +55,5 @@ class ViewTest
     {
         $this->object->offsetUnset("test3");
         return new Result(!$this->object->offsetExists("test3"));
-    } 
-
+    }
 }

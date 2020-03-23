@@ -83,7 +83,7 @@ class Route
     
     /**
      * Gets valid request method for current route
-     * 
+     *
      * @return string|NULL
      */
     public function getValidRequestMethod(): ?string
@@ -93,7 +93,7 @@ class Route
     
     /**
      * Gets validator for route/request parameter by its name for current route
-     * 
+     *
      * @param string $name
      * @return Parameter|NULL
      */

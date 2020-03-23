@@ -1,6 +1,6 @@
 <?php
 namespace Test\Lucinda\STDOUT\Request;
-    
+
 use Lucinda\STDOUT\Request\Server;
 use Lucinda\UnitTest\Result;
 
@@ -18,7 +18,7 @@ class ServerTest
             'SERVER_SOFTWARE' => 'Apache/2.4.29 (Ubuntu)',
         ];
         $this->object = new Server();
-    }     
+    }
 
     public function getName()
     {
@@ -48,6 +48,4 @@ class ServerTest
     {
         return new Result($this->object->getSoftware()=="Apache/2.4.29 (Ubuntu)");
     }
-        
-
 }

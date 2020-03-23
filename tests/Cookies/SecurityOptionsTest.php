@@ -1,6 +1,6 @@
 <?php
 namespace Test\Lucinda\STDOUT\Cookies;
-    
+
 use Lucinda\STDOUT\Cookies\SecurityOptions;
 use Lucinda\UnitTest\Result;
 
@@ -76,6 +76,4 @@ class SecurityOptionsTest
     {
         return new Result($this->object->getDomain()=="www.example.com");
     }
-        
-
 }

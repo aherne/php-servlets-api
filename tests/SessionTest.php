@@ -1,6 +1,6 @@
 <?php
 namespace Test\Lucinda\STDOUT;
-    
+
 use Lucinda\STDOUT\Session;
 use Lucinda\UnitTest\Result;
 
@@ -28,7 +28,7 @@ class SessionTest
 
     public function set()
     {
-        $this->object->set("asd","fgh");
+        $this->object->set("asd", "fgh");
         return new Result(true);
     }
         
@@ -57,6 +57,4 @@ class SessionTest
         $this->object->destroy();
         return new Result(!$this->object->isStarted());
     }
-        
-
 }

@@ -1,6 +1,6 @@
 <?php
 namespace Test\Lucinda\STDOUT\Application\Route;
-    
+
 use Lucinda\STDOUT\Application\Route\Parameter;
 use Lucinda\UnitTest\Result;
 
@@ -32,6 +32,4 @@ class ParameterTest
     {
         return new Result($this->object->isMandatory());
     }
-        
-
 }

@@ -1,6 +1,6 @@
 <?php
 namespace Test\Lucinda\STDOUT\Application;
-    
+
 use Lucinda\STDOUT\Application\Route;
 use Lucinda\UnitTest\Result;
 
@@ -52,6 +52,4 @@ class RouteTest
     {
         return new Result(!empty($this->object->getValidParameters()));
     }
-        
-
 }

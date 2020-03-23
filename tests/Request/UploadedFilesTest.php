@@ -1,12 +1,11 @@
 <?php
 namespace Test\Lucinda\STDOUT\Request;
-    
+
 use Lucinda\STDOUT\Request\UploadedFiles;
 use Lucinda\UnitTest\Result;
 
 class UploadedFilesTest
 {
-
     public function toArray()
     {
         $_FILES = [
@@ -22,6 +21,4 @@ class UploadedFilesTest
         $results = $uploadedFiles->toArray();
         return new Result(isset($results["test"]) && $results["test"]->getSize()==123456);
     }
-        
-
 }

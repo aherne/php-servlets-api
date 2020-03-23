@@ -1,6 +1,6 @@
 <?php
 namespace Test\Lucinda\STDOUT\EventListeners;
-    
+
 use Lucinda\STDOUT\EventListeners\RequestValidator;
 use Lucinda\STDOUT\Attributes;
 use Lucinda\STDOUT\Application;
@@ -48,6 +48,4 @@ class RequestValidatorTest
         
         return $results;
     }
-        
-
 }

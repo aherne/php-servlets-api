@@ -1,6 +1,6 @@
 <?php
 namespace Test\Lucinda\STDOUT\Application;
-    
+
 use Lucinda\STDOUT\Application\Format;
 use Lucinda\UnitTest\Result;
 
@@ -38,6 +38,4 @@ class FormatTest
     {
         return new Result($this->object->getViewResolver()=="ViewLanguageResolver");
     }
-        
-
 }

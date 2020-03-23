@@ -1,12 +1,11 @@
 <?php
 namespace Test\Lucinda\STDOUT\Request\UploadedFiles;
-    
+
 use Lucinda\STDOUT\Request\UploadedFiles\Parser;
 use Lucinda\UnitTest\Result;
 
 class ParserTest
 {
-
     public function getResult()
     {
         /**
@@ -33,6 +32,4 @@ class ParserTest
         $result = $parser->getResult();
         return new Result(isset($result["test"]["size"]) && $result["test"]["size"]==123456);
     }
-        
-
 }

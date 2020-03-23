@@ -7,4 +7,3 @@ namespace Lucinda\STDOUT;
 class MethodNotAllowedException extends \Exception
 {
 }
-

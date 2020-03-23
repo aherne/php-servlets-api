@@ -1,6 +1,6 @@
 <?php
 namespace Test\Lucinda\STDOUT;
-    
+
 use Lucinda\STDOUT\Cookies;
 use Lucinda\UnitTest\Result;
 
@@ -38,6 +38,4 @@ class CookiesTest
         $this->object->remove("asd");
         return new Result(!$this->object->contains("asd"));
     }
-        
-
 }
