@@ -148,8 +148,8 @@ While handling request to response, it needs to add its own [Lucinda\STDOUT\Even
 
 | Method | Arguments | Returns | Description |
 | --- | --- | --- | --- |
-| getRequestedPage | void | string | Gets value of *url* attribute of matching [route](#routes) XML tag found either explicitly (via *url* attribute @ [route](#routes)) or implicitly (via *default_page* attribute @ [application](#application)) |
-| getRequestedResponseFormat | void | string | Gets value of *name* attribute of matching [format](#formats) XML tag found either explicitly (via *format* attribute @ [route](#routes)) or implicitly (via *default_format* attribute @ [application](#application)) |
+| getValidPage | void | string | Gets value of *url* attribute of matching [route](#routes) XML tag found either explicitly (via *url* attribute @ [route](#routes)) or implicitly (via *default_page* attribute @ [application](#application)) |
+| getValidFormat | void | string | Gets value of *name* attribute of matching [format](#formats) XML tag found either explicitly (via *format* attribute @ [route](#routes)) or implicitly (via *default_format* attribute @ [application](#application)) |
 | getPathParameters | void | array | Gets all path parameters detected from parameterized *url* attribute of matching [route](#routes) XML tag |
 | getPathParameters | string $name | string | Gets value of a path parameter detected by its name. Returns NULL if not existing! |
 | getValidParameters | void | array | Gets all parameter validation results by parameter name and validation result |
@@ -553,8 +553,8 @@ Developers need to implement a *run* method, where they are able to access follo
 A common example of a REQUEST listener is the need to authorize request:
 
 ```php
-if (!$this->isAllowed($this->attributes->getRequestedPage())) {
-    throw new PageNotAllowedException($this->attributes->getRequestedPage());
+if (!$this->isAllowed($this->attributes->getValidPage())) {
+    throw new PageNotAllowedException($this->attributes->getValidPage());
 }
 ```
 
