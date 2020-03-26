@@ -20,16 +20,16 @@ class AttributesTest
     }
         
 
-    public function setRequestedPage()
+    public function setValidPage()
     {
-        $this->object->setRequestedPage("info/(name)");
+        $this->object->setValidPage("info/(name)");
         return new Result(true);
     }
         
 
-    public function getRequestedPage()
+    public function getValidPage()
     {
-        return new Result($this->object->getRequestedPage()=="info/(name)");
+        return new Result($this->object->getValidPage()=="info/(name)");
     }
         
 
@@ -46,16 +46,16 @@ class AttributesTest
     }
         
 
-    public function setRequestedResponseFormat()
+    public function setValidFormat()
     {
-        $this->object->setRequestedResponseFormat("html");
+        $this->object->setValidFormat("html");
         return new Result(true);
     }
         
 
-    public function getRequestedResponseFormat()
+    public function getValidFormat()
     {
-        return new Result($this->object->getRequestedResponseFormat()=="html");
+        return new Result($this->object->getValidFormat()=="html");
     }
         
 

@@ -32,7 +32,7 @@ class ViewResolverLocator extends ServiceLocator
     protected function setClassName(Application $application, Attributes $attributes): void
     {
         // get listener path
-        $resolverClass = $application->formats($attributes->getRequestedResponseFormat())->getViewResolver();
+        $resolverClass = $application->formats($attributes->getValidFormat())->getViewResolver();
         $resolverLocation = $application->getViewResolversPath();
 
         // detect resolver @ application

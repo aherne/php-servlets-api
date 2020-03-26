@@ -11,7 +11,7 @@ class ControllerLocatorTest
     public function getClassName()
     {
         $attributes = new Attributes("tests/mocks/events");
-        $attributes->setRequestedPage("users");
+        $attributes->setValidPage("users");
         $locator = new ControllerLocator(new Application(dirname(__DIR__)."/configuration.xml"), $attributes);
         return new Result($locator->getClassName()=="UsersController");
     }

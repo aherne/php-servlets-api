@@ -41,10 +41,10 @@ class RequestValidatorTest
         
         $results = [];
         
-        $results[] = new Result($attributes->getRequestedPage()=="user/(name)");
+        $results[] = new Result($attributes->getValidPage()=="user/(name)");
         $results[] = new Result($attributes->getPathParameters()==["name"=>"lucian"]);
         $results[] = new Result($attributes->getValidParameters()==["name"=>1]);
-        $results[] = new Result($attributes->getRequestedResponseFormat()=="json");
+        $results[] = new Result($attributes->getValidFormat()=="json");
         
         return $results;
     }

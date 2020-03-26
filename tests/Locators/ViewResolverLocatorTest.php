@@ -11,7 +11,7 @@ class ViewResolverLocatorTest
     public function getClassName()
     {
         $attributes = new Attributes("tests/mocks/events");
-        $attributes->setRequestedResponseFormat("html");
+        $attributes->setValidFormat("html");
         $locator = new ViewResolverLocator(new Application(dirname(__DIR__)."/configuration.xml"), $attributes);
         return new Result($locator->getClassName()=="HtmlResolver");
     }

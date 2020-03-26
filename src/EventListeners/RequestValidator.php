@@ -15,11 +15,11 @@ class RequestValidator extends Request
     public function run(): void
     {
         $routeValidator = new RouteValidator($this->application, $this->request);
-        $this->attributes->setRequestedPage($routeValidator->getUrl());
+        $this->attributes->setValidPage($routeValidator->getUrl());
         $this->attributes->setPathParameters($routeValidator->getPathParameters());
         $this->attributes->setValidParameters($routeValidator->getValidParameters());
                 
         $formatValidator = new FormatValidator($this->application, $routeValidator->getUrl());
-        $this->attributes->setRequestedResponseFormat($formatValidator->getFormat());
+        $this->attributes->setValidFormat($formatValidator->getFormat());
     }
 }

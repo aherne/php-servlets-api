@@ -38,7 +38,7 @@ class ControllerLocator extends ServiceLocator
         $folder = $application->getControllersPath();
     
         // gets page url
-        $url = $attributes->getRequestedPage();
+        $url = $attributes->getValidPage();
     
         // get controller class name
         $className = "";

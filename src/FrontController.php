@@ -159,10 +159,10 @@ class FrontController implements Runnable
     private function getTemplateFile(Application $application): string
     {
         if (!$application->getAutoRouting()) {
-            $template = $application->routes($this->attributes->getRequestedPage())->getView();
+            $template = $application->routes($this->attributes->getValidPage())->getView();
             return ($template?$application->getViewsPath()."/".$template:"");
         } else {
-            return $application->getViewsPath()."/".$this->attributes->getRequestedPage();
+            return $application->getViewsPath()."/".$this->attributes->getValidPage();
         }
     }
     
@@ -174,7 +174,7 @@ class FrontController implements Runnable
      */
     private function getContentType(Application $application): string
     {
-        $format = $application->formats($this->attributes->getRequestedResponseFormat());
+        $format = $application->formats($this->attributes->getValidFormat());
         return $format->getContentType().($format->getCharacterEncoding()?"; charset=".$format->getCharacterEncoding():"");
     }
 }

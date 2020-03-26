@@ -37,7 +37,7 @@ class Attributes
      *
      * @param string $page
      */
-    public function setRequestedPage(string $page): void
+    public function setValidPage(string $page): void
     {
         $this->requestedPage = $page;
     }
@@ -48,7 +48,7 @@ class Attributes
      * @example /asd/def
      * @return string
      */
-    public function getRequestedPage(): string
+    public function getValidPage(): string
     {
         return $this->requestedPage;
     }
@@ -108,7 +108,7 @@ class Attributes
      *
      * @param string $format
      */
-    public function setRequestedResponseFormat(string $format): void
+    public function setValidFormat(string $format): void
     {
         $this->requestedResponseFormat = $format;
     }
@@ -119,7 +119,7 @@ class Attributes
      * @example html
      * @return string
      */
-    public function getRequestedResponseFormat(): string
+    public function getValidFormat(): string
     {
         return $this->requestedResponseFormat;
     }
