@@ -1,7 +1,7 @@
 <?php
 namespace Lucinda\STDOUT\Locators;
 
-use Lucinda\STDOUT\Exception;
+use Lucinda\STDOUT\ConfigurationException;
 
 /**
  * Locates and loads EventListener class based on its absolute/relative file path and name
@@ -24,7 +24,7 @@ class EventListenerLocator extends ServiceLocator
      *
      * @param string $classPath
      * @param string $className
-     * @throws Exception
+     * @throws ConfigurationException
      */
     private function setClassName(string $classPath, string $className): void
     {

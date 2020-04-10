@@ -28,13 +28,12 @@ class Application
      * Populates attributes based on an XML file
      *
      * @param string $xmlFilePath XML file url
-     * @throws Exception If xml file wasn't found
-     * @throws XMLException If xml content has failed validation.
+     * @throws ConfigurationException If xml content has failed validation.
      */
     public function __construct(string $xmlFilePath)
     {
         if (!file_exists($xmlFilePath)) {
-            throw new Exception("XML file not found: ".$xmlFilePath);
+            throw new ConfigurationException("XML file not found: ".$xmlFilePath);
         }
         $this->simpleXMLElement = simplexml_load_file($xmlFilePath);
         
@@ -49,21 +48,21 @@ class Application
     
     /**
      * Sets basic application info based on contents of "application" XML tag
-     * @throws XMLException If xml content has failed validation.
+     * @throws ConfigurationException If xml content has failed validation.
      */
     private function setApplicationInfo(): void
     {
         $xml = $this->getTag("application");
         if (empty($xml)) {
-            throw new XMLException("Tag is mandatory: application");
+            throw new ConfigurationException("Tag is mandatory: application");
         }
         $this->defaultPage = (string) $xml["default_page"];
         if (!$this->defaultPage) {
-            throw new XMLException("Attribute 'default_page' is mandatory for 'application' tag");
+            throw new ConfigurationException("Attribute 'default_page' is mandatory for 'application' tag");
         }
         $this->defaultFormat = (string) $xml["default_format"];
         if (!$this->defaultFormat) {
-            throw new XMLException("Attribute 'default_format' is mandatory for 'application' tag");
+            throw new ConfigurationException("Attribute 'default_format' is mandatory for 'application' tag");
         }
         $this->autoRouting = (int) $xml["auto_routing"];
         $this->version = (string) $xml["version"];
@@ -76,47 +75,47 @@ class Application
     /**
      * Sets user-defined routes that map to possible requested pages based on contents of "routes" XML tag
      * NOTICE: Only executed when auto_routing=0
-     * @throws XMLException If xml content has failed validation.
+     * @throws ConfigurationException If xml content has failed validation.
      */
     private function setRoutes(): void
     {
         $xml = $this->simpleXMLElement->routes;
         if ($xml===null) {
-            throw new XMLException("Tag 'routes' is mandatory");
+            throw new ConfigurationException("Tag 'routes' is mandatory");
         }
         $list = $xml->xpath("//route");
         foreach ($list as $info) {
             $url = (string) $info["url"];
             if (!$url) {
-                throw new XMLException("Attribute 'url' is mandatory for 'route' tag");
+                throw new ConfigurationException("Attribute 'url' is mandatory for 'route' tag");
             }
             $this->routes[$url] = new Route($info);
         }
         if (empty($this->routes)) {
-            throw new Exception("Tag 'routes' is empty");
+            throw new ConfigurationException("Tag 'routes' is empty");
         }
     }
     
     /**
      * Sets user-defined file response formats that will be used by application based on contents of "formats" XML tag
-     * @throws XMLException If xml content has failed validation.
+     * @throws ConfigurationException If xml content has failed validation.
      */
     private function setFormats(): void
     {
         $xml = $this->simpleXMLElement->formats;
         if ($xml===null) {
-            throw new XMLException("Tag 'formats' is mandatory");
+            throw new ConfigurationException("Tag 'formats' is mandatory");
         }
         $list = $xml->xpath("//format");
         foreach ($list as $info) {
             $name = (string) $info["name"];
             if (!$name) {
-                throw new XMLException("Attribute 'name' is mandatory for 'format' tag");
+                throw new ConfigurationException("Attribute 'name' is mandatory for 'format' tag");
             }
             $this->formats[$name] = new Format($info);
         }
         if (empty($this->formats)) {
-            throw new Exception("Tag 'formats' is empty");
+            throw new ConfigurationException("Tag 'formats' is empty");
         }
     }
     
@@ -207,7 +206,7 @@ class Application
      * Gets tag based on name from main XML root or referenced XML file if "ref" attribute was set
      *
      * @param string $name
-     * @throws Exception If "ref" points to a nonexistent file.
+     * @throws ConfigurationException If "ref" points to a nonexistent file.
      * @return \SimpleXMLElement
      */
     public function getTag(string $name): \SimpleXMLElement
@@ -217,7 +216,7 @@ class Application
         if ($xmlFilePath) {
             $xmlFilePath .= ".xml";
             if (!file_exists($xmlFilePath)) {
-                throw new Exception("XML file not found: ".$xmlFilePath);
+                throw new ConfigurationException("XML file not found: ".$xmlFilePath);
             }
             $subXML = simplexml_load_file($xmlFilePath);
             return $subXML->{$name};

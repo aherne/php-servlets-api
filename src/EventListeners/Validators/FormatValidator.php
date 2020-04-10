@@ -2,7 +2,7 @@
 namespace Lucinda\STDOUT\EventListeners\Validators;
 
 use Lucinda\STDOUT\Application;
-use Lucinda\STDOUT\FormatNotFoundException;
+use Lucinda\STDOUT\ConfigurationException;
 
 /**
  * Binds information in 'application', 'formats' and 'routes' XML tags based on route requested to detect final response format
@@ -16,7 +16,7 @@ class FormatValidator
      *
      * @param Application $application
      * @param string $url
-     * @throws FormatNotFoundException
+     * @throws ConfigurationException
      */
     public function __construct(Application $application, string $url)
     {
@@ -29,7 +29,7 @@ class FormatValidator
         }
         
         if ($application->formats($extension)===null) {
-            throw new FormatNotFoundException("Format could not be matched to formats.format tag @ XML: ".$extension);
+            throw new ConfigurationException("Format could not be matched to formats.format tag @ XML: ".$extension);
         }
         
         $this->format = $extension;

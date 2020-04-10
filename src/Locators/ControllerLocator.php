@@ -3,8 +3,7 @@ namespace Lucinda\STDOUT\Locators;
 
 use Lucinda\STDOUT\Application;
 use Lucinda\STDOUT\Attributes;
-use Lucinda\STDOUT\Exception;
-use Lucinda\STDOUT\XMLException;
+use Lucinda\STDOUT\ConfigurationException;
 
 /**
  * Locates and loads Controller class based on information collected by Application and Attributes objects
@@ -16,8 +15,7 @@ class ControllerLocator extends ServiceLocator
      *
      * @param Application $application
      * @param Attributes $attributes
-     * @throws Exception If controller file could not be located on disk.
-     * @throws XMLException If XML is misconfigured
+     * @throws ConfigurationException If controller file could not be located on disk.
      */
     public function __construct(Application $application, Attributes $attributes)
     {
@@ -29,8 +27,7 @@ class ControllerLocator extends ServiceLocator
      *
      * @param Application $application
      * @param Attributes $attributes
-     * @throws Exception If controller file could not be located on disk.
-     * @throws XMLException If XML is misconfigured
+     * @throws ConfigurationException If controller file could not be located on disk.
      */
     protected function setClassName(Application $application, Attributes $attributes): void
     {

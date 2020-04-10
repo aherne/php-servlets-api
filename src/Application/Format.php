@@ -1,7 +1,7 @@
 <?php
 namespace Lucinda\STDOUT\Application;
 
-use Lucinda\STDOUT\XMLException;
+use Lucinda\STDOUT\ConfigurationException;
 
 /**
  * Encapsulates file format information:
@@ -28,14 +28,14 @@ class Format
         
         $this->contentType = (string) $info["content_type"];
         if (!$this->contentType) {
-            throw new XMLException("Attribute 'content_type' is mandatory for 'format' tag");
+            throw new ConfigurationException("Attribute 'content_type' is mandatory for 'format' tag");
         }
         
         $this->characterEncoding = (string) $info["charset"];
         
         $this->viewResolverClass = (string) $info['class'];
         if (!$this->viewResolverClass) {
-            throw new XMLException("Attribute 'class' is mandatory for 'format' tag");
+            throw new ConfigurationException("Attribute 'class' is mandatory for 'format' tag");
         }
     }
 

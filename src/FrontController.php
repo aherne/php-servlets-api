@@ -56,7 +56,7 @@ class FrontController implements Runnable
      * @throws FormatNotFoundException If an invalid response format was setup by developer in XML for route requested by client.
      * @throws PathNotFoundException If an invalid route was requested from client or setup by developer in XML.
      * @throws FileUploadException If file upload failed due to server constraints.
-     * @throws Exception If any other situation where execution cannot continue.
+     * @throws ConfigurationException If any other situation where execution cannot continue.
      */
     public function run(): void
     {

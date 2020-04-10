@@ -24,12 +24,12 @@ class Request
     /**
      * Detects all aspects of a request.
      *
-     * @throws Exception
+     * @throws ConfigurationException
      */
     public function __construct()
     {
         if (!isset($_SERVER["REQUEST_URI"])) {
-            throw new Exception("API requires overriding paths!");
+            throw new ConfigurationException("API requires overriding paths!");
         }
 
         $this->setClient();

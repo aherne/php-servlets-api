@@ -30,7 +30,7 @@ class Response
      * Sets HTTP response status by its numeric code.
      *
      * @param integer $code
-     * @throws Exception If status code is invalid.
+     * @throws ConfigurationException If status code is invalid.
      */
     public function setStatus(int $code): void
     {

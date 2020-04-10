@@ -1,7 +1,7 @@
 <?php
 namespace Lucinda\STDOUT\Response;
 
-use Lucinda\STDOUT\Exception;
+use Lucinda\STDOUT\ConfigurationException;
 
 /**
  * Encapsulates HTTP response status logic in accordance to HTTP/1.1 specifications
@@ -80,12 +80,12 @@ class Status
      * Sets response HTTP status by its numeric code
      *
      * @param integer $code
-     * @throws Exception If incorrect numeric code is supplied.
+     * @throws ConfigurationException If incorrect numeric code is supplied.
      */
     public function __construct(int $code)
     {
         if (!array_key_exists($code, self::HTTP_STATUSES)) {
-            throw new Exception("Unsupported HTTP status: ".$code);
+            throw new ConfigurationException("Unsupported HTTP status: ".$code);
         }
         $this->id = $code;
     }

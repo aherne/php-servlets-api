@@ -3,7 +3,7 @@ namespace Lucinda\STDOUT\Locators;
 
 use Lucinda\STDOUT\Application;
 use Lucinda\STDOUT\Attributes;
-use Lucinda\STDOUT\Exception;
+use Lucinda\STDOUT\ConfigurationException;
 
 /**
  * Locates and loads ViewResolver class based on information collected by Application and Attributes objects
@@ -15,7 +15,7 @@ class ViewResolverLocator extends ServiceLocator
      *
      * @param Application $application
      * @param Attributes $attributes
-     * @throws Exception If controller file could not be located on disk.
+     * @throws ConfigurationException If view resolver file could not be located on disk.
      */
     public function __construct(Application $application, Attributes $attributes)
     {
@@ -27,7 +27,7 @@ class ViewResolverLocator extends ServiceLocator
      *
      * @param Application $application
      * @param Attributes $attributes
-     * @throws Exception If view resolver file could not be located on disk.
+     * @throws ConfigurationException If view resolver file could not be located on disk.
      */
     protected function setClassName(Application $application, Attributes $attributes): void
     {

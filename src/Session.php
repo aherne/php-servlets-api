@@ -40,7 +40,6 @@ class Session
      *
      * @param string $key
      * @param mixed $value
-     * @throws Exception	If session not started.
      */
     public function set(string $key, $value): void
     {
@@ -62,9 +61,9 @@ class Session
      * Checks if session param exists.
      *
      * @param string $key
-     * @return mixed
+     * @return bool
      */
-    public function contains(string $key)
+    public function contains(string $key): bool
     {
         return isset($_SESSION[$key]);
     }

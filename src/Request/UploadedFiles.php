@@ -26,7 +26,7 @@ class UploadedFiles
     /**
      * Performs recursive conversion between array of properties and UploadedFile
      *
-     * @param array $array
+     * @param array|File $array
      */
     private function makeObjects(array $array)
     {
