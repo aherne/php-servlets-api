@@ -77,4 +77,10 @@ class ApplicationTest
     {
         return new Result($this->object->formats("html")!==null);
     }
+
+
+    public function getXML()
+    {
+        return new Result($this->object->getXML() instanceof \SimpleXMLElement);
+    }
 }

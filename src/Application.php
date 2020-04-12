@@ -254,4 +254,14 @@ class Application
             return (isset($this->formats[$name])?$this->formats[$name]:null);
         }
     }
+
+    /**
+     * Gets root XML tag
+     *
+     * @return \SimpleXMLElement
+     */
+    public function getXML(): \SimpleXMLElement
+    {
+        return $this->simpleXMLElement;
+    }
 }
