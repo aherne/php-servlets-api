@@ -22,8 +22,10 @@ API is fully PSR-4 compliant, only requiring PHP7.1+ interpreter and SimpleXML e
 To configure this API you must have a XML with following tags inside:
 
 - **[application](#application)**: (mandatory) configures your application on a general basis
-- **[formats](#formats)**: (mandatory) configures formats in which your application is able to resolve responses to a handled HTTP request
+- **[formats](#formats)**: (mandatory) configures formats in which your application is able to resolve responses to
 - **[routes](#routes)**: (mandatory) configures routes that bind requested resources to controllers and views
+- **[session](#session)**: (optional) configures options to use automatically when creating sessions
+- **[cookies](#cookies)**: (optional) configures options to use automatically when setting cookies
 
 ### Application
 
@@ -128,6 +130,73 @@ Tag example:
 </routes>
 ```
 
+### Session
+
+Maximal syntax of this tag is:
+
+```xml
+<session save_path="..." name="..." expired_time="..." expired_on_close="..." https_only="..." headers_only="..." referrer_check="..." handler="..." auto_start="...">
+```
+
+Where:
+
+- *save_path*: (optional) absolute path in which sessions are saved on server. Example: "/tmp/sessions/"
+- *name*: (optional) name of the session which is used as cookie name (default: PHPSESSID). Example: "SESSID"
+- *expired_time*: (optional) number of seconds after which data will be garbage collected. Example: "60"
+- *expired_on_close*: (optional) number of seconds session cookie is expected to survive in client browser after close. Example: "120"
+- *https_only*: (optional) marks session cookie as accessible over secure HTTPS connections. Value: "1"
+- *headers_only*: (optional) marks session cookie as accessible only through the HTTP protocol. Value: "1"
+- *referrer_check*: (optional) substring you want to check each HTTP Referer for in order to validate session cookie. Example: "Chrome"
+- *handler*: (optional) user-defined session handler (including namespace or subfolder) that implements [\SessionHandlerInterface](https://www.php.net/manual/en/class.sessionhandlerinterface.php). Example: "application/models/RedisHandler"
+- *auto_start*: (optional) signals session to be started automatically for each request. Value: "1"
+
+Tag example:
+
+```xml
+<session save_path="/tmp/sessions/" name="SESSID" expired_time="60" expired_on_close="120" https_only="1" headers_only="1" referrer_check="Chrome" handler="application/models/RedisHandler" auto_start="1">
+```
+
+### Cookies
+
+Maximal syntax of this tag is:
+
+```xml
+<cookies path="..." domain="..." https_only="..." headers_only="...">
+```
+
+Where:
+
+- *path*: (optional) path on the server in which the cookie will be available on. Example: "/foo/"
+- *domain*: (optional) the (sub)domain that the cookie is available to. Example: "www.example.com"
+- *https_only*: (optional) signals cookie should only be transmitted over a secure HTTPS connection from the client. Value: "1"
+- *headers_only*: (optional) signals cookie should be made accessible only through the HTTP protocol. Value: "1"
+
+Tag example:
+
+```xml
+<cookies path="/" domain="example.com" https_only="1" headers_only="1">
+```
+
+#### How to set path
+
+Table below shows the effects of *path* attribute:
+
+| Value | Effect |
+| --- | --- |
+|  |  the cookie will be available in the current directory that the cookie is being set in (default) |
+| / | the cookie will be available within the entire domain (recommended) |
+| /foo/ | the cookie will only be available within the /foo/ directory and all sub-directories such as /foo/bar/ of domain |
+
+#### How to set domain
+
+Table below shows the effects of *domain* attribute:
+
+| Value | Effect |
+| --- | --- |
+|  | makes cookie available to current subdomain |
+| www.example.com | makes cookie available to that subdomain and all other sub-domains of it (i.e. w2.www.example.com) |
+| example.com | makes cookie available to the whole domain (including all subdomains of it) |
+
 ## Configuring Shared Variables
 
 API allows event listeners to set variables that are going to be made available to subsequent event listeners and controllers. For each variable there is a:
@@ -178,9 +247,7 @@ As mentioned above, API allows developers to bind listeners to handling lifecycl
 | --- | --- | --- |
 | start | [Lucinda\STDOUT\EventListeners\Start](#abstract-class-eventlisteners-start) | Ran before [configuration](#configuration) XML is read |
 | application | [Lucinda\STDOUT\EventListeners\Application](#abstract-class-eventlisteners-application) | Ran after [configuration](#configuration) XML is read into [Lucinda\STDOUT\Application](#class-application) |
-| request | [Lucinda\STDOUT\EventListeners\Request](#abstract-class-eventlisteners-request) | Ran after user request is read into [Lucinda\STDOUT\Request](#class-request) |
-| session | [Lucinda\STDOUT\EventListeners\Session](#abstract-class-eventlisteners-session) | Ran after [Lucinda\STDOUT\Session](#class-session) object is created for session operations |
-| cookies | [Lucinda\STDOUT\EventListeners\Cookies](#abstract-class-eventlisteners-cookies) | Ran after [Lucinda\STDOUT\Cookies](#class-cookies) object is created for cookie operations |
+| request | [Lucinda\STDOUT\EventListeners\Request](#abstract-class-eventlisteners-request) | Ran after user request is read into [Lucinda\STDOUT\Request](#class-request), [Lucinda\STDOUT\Session](#class-session) and [Lucinda\STDOUT\Cookies](#class-cookies) objects |
 | response | [Lucinda\STDOUT\EventListeners\Response](#abstract-class-eventlisteners-response) | Ran after [Lucinda\STDOUT\Response](#class-response) body is compiled but before it's rendered |
 | end | [Lucinda\STDOUT\EventListeners\End](#abstract-class-eventlisteners-end) | Ran after [Lucinda\STDOUT\Response](#class-response) was rendered back to caller  |
 
@@ -211,12 +278,10 @@ Once above steps are done, developers are finally able to handle requests into r
 - detects [Lucinda\STDOUT\EventListeners\Start](#abstract-class-eventlisteners-start) listeners and executes them in order they were registered
 - encapsulates [configuration](#configuration) XML file into [Lucinda\STDOUT\Application](#class-application) object
 - detects [Lucinda\STDOUT\EventListeners\Application](#abstract-class-eventlisteners-application) listeners and executes them in order they were registered
-- encapsulates request information based on superglobals into [Lucinda\STDOUT\Request](#class-request) object
+- encapsulates request information based on $\_SERVER superglobal into [Lucinda\STDOUT\Request](#class-request) object
+- encapsulates session information based on $\_SESSION superglobal as well as operations available into [Lucinda\STDOUT\Session](#class-session) object
+- encapsulates cookie operations and variables based on $\_COOKIE  superglobal as well as operations available into [Lucinda\STDOUT\Cookie](#class-cookie) object
 - detects [Lucinda\STDOUT\EventListeners\Request](#abstract-class-eventlisteners-request) listeners and executes them in order they were registered
-- encapsulates session variables based on superglobals into [Lucinda\STDOUT\Session](#class-session) object
-- detects [Lucinda\STDOUT\EventListeners\Session](#abstract-class-eventlisteners-session) listeners and executes them in order they were registered
-- encapsulates cookie variables based on superglobals into [Lucinda\STDOUT\Cookie](#class-cookie) object
-- detects [Lucinda\STDOUT\EventListeners\Cookies](#abstract-class-eventlisteners-cookies) listeners and executes them in order they were registered
 - initializes empty [Lucinda\STDOUT\Response](#class-response) based on information detected above from request or XML
 - locates [Lucinda\STDOUT\Controller](#abstract-class-controller) based on information already detected and, if found, executes it in order to bind models to views
 - locates [Lucinda\STDOUT\ViewResolver](#abstract-class-viewresolver) based on information already detected and executes it in order to feed response body based on view
@@ -269,9 +334,7 @@ These classes are fully implemented by API:
     - [Lucinda\STDOUT\Request\URI](#class-request-uri): encapsulates uri information detected from request
     - [Lucinda\STDOUT\Request\UploadedFiles\File](#class-request-uploadedfile): encapsulates information about an uploaded file
 - [Lucinda\STDOUT\Session](#class-session): encapsulates operations to perform with a http session mapped to $\_SESSION superglobal
-    - [Lucinda\STDOUT\Session\SecurityOptions](#class-session-securityoptions): encapsulates options to set session before being started
 - [Lucinda\STDOUT\Cookies](#class-cookies): encapsulates operations to perform with a http cookie mapped to $\_COOKIE superglobal
-    - [Lucinda\STDOUT\Cookies\SecurityOptions](#class-cookies-securityoptions): encapsulates options to set session before being started
 - [Lucinda\STDOUT\Response](#class-response): encapsulates response to send back to caller
     - [Lucinda\STDOUT\Response\Status](#class-response-status): encapsulates response HTTP status
     - [Lucinda\STDOUT\Response\View](#class-response-view): encapsulates view template and data that will be bound into a response body
@@ -394,7 +457,7 @@ Class [Lucinda\STDOUT\Session](https://github.com/aherne/php-servlets-api/tree/v
 
 | Method | Arguments | Returns | Description |
 | --- | --- | --- | --- |
-| start | [Lucinda\STDOUT\Session\SecurityOptions](#class-session-securityoptions) $securityOptions = null, [\SessionHandlerInterface](https://www.php.net/manual/en/class.sessionhandlerinterface.php) $sessionHadler = null | void | Starts session, after setting security options and handler (if any) |
+| start | void | void | Starts session, using settings defined in [session](#session) XML tag |
 | isStarted | void | bool | Checks if session was started |
 | set | string $key, $value | void | Sets session parameter by key and value |
 | get | string $key | mixed | Gets value of session parameter by key |
@@ -402,62 +465,16 @@ Class [Lucinda\STDOUT\Session](https://github.com/aherne/php-servlets-api/tree/v
 | remove | string $key | void | Deletes session parameter by key, if any |
 | destroy | void | void | Destroys session, clearing of all parameters. |
 
-### Class Session SecurityOptions
-
-Class [Lucinda\STDOUT\Session\SecurityOptions](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src/Session/SecurityOptions.php) encapsulates options to set up session security before session is started and defines following setters relevant to developers:
-
-| Method | Arguments | Returns | Description |
-| --- | --- | --- | --- |
-| setSavePath | string $path | void | Set path that is going to be used when storing sessions |
-| setName | string $name | void | Sets name of session cookie |
-| setExpiredTime | int $seconds | void | Sets session cookie's expiration time |
-| setExpiredOnBrowserClose | int $seconds | void | Sets session expiration time on browser close |
-| setSecuredByHTTPS | bool $value = false | void | Toggles restricting sessions to HTTPS only. If ON: HTTP cookies will not be accepted by server |
-| setSecuredByHTTPheaders | bool $value = false | void | Toggles restricting sessions to HTTP headers only. If ON: cookies not sent via HTTP headers will be ignored by server|
-| setSecuredByReferrerCheck | string $keyword | void | Toggles restricting sessions to those coming with a HTTP referrer LIKE %keyword% |
-
 ### Class Cookies
 
 Class [Lucinda\STDOUT\Cookies](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src/Cookies.php) encapsulates operations to perform with a http cookie via $\_COOKIE superglobal and defines following public methods, all relevant to developers:
 
 | Method | Arguments | Returns | Description |
 | --- | --- | --- | --- |
-| set | string $name, $value, [Lucinda\STDOUT\Cookies\SecurityOptions](#class-cookies-securityoptions) $securityOptions=null | void | Sets cookie parameter by name and value, using security options (if any) |
+| set | string $name, $value, int $expiration | void | Sets cookie parameter by name and value, lasting for expiration seconds from now, using settings defined in [cookie](#cookie) XML tag |
 | get | string $name | mixed | Gets value of cookie by name |
 | contains | string $name | bool | Checks if a cookie exists by name |
 | remove | string $name | void | Deletes cookie by name |
-
-### Class Cookies SecurityOptions
-
-Class [Lucinda\STDOUT\Cookies\SecurityOptions](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src/Cookies/SecurityOptions.php) encapsulates options to use in setting a cookie and defines following setters relevant to developers:
-
-| Method | Arguments | Returns | Description |
-| --- | --- | --- | --- |
-| setExpiredTime | int $seconds | void | Sets cookie's expiration time |
-| setSecuredByHTTPS | bool $value=false | void | Toggles restricting to HTTPS only. If ON: HTTP cookies will not be accepted by server |
-| setSecuredByHTTPheaders | bool $value=false | void | Toggles restricting cookies to HTTP headers only. If ON: cookies not sent via HTTP headers will be ignored by server |
-| setPath | string $path = "" | void | Sets the path on the server in which the cookie will be available on (see: [how to set path](#how-to-set-path)) |
-| setDomain | string $domain = "" | void | Sets the (sub)domain that the cookie is available to (see: [how to set domain](#how-to-set-domain)) |
-
-#### How to set path
-
-Table below shows the effects of setPath method based on parameter value:
-
-| Value | Effect |
-| --- | --- |
-|  |  the cookie will be available in the current directory that the cookie is being set in (default) |
-| / | the cookie will be available within the entire domain (recommended) |
-| /foo/ | the cookie will only be available within the /foo/ directory and all sub-directories such as /foo/bar/ of domain |
-
-#### How to set domain
-
-Table below shows the effects of setDomain method based on parameter value:
-
-| Value | Effect |
-| --- | --- |
-|  | makes cookie available to current subdomain |
-| www.example.com | makes cookie available to that subdomain and all other sub-domains of it (i.e. w2.www.example.com) |
-| example.com | makes cookie available to the whole domain (including all subdomains of it) |
 
 ### Class Response
 
@@ -538,46 +555,7 @@ $this->attributes->setDataSource(object);
 
 ### Abstract Class EventListeners Request
 
-Abstract class [Lucinda\STDOUT\EventListeners\Request](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src/EventListeners/Request.php) implements [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src/Runnable.php)) and listens to events that execute AFTER [Lucinda\STDOUT\Request](#class-request) object is created.
-
-Developers need to implement a *run* method, where they are able to access following protected fields injected by API via constructor:
-
-| Field | Type | Description |
-| --- | --- | --- |
-| $application | [Lucinda\STDOUT\Application](#class-application) | Gets application information detected from XML. |
-| $request | [Lucinda\STDOUT\Request](#class-request) | Gets request information detected from superglobals. |
-| $attributes | [Lucinda\STDOUT\Attributes](#class-attributes) | Gets access to object encapsulating data where custom attributes should be set. |
-
-A common example of a REQUEST listener is the need to authorize request:
-
-```php
-if (!$this->isAllowed($this->attributes->getValidPage())) {
-    throw new PageNotAllowedException($this->attributes->getValidPage());
-}
-```
-
-### Abstract Class EventListeners Session
-
-Abstract class [Lucinda\STDOUT\EventListeners\Session](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src/EventListeners/Session.php) implements [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src/Runnable.php)) and listens to events that execute AFTER [Lucinda\STDOUT\Session](#class-session) object is created.
-
-Developers need to implement a *run* method, where they are able to access following protected fields injected by API via constructor:
-
-| Field | Type | Description |
-| --- | --- | --- |
-| $application | [Lucinda\STDOUT\Application](#class-application) | Gets application information detected from XML. |
-| $request | [Lucinda\STDOUT\Request](#class-request) | Gets request information detected from superglobals. |
-| $session | [Lucinda\STDOUT\Session](#class-session) | Gets pointer to class encapsulating operations on http session. |
-| $attributes | [Lucinda\STDOUT\Attributes](#class-attributes) | Gets access to object encapsulating data where custom attributes should be set. |
-
-A common example of a SESSION listener is the need to start session:
-
-```php
-$this->session->start();
-```
-
-### Abstract Class EventListeners Cookies
-
-Abstract class [Lucinda\STDOUT\EventListeners\Cookies](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src/EventListeners/Cookies.php) implements [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src/Runnable.php)) and listens to events that execute AFTER [Lucinda\STDOUT\Cookies](#class-cookies) object is created.
+Abstract class [Lucinda\STDOUT\EventListeners\Request](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src/EventListeners/Request.php) implements [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src/Runnable.php)) and listens to events that execute AFTER [Lucinda\STDOUT\Request](#class-request), [Lucinda\STDOUT\Session](#class-session) and [Lucinda\STDOUT\Cookies](#class-cookies) objects are created.
 
 Developers need to implement a *run* method, where they are able to access following protected fields injected by API via constructor:
 
@@ -589,10 +567,12 @@ Developers need to implement a *run* method, where they are able to access follo
 | $cookies | [Lucinda\STDOUT\Cookies](#class-cookies) | Gets pointer to class encapsulating operations on http cookies. |
 | $attributes | [Lucinda\STDOUT\Attributes](#class-attributes) | Gets access to object encapsulating data where custom attributes should be set. |
 
-A common example of a COOKIES listener is the need to set a general policy of [Lucinda\STDOUT\Cookies\SecurityOptions](#class-cookies-securityoptions) to use in setting cookies:
+A common example of a REQUEST listener is the need to authorize request:
 
 ```php
-$this->attributes->setCookieOptions($securityOptions);
+if (!$this->isAllowed($this->attributes->getValidPage())) {
+    throw new PageNotAllowedException($this->attributes->getValidPage());
+}
 ```
 
 ### Abstract Class EventListeners Response

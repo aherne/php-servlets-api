@@ -32,8 +32,6 @@ class FrontController implements Runnable
             EventType::START=>[],
             EventType::APPLICATION=>[],
             EventType::REQUEST=>["\\Lucinda\\STDOUT\\EventListeners\\RequestValidator"=>__DIR__."/EventListeners"],
-            EventType::SESSION=>[],
-            EventType::COOKIES=>[],
             EventType::RESPONSE=>[],
             EventType::END=>[]
         ];
@@ -53,7 +51,6 @@ class FrontController implements Runnable
     /**
      * Performs all steps required to convert request to response in procedural mode, while delegating to subcomponents, to maximize performance
      *
-     * @throws FormatNotFoundException If an invalid response format was setup by developer in XML for route requested by client.
      * @throws PathNotFoundException If an invalid route was requested from client or setup by developer in XML.
      * @throws FileUploadException If file upload failed due to server constraints.
      * @throws ConfigurationException If any other situation where execution cannot continue.
@@ -79,38 +76,19 @@ class FrontController implements Runnable
             $runnable->run();
         }
         
-        // reads user request
+        // reads user request, into request (RO), session (RW) and cookies (RW) objects
         $request = new Request();
+        $session = new Session($application->getSessionOptions());
+        $cookies = new Cookies($application->getCookieOptions());
         
         // execute events for REQUEST
         foreach ($this->events[EventType::REQUEST] as $class=>$path) {
             $eventLocator = new EventListenerLocator($path, $class);
             $className = $eventLocator->getClassName();
-            $runnable = new $className($this->attributes, $application, $request);
-            $runnable->run();
-        }
-        
-        // encapsulates session operations
-        $session = new Session();
-        
-        // execute events for SESSION
-        foreach ($this->events[EventType::SESSION] as $class=>$path) {
-            $eventLocator = new EventListenerLocator($path, $class);
-            $className = $eventLocator->getClassName();
-            $runnable = new $className($this->attributes, $application, $request, $session);
-            $runnable->run();
-        }
-        
-        // encapsulates cookies operations
-        $cookies = new Cookies();
-        
-        // execute events for COOKIES
-        foreach ($this->events[EventType::COOKIES] as $class=>$path) {
-            $eventLocator = new EventListenerLocator($path, $class);
-            $className = $eventLocator->getClassName();
             $runnable = new $className($this->attributes, $application, $request, $session, $cookies);
             $runnable->run();
         }
+                
         // initializes response
         $response = new Response($this->getContentType($application), $this->getTemplateFile($application));
 

@@ -1,7 +1,7 @@
 <?php
 namespace Lucinda\STDOUT;
 
-use Lucinda\STDOUT\Session\SecurityOptions;
+use Lucinda\STDOUT\Locators\ClassFinder;
 
 /**
  * Encapsulates SESSION operations and parameters
@@ -9,19 +9,52 @@ use Lucinda\STDOUT\Session\SecurityOptions;
 class Session
 {
     /**
-     * Starts session.
+     * Configures session based on information set in XML "session" tag and starts it, if "auto_start" attribute is on
      *
-     * @param SecurityOptions $securityOptions Added here to hint where to inject.
-     * @param \SessionHandlerInterface $sessionHandler	If null, built-in session handler is used.
+     * @param \Lucinda\STDOUT\Session\Options $options
      */
-    public function start(SecurityOptions $securityOptions = null, \SessionHandlerInterface $sessionHandler = null): void
+    public function __construct(\Lucinda\STDOUT\Session\Options $options = null)
     {
-        if ($securityOptions!=null) {
-            $securityOptions->save();
+        if ($options==null) {
+            return;
         }
-        if ($sessionHandler!=null) {
-            session_set_save_handler($sessionHandler, true);
+        
+        if ($value = $options->getSavePath()) {
+            ini_set("session.save_path", $value);
         }
+        if ($value = $options->getName()) {
+            ini_set("session.name", $value);
+        }
+        if ($value = $options->getExpiredTime()) {
+            ini_set("session.gc_maxlifetime", $value);
+        }
+        if ($value = $options->getExpiredOnBrowserClose()) {
+            ini_set("session.cookie_lifetime", $value);
+        }
+        if ($value = $options->isSecuredByHTTPS()) {
+            ini_set("session.cookie_secure", $value);
+        }
+        if ($value = $options->isSecuredByHTTPheaders()) {
+            ini_set("session.cookie_httponly", $value);
+        }
+        if ($value = $options->getReferrerCheck()) {
+            ini_set("session.referer_check", $value);
+        }
+        if ($value = $options->getHandler()) {
+            $classFinder = new ClassFinder("");
+            $className = $classFinder->find($value);
+            session_set_save_handler(new $className(), true);
+        }
+        if ($value = $options->isAutoStart()) {
+            $this->start();
+        }
+    }
+    
+    /**
+     * Starts session.
+     */
+    public function start(): void
+    {
         session_start();
     }
     

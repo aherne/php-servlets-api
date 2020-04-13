@@ -83,4 +83,14 @@ class ApplicationTest
     {
         return new Result($this->object->getXML() instanceof \SimpleXMLElement);
     }
+    public function getSessionOptions()
+    {
+        return new Result($this->object->getSessionOptions()->isSecuredByHTTPS());
+    }
+        
+
+    public function getCookieOptions()
+    {
+        return new Result($this->object->getCookieOptions()->isSecuredByHTTPS());
+    }
 }

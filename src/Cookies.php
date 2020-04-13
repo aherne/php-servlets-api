@@ -1,29 +1,32 @@
 <?php
 namespace Lucinda\STDOUT;
 
-use Lucinda\STDOUT\Cookies\SecurityOptions;
-
 /**
  * Encapsulates COOKIE operations and parameters
  */
 class Cookies
 {
-    const DEFAULT_EXPIRATION_TIME = 3600;
+    private $options;
+    
+    public function __construct(\Lucinda\STDOUT\Cookies\Options $options = null)
+    {
+        $this->options = $options;
+    }
     
     /**
      * Adds/updates a cookie param.
      *
      * @param string $key
      * @param mixed $value
-     * @param SecurityOptions $securityOptions
+     * @param int $expirationTime
      */
-    public function set(string $key, $value, SecurityOptions $securityOptions=null): void
+    public function set(string $key, $value, int $expirationTime): void
     {
-        if ($securityOptions) {
-            setcookie($key, $value, $securityOptions->getExpiredTime(), $securityOptions->getPath(), $securityOptions->getDomain(), $securityOptions->isSecuredByHTTPS(), $securityOptions->isSecuredByHTTPheaders());
+        if ($this->options) {
+            setcookie($key, $value, time()+$expirationTime, $this->options->getPath(), $this->options->getDomain(), $this->options->isSecuredByHTTPS(), $this->options->isSecuredByHTTPheaders());
             $_COOKIE[$key] = $value;
         } else {
-            setcookie($key, $value, time()+self::DEFAULT_EXPIRATION_TIME);
+            setcookie($key, $value, time()+$expirationTime, "/");
             $_COOKIE[$key] = $value;
         }
     }

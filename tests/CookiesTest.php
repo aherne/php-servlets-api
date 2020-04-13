@@ -16,7 +16,7 @@ class CookiesTest
 
     public function set()
     {
-        $this->object->set("asd", "fgh");
+        $this->object->set("asd", "fgh", 10);
         return new Result(true);
     }
         

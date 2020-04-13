@@ -3,6 +3,8 @@ namespace Lucinda\STDOUT;
 
 use Lucinda\STDOUT\Application\Route;
 use Lucinda\STDOUT\Application\Format;
+use Lucinda\STDOUT\Session\Options as SessionOptions;
+use Lucinda\STDOUT\Cookies\Options as CookiesOptions;
 
 /**
  * Compiles information about application.
@@ -23,6 +25,8 @@ class Application
     private $version;
     private $routes = array();
     private $formats = array();
+    private $sessionOptions;
+    private $cookiesOptions;
     
     /**
      * Populates attributes based on an XML file
@@ -44,6 +48,10 @@ class Application
         }
         
         $this->setFormats();
+        
+        $this->setSessionOptions();
+        
+        $this->setCookieOptions();
     }
     
     /**
@@ -120,6 +128,30 @@ class Application
     }
     
     /**
+     * Sets options to start session with based on "session" XML tag
+     */
+    private function setSessionOptions(): void
+    {
+        $xml = $this->simpleXMLElement->session;
+        if ($xml===null) {
+            return;
+        }
+        $this->sessionOptions = new SessionOptions($xml);
+    }
+    
+    /**
+     * Sets options to create cookies with based on "cookies" XML tag
+     */
+    private function setCookieOptions(): void
+    {
+        $xml = $this->simpleXMLElement->cookies;
+        if ($xml===null) {
+            return;
+        }
+        $this->cookiesOptions = new CookiesOptions($xml);
+    }
+    
+    /**
      * Gets default landing page.
      *
      * @return string
@@ -177,6 +209,26 @@ class Application
     public function getViewsPath(): string
     {
         return $this->viewsPath;
+    }
+    
+    /**
+     * Gets  options to start session with based on "session" XML tag
+     *
+     * @return SessionOptions|NULL
+     */
+    public function getSessionOptions(): ?SessionOptions
+    {
+        return $this->sessionOptions;
+    }
+    
+    /**
+     * Gets options to create cookies with based on "cookies" XML tag
+     *
+     * @return CookiesOptions|NULL
+     */
+    public function getCookieOptions(): ?CookiesOptions
+    {
+        return $this->cookiesOptions;
     }
     
     /**

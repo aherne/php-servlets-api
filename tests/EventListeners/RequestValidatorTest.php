@@ -6,6 +6,8 @@ use Lucinda\STDOUT\Attributes;
 use Lucinda\STDOUT\Application;
 use Lucinda\STDOUT\Request;
 use Lucinda\UnitTest\Result;
+use Lucinda\STDOUT\Session;
+use Lucinda\STDOUT\Cookies;
 
 class RequestValidatorTest
 {
@@ -36,7 +38,7 @@ class RequestValidatorTest
             'SCRIPT_FILENAME' => '/var/www/html/documentation/index.php',
             'QUERY_STRING' =>''
         ];
-        $validator = new RequestValidator($attributes, new Application(dirname(__DIR__)."/configuration.xml"), new Request());
+        $validator = new RequestValidator($attributes, new Application(dirname(__DIR__)."/configuration.xml"), new Request(), new Session(), new Cookies());
         $validator->run();
         
         $results = [];

@@ -14,4 +14,6 @@
   		<parameter name="name" validator="UserNameValidator" mandatory="1"/>
   	</route>
   </routes>
+  <session https_only="1" headers_only="1"/>
+  <cookies https_only="1" headers_only="1"/>
 </xml>
