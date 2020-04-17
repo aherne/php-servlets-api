@@ -121,6 +121,6 @@ class Options
      */
     public function isAutoStart(): bool
     {
-        return $this->handlerFile;
+        return $this->autoStart;
     }
 }
