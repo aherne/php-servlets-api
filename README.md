@@ -654,7 +654,7 @@ To better understand how *controllers* attribute @ [application](#application) a
 | application/controllers | \Foo\UsersController | application/controllers/UsersController.php | \Foo\UsersController |
 | application/controllers | foo/\Bar\UsersController | application/controllers/foo/UsersController.php | \Bar\UsersController |
 
-Example of controller for *PathNotFoundException*:
+Example of controller for */users* route:
 
 ```php
 class UsersController extends \Lucinda\STDOUT\Controller
