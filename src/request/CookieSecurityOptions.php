@@ -7,7 +7,7 @@ namespace Lucinda\MVC\STDOUT;
 class CookieSecurityOptions
 {
     private $expiredTime = 0;
-    private $isHTTPSOnly = false;
+    private $isHTTPS = false;
     private $isHTTPHeadersOnly = false;
     private $path = "";
     private $domain = "";
