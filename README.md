@@ -4,6 +4,8 @@
 
 This API was created to efficiently handle web requests into server responses using a MVC version where views and models are expected to be independent while controllers mediate between the two based on user request. Designed with modularity, efficiency and simplicity at its foundation, API is both object and event oriented: similar to JavaScript, it allows developers to bind logic that will be executed when predefined events are reached while handling.
 
+![diagram](https://www.lucinda-framework.com/public/images/svg/stdout-mvc-api.svg)
+
 API does nothing more than standard MVC logic, so in real life it expects a web framework to be built on top to add further features (eg: DB connectivity). In order to use it, following steps are required from developers:
 
 - **[configuration](#configuration)**: setting up an XML file where this API is configured
