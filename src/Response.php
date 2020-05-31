@@ -1,140 +1,60 @@
 <?php
-namespace Lucinda\MVC\STDOUT;
+namespace Lucinda\STDOUT;
 
-require("response/ResponseStream.php");
-require("response/ResponseStatus.php");
+use Lucinda\STDOUT\Response\Status;
+use Lucinda\STDOUT\Response\View;
 
 /**
  * Compiles information about response
  */
 class Response
 {
-    private $headers = array();
-    private $attributes = array();
     private $status;
-    private $viewPath;
-    private $outputStream;
-    private $isDisabled;
+    private $headers = array();
+    private $body;
+    private $view;
 
     /**
      * Constructs an empty response based on content type
      *
      * @param string $contentType Value of content type header that will be sent in response
+     * @param string $templateFile Value of view template file that will form the basis of response
      */
-    public function __construct($contentType)
+    public function __construct(string $contentType, string $templateFile)
     {
-        $this->outputStream	= new ResponseStream();
         $this->headers["Content-Type"] = $contentType;
-    }
-
-    /**
-     * Gets response stream to work on.
-     *
-     * @return ResponseStream
-     */
-    public function getOutputStream()
-    {
-        return $this->outputStream;
-    }
-
-    /**
-     * Redirects to a new location.
-     *
-     * @param string $location
-     * @param boolean $permanent
-     * @param boolean $preventCaching
-     */
-    public function redirect($location, $permanent=true, $preventCaching=false)
-    {
-        if ($preventCaching) {
-            header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
-            header("Pragma: no-cache");
-            header("Expires: 0");
-        }
-        header('Location: '.$location, true, $permanent?301:302);
-        exit();
-    }
-
-    /**
-     * Forwards response to a file (aka "view")
-     *
-     * @param string $viewPath
-     */
-    public function setView($viewPath)
-    {
-        $this->viewPath = $viewPath;
-    }
-
-    /**
-     * Gets view's absolute path.
-     *
-     * @return string
-     */
-    public function getView()
-    {
-        return $this->viewPath;
+        $this->view = new View($templateFile);
     }
 
     /**
      * Sets HTTP response status by its numeric code.
      *
-     * @param int $code
-     * @throws ServletException If status code is invalid.
+     * @param integer $code
+     * @throws ConfigurationException If status code is invalid.
      */
-    public function setStatus($code)
+    public function setStatus(int $code): void
     {
-        $this->status = new ResponseStatus($code);
+        $this->status = new Status($code);
     }
 
     /**
      * Gets HTTP response status info.
      *
-     * @return ResponseStatus
+     * @return Status
      */
-    public function getStatus()
+    public function getStatus(): Status
     {
         return $this->status;
     }
-
+    
     /**
-     * Disables response. A disabled response will output nothing.
-     */
-    public function disable()
-    {
-        $this->isDisabled = true;
-    }
-
-    /**
-     * Checks if response is disabled.
+     * Gets a pointer to View
      *
-     * @return boolean
+     * @return View
      */
-    public function isDisabled()
+    public function view(): View
     {
-        return $this->isDisabled;
-    }
-
-    /**
-     * Commits response to client.
-     */
-    public function commit()
-    {
-        if (!headers_sent() && $this->status) {
-            header("HTTP/1.1 ".$this->status->getId()." ".$this->status->getDescription());
-        }
-
-        if (!$this->isDisabled) {
-            // load headers
-            $headers = $this->headers;
-            if (sizeof($headers)>0) {
-                foreach ($headers as $name=>$value) {
-                    header($name.": ".$value);
-                }
-            }
-
-            // show output
-            echo $this->outputStream->get();
-        }
+        return $this->view;
     }
     
     /**
@@ -142,9 +62,9 @@ class Response
      *
      * @param string $key
      * @param string $value
-     * @return string[string]|NULL|string
+     * @return string|array|null
      */
-    public function headers($key="", $value=null)
+    public function headers(string $key="", string $value=null)
     {
         if (!$key) {
             return $this->headers;
@@ -156,20 +76,60 @@ class Response
     }
     
     /**
-     * Gets or sets data that will be sent to views.
+     * Sets response body
      *
-     * @param string $key
-     * @param string $value
-     * @return mixed[string]|NULL|mixed
+     * @param string $body
      */
-    public function attributes($key="", $value=null)
+    public function setBody(string $body): void
     {
-        if (!$key) {
-            return $this->attributes;
-        } elseif ($value===null) {
-            return (isset($this->attributes[$key])?$this->attributes[$key]:null);
-        } else {
-            $this->attributes[$key] = $value;
+        $this->body = $body;
+    }
+    
+    /**
+     * Gets response body
+     *
+     * @return string
+     */
+    public function getBody(): ?string
+    {
+        return $this->body;
+    }
+    
+    /**
+     * Redirects to a new location.
+     *
+     * @param string $location
+     * @param boolean $permanent
+     * @param boolean $preventCaching
+     */
+    public static function redirect(string $location, bool $permanent=true, bool $preventCaching=false): void
+    {
+        if ($preventCaching) {
+            header("Cache-Control: no-cache, no-store, must-revalidate"); // HTTP 1.1.
+            header("Pragma: no-cache");
+            header("Expires: 0");
         }
+        header('Location: '.$location, true, $permanent?301:302);
+        exit();
+    }
+    
+    /**
+     * Commits response to client.
+     */
+    public function commit(): void
+    {
+        // sends headers
+        if (!headers_sent()) {
+            if ($this->status) {
+                header("HTTP/1.1 ".$this->status->getId()." ".$this->status->getDescription());
+            }
+            
+            foreach ($this->headers as $name=>$value) {
+                header($name.": ".$value);
+            }
+        }
+        
+        // displays body
+        echo $this->body;
     }
 }

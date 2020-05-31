@@ -1,11 +1,23 @@
 <?php
-namespace Lucinda\STDOUT;
+namespace Lucinda\STDOUT\EventListeners;
+
+use Lucinda\STDOUT\Runnable;
+use Lucinda\STDOUT\Attributes;
+use Lucinda\STDOUT\Application;
+use Lucinda\STDOUT\Request;
+use Lucinda\STDOUT\Session;
+use Lucinda\STDOUT\Cookies;
 
 /**
- * Defines an abstract controller.
+ * Defines blueprint of an event that executes before response is rendered to client
  */
-abstract class Controller implements Runnable
+abstract class Response implements Runnable
 {
+    /**
+     * @var Attributes
+     */
+    protected $attributes;
+    
     /**
      * @var Application
      */
@@ -27,15 +39,11 @@ abstract class Controller implements Runnable
     protected $cookies;
     
     /**
-     * @var Response
+     * @var \Lucinda\STDOUT\Response
      */
     protected $response;
     
-    /**
-     * @var Attributes
-     */
-    protected $attributes;
-        
+    
     /**
      * Saves objects to be available in implemented run() methods.
      *
@@ -44,9 +52,9 @@ abstract class Controller implements Runnable
      * @param Request $request
      * @param Session $session
      * @param Cookies $cookies
-     * @param Response $response
+     * @param \Lucinda\STDOUT\Response $response
      */
-    public function __construct(Attributes $attributes, Application $application, Request $request, Session $session, Cookies $cookies, Response $response)
+    public function __construct(Attributes $attributes, Application $application, Request $request, Session $session, Cookies $cookies, \Lucinda\STDOUT\Response $response)
     {
         $this->attributes = $attributes;
         $this->application = $application;

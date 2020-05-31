@@ -5,14 +5,23 @@
     "keywords": ["mvc","servlets","event listeners","view resolvers", "STDOUT"],
     "homepage": "http://www.lucinda-framework.com/stdout-mvc",
     "license": "MIT",
+    "require": {
+        "php": "^7.1",
+        "ext-simplexml": "*"
+    },
+    "require-dev": {
+    	"lucinda/unit-testing": "^1.0"
+    },
+    "autoload": {
+    	"psr-4": {
+        	"Lucinda\\STDOUT\\": "src/"
+    	}
+    },
     "authors": [
         {
             "name": "Lucian Popescu",
             "email": "lucian.gabriel.popescu@gmail.com",
             "role": "Developer"
         }
-    ],
-    "require": {
-        "ext-simplexml": "*"
-    }
+    ]
 }

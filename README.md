@@ -1,6 +1,19 @@
 # STDOUT MVC API
 
-*Documentation below refers to latest API version, available in branch [v3.0.0](https://github.com/aherne/php-servlets-api/tree/v3.0.0)! For older version in master branch, please check [Lucinda Framework](https://www.lucinda-framework.com/stdout-mvc).*
+Table of contents:
+
+- [About](#about)
+- [Configuration](#configuration)
+- [Execution](#execution)
+    - [Initialization](#initialization)
+    - [Binding Events](#binding-events)
+    - [Configuring Shared Variables](#configuring-shared-variables)
+    - [Handling](#handling)
+- [Installation](#installation)
+- [Unit Tests](#unit-tests)
+- [Reference Guide](#reference-guide)
+
+## About
 
 This API was created to efficiently handle web requests into server responses using a MVC version where views and models are expected to be independent while controllers mediate between the two based on user request. Designed with modularity, efficiency and simplicity at its foundation, API is both object and event oriented: similar to JavaScript, it allows developers to bind logic that will be executed when predefined events are reached while handling.
 
@@ -9,9 +22,9 @@ This API was created to efficiently handle web requests into server responses us
 API does nothing more than standard MVC logic, so in real life it expects a web framework to be built on top to add further features (eg: DB connectivity). In order to use it, following steps are required from developers:
 
 - **[configuration](#configuration)**: setting up an XML file where this API is configured
-- **[configuring shared variables](#configuring-shared-variables)**: extend [Lucinda\STDOUT\Attributes](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src/Attributes.php) class to encapsulate variables specific to your project, to be shared between event listeners and controllers
 - **[initialization](#initialization)**: instancing [Lucinda\STDOUT\FrontController](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src/FrontController.php), a [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src/Runnable.php) able to handle requests into responses later on based on above two
 - **[binding events](#binding-events)**: setting up [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src/Runnable.php) classes that will be instanced and *run* when predefined events are reached during handling process
+- **[configuring shared variables](#configuring-shared-variables)**: extend [Lucinda\STDOUT\Attributes](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src/Attributes.php) class to encapsulate variables specific to your project, to be shared between event listeners and controllers
 - **[handling](#handling)**: calling *run* method @ [Lucinda\STDOUT\FrontController](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src/FrontController.php)  to finally handle requests into responses, triggering events above (if any)
 
 API is fully PSR-4 compliant, only requiring PHP7.1+ interpreter and SimpleXML extension. To quickly see how it works, check:
@@ -201,34 +214,9 @@ Table below shows the effects of *domain* attribute:
 | www.example.com | makes cookie available to that subdomain and all other sub-domains of it (i.e. w2.www.example.com) |
 | example.com | makes cookie available to the whole domain (including all subdomains of it) |
 
-## Configuring Shared Variables
+## Execution
 
-API allows event listeners to set variables that are going to be made available to subsequent event listeners and controllers. For each variable there is a:
-
-- *setter*: to be ran once by a event listener
-- *getter*: to be ran by subsequent event listeners and controllers
-
-API comes with [Lucinda\STDOUT\Attributes](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src/Attributes.php), which holds the foundation every site must extend in order to set up its own variables. Class comes with following generic methods:
-
-| Method | Arguments | Returns | Description |
-| --- | --- | --- | --- |
-| __construct | string $eventsFolder | void | Sets folder in which user-defined event listeners are located |
-| getEventsFolder | void | string | Gets folder in which user-defined event listeners are located |
-
-While handling request to response, it needs to add its own [Lucinda\STDOUT\EventListeners\RequestValidator](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src/EventListeners/RequestValidator.php) in order to bind route requested to a [route](#routes) XML tag. Results of this binding are saved into [Lucinda\STDOUT\Attributes](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src/Attributes.php) via setters and made available via following getters:
-
-| Method | Arguments | Returns | Description |
-| --- | --- | --- | --- |
-| getValidPage | void | string | Gets value of *url* attribute of matching [route](#routes) XML tag found either explicitly (via *url* attribute @ [route](#routes)) or implicitly (via *default_page* attribute @ [application](#application)) |
-| getValidFormat | void | string | Gets value of *name* attribute of matching [format](#formats) XML tag found either explicitly (via *format* attribute @ [route](#routes)) or implicitly (via *default_format* attribute @ [application](#application)) |
-| getPathParameters | void | array | Gets all path parameters detected from parameterized *url* attribute of matching [route](#routes) XML tag |
-| getPathParameters | string $name | string | Gets value of a path parameter detected by its name. Returns NULL if not existing! |
-| getValidParameters | void | array | Gets all parameter validation results by parameter name and validation result |
-| getValidParameters | string $name | string | Gets parameter validation result by parameter name. Returns NULL if not existing! |
-
-Unless your site is extremely simple, it will require developers to extend this class and add further variables, for whom setters and getters must be defined!
-
-## Initialization
+### Initialization
 
 Now that developers have finished setting up XML that configures the API, they are finally able to initialize it by instantiating [Lucinda\STDOUT\FrontController](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src/FrontController.php).
 
@@ -243,7 +231,7 @@ Where:
 - *$documentDescriptor*: relative location of XML [configuration](#configuration) file. Example: "configuration.xml"
 - *$attributes*: see **[configuring shared variables](#configuring-shared-variables)**.
 
-## Binding Events
+### Binding Events
 
 As mentioned above, API allows developers to bind listeners to handling lifecycle events. Each event  type corresponds to a abstract [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src/Runnable.php) class:
 
@@ -275,7 +263,34 @@ To better understand how *folder* and *$className* above play together in locati
 | application/events | \Foo\TestEvent | application/events/TestEvent.php | \Foo\TestEvent |
 | application/events | foo/\Bar\TestEvent | application/events/foo/TestEvent.php | \Bar\TestEvent |
 
-## Handling
+### Configuring Shared Variables
+
+API allows event listeners to set variables that are going to be made available to subsequent event listeners and controllers. For each variable there is a:
+
+- *setter*: to be ran once by a event listener
+- *getter*: to be ran by subsequent event listeners and controllers
+
+API comes with [Lucinda\STDOUT\Attributes](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src/Attributes.php), which holds the foundation every site must extend in order to set up its own variables. Class comes with following generic methods:
+
+| Method | Arguments | Returns | Description |
+| --- | --- | --- | --- |
+| __construct | string $eventsFolder | void | Sets folder in which user-defined event listeners are located |
+| getEventsFolder | void | string | Gets folder in which user-defined event listeners are located |
+
+While handling request to response, it needs to add its own [Lucinda\STDOUT\EventListeners\RequestValidator](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src/EventListeners/RequestValidator.php) in order to bind route requested to a [route](#routes) XML tag. Results of this binding are saved into [Lucinda\STDOUT\Attributes](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src/Attributes.php) via setters and made available via following getters:
+
+| Method | Arguments | Returns | Description |
+| --- | --- | --- | --- |
+| getValidPage | void | string | Gets value of *url* attribute of matching [route](#routes) XML tag found either explicitly (via *url* attribute @ [route](#routes)) or implicitly (via *default_page* attribute @ [application](#application)) |
+| getValidFormat | void | string | Gets value of *name* attribute of matching [format](#formats) XML tag found either explicitly (via *format* attribute @ [route](#routes)) or implicitly (via *default_format* attribute @ [application](#application)) |
+| getPathParameters | void | array | Gets all path parameters detected from parameterized *url* attribute of matching [route](#routes) XML tag |
+| getPathParameters | string $name | string | Gets value of a path parameter detected by its name. Returns NULL if not existing! |
+| getValidParameters | void | array | Gets all parameter validation results by parameter name and validation result |
+| getValidParameters | string $name | string | Gets parameter validation result by parameter name. Returns NULL if not existing! |
+
+Unless your site is extremely simple, it will require developers to extend this class and add further variables, for whom setters and getters must be defined!
+
+### Handling
 
 Once above steps are done, developers are finally able to handle requests into responses via *run* method of [Lucinda\STDOUT\FrontController](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src/FrontController.php), which:
 
@@ -326,6 +341,14 @@ $controller = new Lucinda\STDOUT\FrontController("configuration.xml", new Lucind
 // TODO: add event listeners here
 $controller->run();
 ```
+
+## Unit Tests
+
+For tests and examples, check following files/folders in API sources:
+
+- [test.php](https://github.com/aherne/php-servlets-api/tree/v3.0.0/test.php): runs unit tests in console
+- [unit-tests.xml](https://github.com/aherne/php-servlets-api/tree/v3.0.0/unit-tests.xml): sets up unit tests and mocks "loggers" tag
+- [tests](https://github.com/aherne/php-servlets-api/tree/v3.0.0/tests): unit tests for classes from [src](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src) folder
 
 ## Reference Guide
 
@@ -658,7 +681,7 @@ To better understand how *controllers* attribute @ [application](#application) a
 | application/controllers | \Foo\UsersController | application/controllers/UsersController.php | \Foo\UsersController |
 | application/controllers | foo/\Bar\UsersController | application/controllers/foo/UsersController.php | \Bar\UsersController |
 
-Example of controller for *PathNotFoundException*:
+Example of controller for */users* route:
 
 ```php
 class UsersController extends \Lucinda\STDOUT\Controller
@@ -730,11 +753,3 @@ Defined in XML as:
 ```xml
 <format name="html" content_type="text/html" class="HtmlResolver" charset="UTF-8"/>
 ```
-
-## Unit Tests
-
-For tests and examples, check following files/folders in API sources:
-
-- [test.php](https://github.com/aherne/php-servlets-api/tree/v3.0.0/test.php): runs unit tests in console
-- [unit-tests.xml](https://github.com/aherne/php-servlets-api/tree/v3.0.0/unit-tests.xml): sets up unit tests and mocks "loggers" tag
-- [tests](https://github.com/aherne/php-servlets-api/tree/v3.0.0/tests): unit tests for classes from [src](https://github.com/aherne/php-servlets-api/tree/v3.0.0/src) folder

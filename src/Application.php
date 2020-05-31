@@ -1,8 +1,10 @@
 <?php
-namespace Lucinda\MVC\STDOUT;
+namespace Lucinda\STDOUT;
 
-require("application/Route.php");
-require("application/Format.php");
+use Lucinda\STDOUT\Application\Route;
+use Lucinda\STDOUT\Application\Format;
+use Lucinda\STDOUT\Session\Options as SessionOptions;
+use Lucinda\STDOUT\Cookies\Options as CookiesOptions;
 
 /**
  * Compiles information about application.
@@ -16,140 +18,137 @@ class Application
     private $defaultPage;
     private $defaultFormat;
     private $controllerPath;
-    private $listenerPath;
     private $viewResolversPath;
     private $viewsPath;
-    private $publicPath;
+    private $validatorsPath;
     private $autoRouting;
     private $version;
-    private $listeners = array();
     private $routes = array();
     private $formats = array();
-    private $attributes = array();
+    private $sessionOptions;
+    private $cookiesOptions;
     
     /**
      * Populates attributes based on an XML file
      *
      * @param string $xmlFilePath XML file url
-     * @throws ServletException If xml file wasn't found
-     * @throws XMLException If xml content has failed validation.
+     * @throws ConfigurationException If xml content has failed validation.
      */
-    public function __construct($xmlFilePath)
+    public function __construct(string $xmlFilePath)
     {
         if (!file_exists($xmlFilePath)) {
-            throw new ServletException("XML file not found: ".$xmlFilePath);
+            throw new ConfigurationException("XML file not found: ".$xmlFilePath);
         }
         $this->simpleXMLElement = simplexml_load_file($xmlFilePath);
         
         $this->setApplicationInfo();
-        
-        $this->setListeners();
         
         if (!$this->autoRouting) {
             $this->setRoutes();
         }
         
         $this->setFormats();
+        
+        $this->setSessionOptions();
+        
+        $this->setCookieOptions();
     }
     
     /**
      * Sets basic application info based on contents of "application" XML tag
-     * @throws XMLException If xml content has failed validation.
+     * @throws ConfigurationException If xml content has failed validation.
      */
-    private function setApplicationInfo()
+    private function setApplicationInfo(): void
     {
         $xml = $this->getTag("application");
         if (empty($xml)) {
-            throw new XMLException("Tag is mandatory: application");
+            throw new ConfigurationException("Tag is mandatory: application");
         }
         $this->defaultPage = (string) $xml["default_page"];
         if (!$this->defaultPage) {
-            throw new XMLException("Attribute 'default_page' is mandatory for 'application' tag");
+            throw new ConfigurationException("Attribute 'default_page' is mandatory for 'application' tag");
         }
         $this->defaultFormat = (string) $xml["default_format"];
         if (!$this->defaultFormat) {
-            throw new XMLException("Attribute 'default_format' is mandatory for 'application' tag");
+            throw new ConfigurationException("Attribute 'default_format' is mandatory for 'application' tag");
         }
-        $this->listenerPath = (string) $xml->paths->listeners;
-        $this->controllerPath = (string) $xml->paths->controllers;
-        $this->viewResolversPath = (string) $xml->paths->resolvers;
-        $this->viewsPath = (string) $xml->paths->views;
-        $this->publicPath = (string) $xml->paths->public;
         $this->autoRouting = (int) $xml["auto_routing"];
         $this->version = (string) $xml["version"];
-    }
-    
-    /**
-     * Sets user-defined event listeners based on contents of "listeners" XML tag
-     */
-    private function setListeners()
-    {
-        $tmp = (array) $this->getTag("listeners");
-        if (empty($tmp["listener"])) {
-            return;
-        }
-        $list = (is_array($tmp["listener"])?$tmp["listener"]:[$tmp["listener"]]);
-        foreach ($list as $info) {
-            if (empty($info['class'])) {
-                throw new XMLException("Attribute 'class' is mandatory for 'listener' tag");
-            }
-            $this->listeners[] = (string) $info['class'];
-        }
+        $this->controllerPath = (string) $xml->paths["controllers"];
+        $this->viewResolversPath = (string) $xml->paths["resolvers"];
+        $this->validatorsPath = (string) $xml->paths["validators"];
+        $this->viewsPath = (string) $xml->paths["views"];
     }
     
     /**
      * Sets user-defined routes that map to possible requested pages based on contents of "routes" XML tag
      * NOTICE: Only executed when auto_routing=0
-     * @throws XMLException If xml content has failed validation.
+     * @throws ConfigurationException If xml content has failed validation.
      */
-    private function setRoutes()
+    private function setRoutes(): void
     {
-        $tmp = (array) $this->getTag("routes");
-        if (empty($tmp["route"])) {
-            throw new XMLException("Tag 'routes' missing 'route' subtags");
+        $xml = $this->simpleXMLElement->routes;
+        if ($xml===null) {
+            throw new ConfigurationException("Tag 'routes' is mandatory");
         }
-        $list = (is_array($tmp["route"])?$tmp["route"]:[$tmp["route"]]);
+        $list = $xml->xpath("//route");
         foreach ($list as $info) {
-            if (empty($info['url'])) {
-                throw new XMLException("Attribute 'url' is mandatory for 'route' tag");
+            $url = (string) $info["url"];
+            if (!$url) {
+                throw new ConfigurationException("Attribute 'url' is mandatory for 'route' tag");
             }
-            $url = (string) $info['url'];
-            $this->routes[$url] = new Route($url, (string) $info['controller'], (string) $info['view'], (string) $info['format']);
+            $this->routes[$url] = new Route($info);
         }
         if (empty($this->routes)) {
-            throw new XMLException("Tag 'routes' is mandatory");
+            throw new ConfigurationException("Tag 'routes' is empty");
         }
     }
     
     /**
      * Sets user-defined file response formats that will be used by application based on contents of "formats" XML tag
-     * @throws XMLException If xml content has failed validation.
+     * @throws ConfigurationException If xml content has failed validation.
      */
-    private function setFormats()
+    private function setFormats(): void
     {
-        $tmp = (array) $this->getTag("formats");
-        if (empty($tmp["format"])) {
-            throw new XMLException("Tag 'format' child of 'formats' tag is mandatory");
+        $xml = $this->simpleXMLElement->formats;
+        if ($xml===null) {
+            throw new ConfigurationException("Tag 'formats' is mandatory");
         }
-        $list = (is_array($tmp["format"])?$tmp["format"]:[$tmp["format"]]);
+        $list = $xml->xpath("//format");
         foreach ($list as $info) {
-            if (empty($info['name'])) {
-                throw new XMLException("Attribute 'name' is mandatory for 'format' tag");
+            $name = (string) $info["name"];
+            if (!$name) {
+                throw new ConfigurationException("Attribute 'name' is mandatory for 'format' tag");
             }
-            if (empty($info['content_type'])) {
-                throw new XMLException("Attribute 'content_type' is mandatory for 'format' tag");
-            }
-            $name = (string) $info['name'];
-            $this->formats[$name] = new Format(
-                $name,
-                (string) $info['content_type'],
-                (isset($info['charset'])?(string) $info['charset']:""),
-                (isset($info['class'])?(string) $info['class']:"")
-            );
+            $this->formats[$name] = new Format($info);
         }
         if (empty($this->formats)) {
-            throw new XMLException("Tag 'formats' is mandatory");
+            throw new ConfigurationException("Tag 'formats' is empty");
         }
+    }
+    
+    /**
+     * Sets options to start session with based on "session" XML tag
+     */
+    private function setSessionOptions(): void
+    {
+        $xml = $this->simpleXMLElement->session;
+        if ($xml===null) {
+            return;
+        }
+        $this->sessionOptions = new SessionOptions($xml);
+    }
+    
+    /**
+     * Sets options to create cookies with based on "cookies" XML tag
+     */
+    private function setCookieOptions(): void
+    {
+        $xml = $this->simpleXMLElement->cookies;
+        if ($xml===null) {
+            return;
+        }
+        $this->cookiesOptions = new CookiesOptions($xml);
     }
     
     /**
@@ -157,7 +156,7 @@ class Application
      *
      * @return string
      */
-    public function getDefaultPage()
+    public function getDefaultPage(): string
     {
         return $this->defaultPage;
     }
@@ -167,7 +166,7 @@ class Application
      *
      * @return string
      */
-    public function getDefaultFormat()
+    public function getDefaultFormat(): string
     {
         return $this->defaultFormat;
     }
@@ -177,19 +176,9 @@ class Application
      *
      * @return string
      */
-    public function getControllersPath()
+    public function getControllersPath(): string
     {
         return $this->controllerPath;
-    }
-    
-    /**
-     * Gets path to listeners folder.
-     *
-     * @return string
-     */
-    public function getListenersPath()
-    {
-        return $this->listenerPath;
     }
     
     /**
@@ -197,9 +186,19 @@ class Application
      *
      * @return string
      */
-    public function getViewResolversPath()
+    public function getViewResolversPath(): string
     {
         return $this->viewResolversPath;
+    }
+    
+    /**
+     * Gets path to parameter validators folder.
+     *
+     * @return string
+     */
+    public function getValidatorsPath(): string
+    {
+        return $this->validatorsPath;
     }
     
     /**
@@ -207,20 +206,29 @@ class Application
      *
      * @return string
      */
-    public function getViewsPath()
+    public function getViewsPath(): string
     {
         return $this->viewsPath;
     }
     
     /**
-     * Gets path to public folder. Contents of this folder are directly available to outside world.
+     * Gets  options to start session with based on "session" XML tag
      *
-     * @return string
+     * @return SessionOptions|NULL
      */
-    public function getPublicPath()
+    public function getSessionOptions(): ?SessionOptions
     {
-        return $this->publicPath;
-        ;
+        return $this->sessionOptions;
+    }
+    
+    /**
+     * Gets options to create cookies with based on "cookies" XML tag
+     *
+     * @return CookiesOptions|NULL
+     */
+    public function getCookieOptions(): ?CookiesOptions
+    {
+        return $this->cookiesOptions;
     }
     
     /**
@@ -230,7 +238,7 @@ class Application
      * 		true: Controllers will be automatically discovered based on route requested
      * 		false: Routes to controllers have been explicitly set in routes:route @ XML.
      */
-    public function getAutoRouting()
+    public function getAutoRouting(): bool
     {
         return $this->autoRouting;
     }
@@ -241,36 +249,26 @@ class Application
      *
      * @return string
      */
-    public function getVersion()
+    public function getVersion(): string
     {
         return $this->version;
-    }
-    
-    /**
-     * Gets user-defined listeners. They will be executed in exactly the order set by user.
-     *
-     * @return string[]	List of class names
-     */
-    public function getListeners()
-    {
-        return $this->listeners;
     }
     
     /**
      * Gets tag based on name from main XML root or referenced XML file if "ref" attribute was set
      *
      * @param string $name
-     * @throws ServletException If "ref" points to a nonexistent file.
+     * @throws ConfigurationException If "ref" points to a nonexistent file.
      * @return \SimpleXMLElement
      */
-    public function getTag($name)
+    public function getTag(string $name): \SimpleXMLElement
     {
         $xml = $this->simpleXMLElement->{$name};
         $xmlFilePath = (string) $xml["ref"];
         if ($xmlFilePath) {
             $xmlFilePath .= ".xml";
             if (!file_exists($xmlFilePath)) {
-                throw new ServletException("XML file not found: ".$xmlFilePath);
+                throw new ConfigurationException("XML file not found: ".$xmlFilePath);
             }
             $subXML = simplexml_load_file($xmlFilePath);
             return $subXML->{$name};
@@ -278,32 +276,14 @@ class Application
             return $xml;
         }
     }
-        
-    /**
-     * Gets or sets application attributes
-     *
-     * @param string $key
-     * @param mixed $value
-     * @return mixed[string]|NULL|mixed
-     */
-    public function attributes($key="", $value=null)
-    {
-        if (!$key) {
-            return $this->attributes;
-        } elseif ($value===null) {
-            return (isset($this->attributes[$key])?$this->attributes[$key]:null);
-        } else {
-            $this->attributes[$key] = $value;
-        }
-    }
     
     /**
      * Gets routes detected by optional url
      *
      * @param string $url
-     * @return Route[string]|NULL|Route
+     * @return Route|array|null
      */
-    public function routes($url="")
+    public function routes(string $url="")
     {
         if (!$url) {
             return $this->routes;
@@ -316,14 +296,24 @@ class Application
      * Gets display formats detected by name
      *
      * @param string $name
-     * @return Format[string]|NULL|Format
+     * @return Format|array|null
      */
-    public function formats($name="")
+    public function formats(string $name="")
     {
         if (!$name) {
             return $this->formats;
         } else {
             return (isset($this->formats[$name])?$this->formats[$name]:null);
         }
+    }
+
+    /**
+     * Gets root XML tag
+     *
+     * @return \SimpleXMLElement
+     */
+    public function getXML(): \SimpleXMLElement
+    {
+        return $this->simpleXMLElement;
     }
 }

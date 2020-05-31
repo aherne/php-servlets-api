@@ -1,11 +1,24 @@
 <?php
-namespace Lucinda\STDOUT;
+namespace Lucinda\STDOUT\EventListeners;
+
+use Lucinda\STDOUT\Runnable;
+use Lucinda\STDOUT\Attributes;
+use Lucinda\STDOUT\Application;
+use Lucinda\STDOUT\Request;
+use Lucinda\STDOUT\Session;
+use Lucinda\STDOUT\Cookies;
+use Lucinda\STDOUT\Response;
 
 /**
- * Defines an abstract controller.
+ * Defines blueprint of an event that executes when application ends execution (after response is committed to client)
  */
-abstract class Controller implements Runnable
+abstract class End implements Runnable
 {
+    /**
+     * @var Attributes
+     */
+    protected $attributes;
+    
     /**
      * @var Application
      */
@@ -31,11 +44,7 @@ abstract class Controller implements Runnable
      */
     protected $response;
     
-    /**
-     * @var Attributes
-     */
-    protected $attributes;
-        
+    
     /**
      * Saves objects to be available in implemented run() methods.
      *
