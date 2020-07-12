@@ -1,9 +1,9 @@
 {
     "name": "lucinda/mvc",
     "type": "library",
-    "description": "MVC API for normal STDOUT flow in PHP applications",
-    "keywords": ["mvc","servlets","event listeners","view resolvers", "STDOUT"],
-    "homepage": "http://www.lucinda-framework.com/stdout-mvc",
+    "description": "Ultra high-performance API for handling requests into responses via MVC pattern in PHP applications",
+    "keywords": ["mvc","servlets","event listeners","view resolvers", "STDOUT", "event handling"],
+    "homepage": "https://github.com/aherne/php-servlets-api",
     "license": "MIT",
     "require": {
         "php": "^7.1",
