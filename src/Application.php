@@ -26,6 +26,8 @@ class Application
     private $routes = array();
     private $formats = array();
     private $attributes = array();
+
+    private $objectsCache=array();
     
     /**
      * Populates attributes based on an XML file
@@ -268,12 +270,18 @@ class Application
         $xml = $this->simpleXMLElement->{$name};
         $xmlFilePath = (string) $xml["ref"];
         if ($xmlFilePath) {
-            $xmlFilePath .= ".xml";
-            if (!file_exists($xmlFilePath)) {
-                throw new ServletException("XML file not found: ".$xmlFilePath);
+            if (isset($this->objectsCache[$name])) {
+                return $this->objectsCache[$name];
+            } else {
+                $xmlFilePath = $xmlFilePath.".xml";
+                if (!file_exists($xmlFilePath)) {
+                    throw new Exception("XML file not found: ".$xmlFilePath);
+                }
+                $subXML = simplexml_load_file($xmlFilePath);
+                $returningXML = $subXML->{$name};
+                $this->objectsCache[$name] = $returningXML;
+                return $returningXML;
             }
-            $subXML = simplexml_load_file($xmlFilePath);
-            return $subXML->{$name};
         } else {
             return $xml;
         }
