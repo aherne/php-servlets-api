@@ -275,7 +275,7 @@ class Application
             } else {
                 $xmlFilePath = $xmlFilePath.".xml";
                 if (!file_exists($xmlFilePath)) {
-                    throw new Exception("XML file not found: ".$xmlFilePath);
+                    throw new XMLException("XML file not found: ".$xmlFilePath);
                 }
                 $subXML = simplexml_load_file($xmlFilePath);
                 $returningXML = $subXML->{$name};
