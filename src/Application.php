@@ -28,6 +28,8 @@ class Application
     private $sessionOptions;
     private $cookiesOptions;
     
+    private $objectsCache=array();
+    
     /**
      * Populates attributes based on an XML file
      *
@@ -87,7 +89,7 @@ class Application
      */
     private function setRoutes(): void
     {
-        $xml = $this->simpleXMLElement->routes;
+        $xml = $this->getTag("routes");
         if ($xml===null) {
             throw new ConfigurationException("Tag 'routes' is mandatory");
         }
@@ -110,7 +112,7 @@ class Application
      */
     private function setFormats(): void
     {
-        $xml = $this->simpleXMLElement->formats;
+        $xml = $this->getTag("formats");
         if ($xml===null) {
             throw new ConfigurationException("Tag 'formats' is mandatory");
         }
@@ -132,7 +134,7 @@ class Application
      */
     private function setSessionOptions(): void
     {
-        $xml = $this->simpleXMLElement->session;
+        $xml = $this->getTag("session");
         if ($xml===null) {
             return;
         }
@@ -144,7 +146,7 @@ class Application
      */
     private function setCookieOptions(): void
     {
-        $xml = $this->simpleXMLElement->cookies;
+        $xml = $this->getTag("cookies");
         if ($xml===null) {
             return;
         }
@@ -266,12 +268,18 @@ class Application
         $xml = $this->simpleXMLElement->{$name};
         $xmlFilePath = (string) $xml["ref"];
         if ($xmlFilePath) {
-            $xmlFilePath .= ".xml";
-            if (!file_exists($xmlFilePath)) {
-                throw new ConfigurationException("XML file not found: ".$xmlFilePath);
+            if (isset($this->objectsCache[$name])) {
+                return $this->objectsCache[$name];
+            } else {
+                $xmlFilePath = $xmlFilePath.".xml";
+                if (!file_exists($xmlFilePath)) {
+                    throw new ConfigurationException("XML file not found: ".$xmlFilePath);
+                }
+                $subXML = simplexml_load_file($xmlFilePath);
+                $returningXML = $subXML->{$name};
+                $this->objectsCache[$name] = $returningXML;
+                return $returningXML;
             }
-            $subXML = simplexml_load_file($xmlFilePath);
-            return $subXML->{$name};
         } else {
             return $xml;
         }
