@@ -78,9 +78,9 @@ class Response
     /**
      * Sets response body
      *
-     * @param string $body
+     * @param mixed $body
      */
-    public function setBody(string $body): void
+    public function setBody($body): void
     {
         $this->body = $body;
     }
@@ -88,9 +88,9 @@ class Response
     /**
      * Gets response body
      *
-     * @return string
+     * @return mixed
      */
-    public function getBody(): ?string
+    public function getBody()
     {
         return $this->body;
     }
