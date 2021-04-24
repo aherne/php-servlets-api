@@ -1,12 +1,9 @@
 <?php
-require("src/Runnable.php");
-require("src/Locators/ServiceLocator.php");
 require("src/Attributes.php");
 require("src/FrontController.php");
 require("src/EventType.php");
 require("src/Application.php");
 require("src/Application/Route.php");
-require("src/Application/Format.php");
 require("src/Session/Options.php");
 require("src/Cookies/Options.php");
 require("src/Request.php");
@@ -17,13 +14,8 @@ require("src/Request/UploadedFiles.php");
 require("src/Session.php");
 require("src/Cookies.php");
 require("src/Locators/EventListenerLocator.php");
-require("src/Locators/ClassFinder.php");
 require("src/EventListeners/Request.php");
 require("src/EventListeners/Validators/RouteValidator.php");
 require("src/EventListeners/Validators/FormatValidator.php");
-require("src/Response.php");
-require("src/Response/View.php");
 require("src/Locators/ControllerLocator.php");
 require("src/Controller.php");
-require("src/Locators/ViewResolverLocator.php");
-require("src/ViewResolver.php");
