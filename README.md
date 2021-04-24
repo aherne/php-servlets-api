@@ -17,7 +17,7 @@ Table of contents:
     - [How Are View Resolvers Located](#how-are-view-resolvers-located)
     - [How Is Route Detected](#how-is-route-detected)
     - [How Are Controllers Located](#how-are-controllers-located)
-    - [How Are Parameter Validators Located](#how-are-parameter-validators-located)
+    - [How Are Parameter Validators Working](#how-are-parameter-validators-working)
     - [How Are Event Listeners Located](#how-are-event-listeners-located)
     - [How to Set Cookies Path and Domain](#how-to-set-cookies-path-and-domain)
     - [How Are Uploaded Files Processed](#how-are-uploaded-files-processed)
@@ -94,7 +94,7 @@ Maximal syntax of this tag is:
 </routes>
 ```
 
-Most of tag logic is already covered by Abstract MVC API [specification](https://github.com/aherne/mvc#application). Following extra observations need to be made:
+Most of tag logic is already covered by Abstract MVC API [specification](https://github.com/aherne/mvc#routes). Following extra observations need to be made:
 
 - *id*: (mandatory) requested requested resource url without trailing slash. Can be an exact url (eg: *foo/bar*) or a url pattern (eg: *user/(id)*). If pattern is used, each variable must be named and enclosed in parenthesis!
 - *controller*: (optional) holds user-defined controller (including namespace or subfolder) that will mitigate requests and responses based on models, found in folder defined by *controllers* attribute of **paths** tag @ **[application](#application)**. Must be a [Lucinda\STDOUT\Controller](#abstract-class-controller) instance!
@@ -453,7 +453,7 @@ class UserNameValidator implements ParameterValidator
 }
 ```
 
-To understand more how parameters are located, check [specifications](#how-are-parameter-validators-located) and [tag documentation](#route-parameters)!
+To understand more how parameters work, check [specifications](#how-are-parameter-validators-working) and [tag documentation](#route-parameters)!
 
 ### Abstract Class EventListeners Start
 
@@ -672,7 +672,7 @@ Since this API works on top of [Abstract MVC API](https://github.com/aherne/mvc)
 - [How Are View Resolvers Located](#how-are-view-resolvers-located)
 - [How Is Route Detected](#how-is-route-detected)
 - [How Are Controllers Located](#how-are-controllers-located)
-- [How Are Parameter Validators Located](#how-are-parameter-validators-located)
+- [How Are Parameter Validators Working](#how-are-parameter-validators-working)
 - [How Are Event Listeners Located](#how-are-event-listeners-located)
 - [How to Set Cookies Path and Domain](#how-to-set-cookies-path-and-domain)
 - [How Are Uploaded Files Processed](#how-are-uploaded-files-processed)
@@ -711,6 +711,50 @@ There will be following situations for above:
 ### How Are Controllers Located
 
 This follows parent API [specifications](https://github.com/aherne/mvc#how-are-controllers-located) only that class defined as *controller* attribute in [route](#routes) tag must extend [Lucinda\STDOUT\Controller](#abstract-class-controller).
+
+### How Are Parameter Validators Working
+
+To better understand how *validators* attribute in **[application](#application)** XML tag plays together with **parameter** sub-tags in **[routes](#route-parameters)** tag in order to locate validators to run based on incoming request, let's take this XML for example:
+
+```xml
+<application default_route="default" ...>
+	<paths validators="application/validators" .../>
+</application>
+...
+<routes>
+    <route id="users/(uname)" method="GET" ...>
+    	<parameter name="uname" class="UserNameValidator"/>
+    </route>
+    <route id="user/info" method="POST" ...>
+    	<parameter name="id" class="UserIdValidator"/>
+    	<parameter name="name" class="UserNameValidator"/>
+    </route>
+    ...
+</routes>
+```
+
+When a GET request to */users/aherne* is received, API will:
+
+- detect route with id *users/(uname)* and that value of "uname" path parameter is "aherne"
+- check if route is called with GET method. If not, a [Lucinda\STDOUT\MethodNotAllowedException](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/MethodNotAllowedException.php) is thrown!
+- load *UserNameValidator* file in *application/validators* folder, instances class and runs *validate* method on "aherne" value. If validation fails, a [Lucinda\STDOUT\ValidationFailedException](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/ValidationFailedException.php) is thrown!
+
+When a POST request to */users/aherne* is received with *id=1&name=Lucian&group=admin* payload, API will: 
+
+- detect route with id *user/info* and POST parameters *id=1&name=Lucian&group=admin*
+- check if route is called with POST method. If not, a [Lucinda\STDOUT\MethodNotAllowedException](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/MethodNotAllowedException.php) is thrown!
+- for each post parameter, if name of parameter matches a *name* in **[parameter](#route-parameters)** XML tag:
+    - loads class in *application/validators* folder (eg: *UserIdValidator* that will validate value of *id* post parameter) and instances it
+    - runs *validate* method on parameter value (eg: 1).  If validation fails, a [Lucinda\STDOUT\ValidationFailedException](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/ValidationFailedException.php) is thrown!
+
+Once a validator is located, following logic is used to match folder defined by *validators* attribute in **[application](#application)** XML tag with class name defined by *class* attribute in **[parameter](#route-parameters)** XML tag:
+
+| *validators* | *class* | File Loaded | Class Instanced |
+| --- | --- | --- | --- |
+| application/validators | TestEvent | application/validators/TestEvent.php | TestEvent |
+| application/validators | foo/TestEvent | application/validators/foo/TestEvent.php | TestEvent |
+| application/validators | \Foo\TestEvent | application/validators/TestEvent.php | \Foo\TestEvent |
+| application/validators | foo/\Bar\TestEvent | application/validators/foo/TestEvent.php | \Bar\TestEvent |
 
 ### How Are Event Listeners Located
 
