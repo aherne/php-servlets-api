@@ -2,7 +2,7 @@
 namespace Lucinda\STDOUT\EventListeners\Validators;
 
 use Lucinda\STDOUT\Application;
-use Lucinda\STDOUT\ConfigurationException;
+use Lucinda\MVC\ConfigurationException;
 
 /**
  * Binds information in 'application', 'formats' and 'routes' XML tags based on route requested to detect final response format
@@ -28,7 +28,7 @@ class FormatValidator
             }
         }
         
-        if ($application->formats($extension)===null) {
+        if ($application->resolvers($extension)===null) {
             throw new ConfigurationException("Format could not be matched to formats.format tag @ XML: ".$extension);
         }
         

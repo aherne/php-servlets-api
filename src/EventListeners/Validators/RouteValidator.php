@@ -4,7 +4,7 @@ namespace Lucinda\STDOUT\EventListeners\Validators;
 use Lucinda\STDOUT\Request;
 use Lucinda\STDOUT\Application;
 use Lucinda\STDOUT\PathNotFoundException;
-use Lucinda\STDOUT\Locators\ClassFinder;
+use Lucinda\MVC\Locators\ClassFinder;
 use Lucinda\STDOUT\MethodNotAllowedException;
 use Lucinda\STDOUT\ValidationFailedException;
 
@@ -43,18 +43,18 @@ class RouteValidator
     {
         $url = $request->getURI()->getPage();
         if ($url=="") {
-            $url = $application->getDefaultPage();
+            $url = $application->getDefaultRoute();
         }
         if (!$application->getAutoRouting()) {
             if ($application->routes($url)===null) {
                 $matchFound = false;
                 $routes = $application->routes();
                 foreach ($routes as $route) {
-                    if (strpos($route->getPath(), "(")!==false) {
+                    if (strpos($route->getID(), "(")!==false) {
                         $matches = [];
-                        preg_match_all("/(\(([^)]+)\))/", $route->getPath(), $matches);
+                        preg_match_all("/(\(([^)]+)\))/", $route->getID(), $matches);
                         $names = $matches[2];
-                        $pattern = "/^".str_replace($matches[1], "([^\/]+)", str_replace("/", "\/", $route->getPath()))."$/";
+                        $pattern = "/^".str_replace($matches[1], "([^\/]+)", str_replace("/", "\/", $route->getID()))."$/";
                         $results = [];
                         if (preg_match_all($pattern, $url, $results)==1) {
                             $parameters = [];
@@ -65,7 +65,7 @@ class RouteValidator
                                 $parameters[$names[$i-1]]=$item[0];
                             }
                             $this->pathParameters = $parameters;
-                            $url = $route->getPath();
+                            $url = $route->getID();
                             $matchFound = true;
                             break;
                         }

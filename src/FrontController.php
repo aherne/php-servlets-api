@@ -3,8 +3,11 @@ namespace Lucinda\STDOUT;
 
 use Lucinda\STDOUT\Request\UploadedFiles\Exception as FileUploadException;
 use Lucinda\STDOUT\Locators\ControllerLocator;
-use Lucinda\STDOUT\Locators\ViewResolverLocator;
+use Lucinda\MVC\Locators\ViewResolverLocator;
 use Lucinda\STDOUT\Locators\EventListenerLocator;
+use Lucinda\MVC\Runnable;
+use Lucinda\MVC\Response;
+use Lucinda\MVC\ConfigurationException;
 
 /**
  * Implements STDOUT front controller MVC functionality, integrating all API components as a whole.
@@ -102,7 +105,7 @@ class FrontController implements Runnable
 
         // resolves view into response body, unless output stream has been written to already
         if ($response->getBody()===null) {
-            $viewResolverLocator = new ViewResolverLocator($application, $this->attributes);
+            $viewResolverLocator = new ViewResolverLocator($application, $application->resolvers($this->attributes->getValidFormat()));
             $className  = $viewResolverLocator->getClassName();
             if ($className) {
                 $runnable = new $className($application, $response);
@@ -154,7 +157,7 @@ class FrontController implements Runnable
      */
     private function getContentType(Application $application): string
     {
-        $format = $application->formats($this->attributes->getValidFormat());
+        $format = $application->resolvers($this->attributes->getValidFormat());
         return $format->getContentType().($format->getCharacterEncoding()?"; charset=".$format->getCharacterEncoding():"");
     }
 }

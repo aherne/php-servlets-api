@@ -1,7 +1,7 @@
 <?php
 namespace Lucinda\STDOUT\Application\Route;
 
-use Lucinda\STDOUT\ConfigurationException;
+use Lucinda\MVC\ConfigurationException;
 
 /**
  * Encapsulates information necessary to validate a route/request parameter

@@ -1,5 +1,5 @@
 <?php
-use Lucinda\STDOUT\ViewResolver;
+use Lucinda\MVC\ViewResolver;
 
 class HtmlResolver extends ViewResolver
 {

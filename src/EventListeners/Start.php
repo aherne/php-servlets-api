@@ -1,7 +1,7 @@
 <?php
 namespace Lucinda\STDOUT\EventListeners;
 
-use Lucinda\STDOUT\Runnable;
+use Lucinda\MVC\Runnable;
 use Lucinda\STDOUT\Attributes;
 
 /**

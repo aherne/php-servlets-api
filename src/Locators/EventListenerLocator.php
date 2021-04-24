@@ -1,7 +1,9 @@
 <?php
 namespace Lucinda\STDOUT\Locators;
 
-use Lucinda\STDOUT\ConfigurationException;
+use Lucinda\MVC\Locators\ServiceLocator;
+use Lucinda\MVC\Locators\ClassFinder;
+use Lucinda\MVC\ConfigurationException;
 
 /**
  * Locates and loads EventListener class based on its absolute/relative file path and name

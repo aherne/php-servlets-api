@@ -1,6 +1,9 @@
 <?php
 namespace Lucinda\STDOUT;
 
+use Lucinda\MVC\Runnable;
+use Lucinda\MVC\Response;
+
 /**
  * Defines an abstract controller.
  */
