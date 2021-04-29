@@ -4,7 +4,7 @@ namespace Lucinda\STDOUT\EventListeners;
 use Lucinda\STDOUT\Application;
 use Lucinda\STDOUT\Attributes;
 use Lucinda\STDOUT\Cookies;
-use Lucinda\STDOUT\Runnable;
+use Lucinda\MVC\Runnable;
 use Lucinda\STDOUT\Session;
 
 /**

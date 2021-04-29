@@ -1,7 +1,7 @@
 <?php
 namespace Lucinda\STDOUT;
 
-use Lucinda\STDOUT\Locators\ClassFinder;
+use Lucinda\MVC\Locators\ClassFinder;
 
 /**
  * Encapsulates SESSION operations and parameters

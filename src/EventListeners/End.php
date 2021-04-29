@@ -1,13 +1,13 @@
 <?php
 namespace Lucinda\STDOUT\EventListeners;
 
-use Lucinda\STDOUT\Runnable;
+use Lucinda\MVC\Runnable;
 use Lucinda\STDOUT\Attributes;
 use Lucinda\STDOUT\Application;
 use Lucinda\STDOUT\Request;
 use Lucinda\STDOUT\Session;
 use Lucinda\STDOUT\Cookies;
-use Lucinda\STDOUT\Response;
+use Lucinda\MVC\Response;
 
 /**
  * Defines blueprint of an event that executes when application ends execution (after response is committed to client)

@@ -3,7 +3,9 @@ namespace Lucinda\STDOUT\Locators;
 
 use Lucinda\STDOUT\Application;
 use Lucinda\STDOUT\Attributes;
-use Lucinda\STDOUT\ConfigurationException;
+use Lucinda\MVC\ConfigurationException;
+use Lucinda\MVC\Locators\ServiceLocator;
+use Lucinda\MVC\Locators\ClassFinder;
 
 /**
  * Locates and loads Controller class based on information collected by Application and Attributes objects

@@ -2,7 +2,7 @@
 namespace Lucinda\STDOUT\EventListeners;
 
 use Lucinda\STDOUT\Attributes;
-use Lucinda\STDOUT\Runnable;
+use Lucinda\MVC\Runnable;
 
 /**
  * Defines blueprint of an event that executes after XML that contains application settings is parsed

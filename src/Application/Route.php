@@ -9,12 +9,8 @@ use Lucinda\STDOUT\Application\Route\Parameter;
  * - cpntroller: path to controller (relative to application/controllers folder)
  * - view: path to view (relative to application/views folder)
  */
-class Route
+class Route extends \Lucinda\MVC\Application\Route
 {
-    private $path;
-    private $controllerFile;
-    private $viewFile;
-    private $format;
     private $requestMethod;
     private $parameters = [];
     
@@ -25,60 +21,12 @@ class Route
      */
     public function __construct(\SimpleXMLElement $info)
     {
-        $this->path = (string) $info["url"];
-        $this->controllerFile = (string) $info["controller"];
-        $this->viewFile = (string) $info["view"];
-        $this->format = (string) $info["format"];
+        parent::__construct($info);
         $this->requestMethod = (string) $info["method"];
         $parameters = $info->xpath("parameter");
         foreach ($parameters as $parameter) {
             $this->parameters[(string) $parameter["name"]] = new Parameter($parameter);
         }
-    }
-    
-    /**
-     * Gets route path.
-     *
-     * @return string
-     * @example test/mine		without path parameters
-     * @example test/{a}/{b}	with path parameters
-     */
-    public function getPath(): string
-    {
-        return $this->path;
-    }
-    
-    /**
-     * Gets controller name.
-     *
-     * @return string
-     * @example TestController
-     */
-    public function getController(): ?string
-    {
-        return $this->controllerFile;
-    }
-    
-    /**
-     * Gets view path.
-     *
-     * @return string
-     * @example asd/fgh.html
-     */
-    public function getView(): ?string
-    {
-        return $this->viewFile;
-    }
-
-    /**
-     * Gets response format.
-     *
-     * @return string
-     * @example json
-     */
-    public function getFormat(): ?string
-    {
-        return $this->format;
     }
     
     /**

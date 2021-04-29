@@ -13,9 +13,9 @@ class ApplicationTest
         $this->object = new Application(__DIR__."/configuration.xml");
     }
 
-    public function getDefaultPage()
+    public function getDefaultRoute()
     {
-        return new Result($this->object->getDefaultPage()=="index");
+        return new Result($this->object->getDefaultRoute()=="index");
     }
         
 
@@ -73,9 +73,9 @@ class ApplicationTest
     }
         
 
-    public function formats()
+    public function resolvers()
     {
-        return new Result($this->object->formats("html")!==null);
+        return new Result($this->object->resolvers("html")!==null);
     }
 
 
@@ -83,6 +83,7 @@ class ApplicationTest
     {
         return new Result($this->object->getXML() instanceof \SimpleXMLElement);
     }
+    
     public function getSessionOptions()
     {
         return new Result($this->object->getSessionOptions()->isSecuredByHTTPS());
