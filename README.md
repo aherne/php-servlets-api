@@ -32,17 +32,17 @@ This API was created to efficiently handle web requests into server responses us
 API does nothing more than standard MVC logic, so in real life it expects a web framework to be built on top to add further features (eg: DB connectivity). In order to use it, following steps are required from developers:
 
 - **[configuration](#configuration)**: setting up an XML file where this API is configured
-- **[initialization](#initialization)**: instancing [Lucinda\STDOUT\FrontController](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/FrontController.php), a [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/Runnable.php) able to handle requests into responses later on based on above two
-- **[binding events](#binding-events)**: setting up [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/Runnable.php) classes that will be instanced and *run* when predefined events are reached during handling process
+- **[initialization](#initialization)**: instancing [Lucinda\STDOUT\FrontController](https://github.com/aherne/php-servlets-api/blob/master/src/FrontController.php), a [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/blob/master/src/Runnable.php) able to handle requests into responses later on based on above two
+- **[binding events](#binding-events)**: setting up [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/blob/master/src/Runnable.php) classes that will be instanced and *run* when predefined events are reached during handling process
 - **[configuring shared variables](#configuring-shared-variables)**: extend [Lucinda\STDOUT\Attributes](#class-attributes) class to encapsulate variables specific to your project, to be shared between event listeners and controllers
-- **[handling](#handling)**: calling *run* method @ [Lucinda\STDOUT\FrontController](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/FrontController.php)  to finally handle requests into responses, triggering events above (if any)
+- **[handling](#handling)**: calling *run* method @ [Lucinda\STDOUT\FrontController](https://github.com/aherne/php-servlets-api/blob/master/src/FrontController.php)  to finally handle requests into responses, triggering events above (if any)
 
 API is fully PSR-4 compliant, only requiring [Abstract MVC API](https://github.com/aherne/mvc) for basic MVC logic, PHP7.1+ interpreter and SimpleXML extension. To quickly see how it works, check:
 
 - **[installation](#installation)**: describes how to install API on your computer, in light of steps above
 - **[reference guide](#reference-guide)**: describes all API classes, methods and fields relevant to developers
 - **[unit tests](#unit-tests)**: API has 100% Unit Test coverage, using [UnitTest API](https://github.com/aherne/unit-testing) instead of PHPUnit for greater flexibility
-- **[example](https://github.com/aherne/php-servlets-api/blob/v3.1.0/tests/FrontController.php)**: shows a deep example of API functionality based on [Lucinda\STDOUT\FrontController](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/FrontController.php) unit test
+- **[example](https://github.com/aherne/php-servlets-api/blob/master/tests/FrontController.php)**: shows a deep example of API functionality based on [Lucinda\STDOUT\FrontController](https://github.com/aherne/php-servlets-api/blob/master/src/FrontController.php) unit test
 
 ## Configuration
 
@@ -98,7 +98,7 @@ Most of tag logic is already covered by Abstract MVC API [specification](https:/
 
 - *id*: (mandatory) requested requested resource url without trailing slash. Can be an exact url (eg: *foo/bar*) or a url pattern (eg: *user/(id)*). If pattern is used, each variable must be named and enclosed in parenthesis!
 - *controller*: (optional) holds user-defined controller (including namespace or subfolder) that will mitigate requests and responses based on models, found in folder defined by *controllers* attribute of **paths** tag @ **[application](#application)**. Must be a [Lucinda\STDOUT\Controller](#abstract-class-controller) instance!
-- *method*: (optional) holds single HTTP method by which resource MUST be requested with. If request comes with a different method, a [Lucinda\STDOUT\MethodNotAllowedException](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/MethodNotAllowedException.php) is thrown!
+- *method*: (optional) holds single HTTP method by which resource MUST be requested with. If request comes with a different method, a [Lucinda\STDOUT\MethodNotAllowedException](https://github.com/aherne/php-servlets-api/blob/master/src/MethodNotAllowedException.php) is thrown!
 
 
 Tag example:
@@ -188,9 +188,9 @@ To understand how to properly set *path* and *domain* when needed, check [specif
 
 ### Initialization
 
-Now that developers have finished setting up XML that configures the API, they are finally able to initialize it by instantiating [Lucinda\STDOUT\FrontController](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/FrontController.php).
+Now that developers have finished setting up XML that configures the API, they are finally able to initialize it by instantiating [Lucinda\STDOUT\FrontController](https://github.com/aherne/php-servlets-api/blob/master/src/FrontController.php).
 
-Apart of method *run* required by [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/Runnable.php) interface it implements, class comes with following public methods:
+Apart of method *run* required by [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/blob/master/src/Runnable.php) interface it implements, class comes with following public methods:
 
 | Method | Arguments | Returns | Description |
 | --- | --- | --- | --- |
@@ -201,7 +201,7 @@ Where:
 
 - *$documentDescriptor*: relative location of XML [configuration](#configuration) file. Example: "configuration.xml"
 - *$attributes*: see **[configuring shared variables](#configuring-shared-variables)**.
-- *$type*: event type (see above) encapsulated by enum [Lucinda\STDOUT\EventType](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/EventType.php)
+- *$type*: event type (see above) encapsulated by enum [Lucinda\STDOUT\EventType](https://github.com/aherne/php-servlets-api/blob/master/src/EventType.php)
 - *$className*: listener *class name*, including namespace and subfolder, found in *folder* defined when [Lucinda\STDOUT\Attributes](#class-attributes) was instanced.
 
 Example:
@@ -213,7 +213,7 @@ $handler->run();
 
 ### Binding Events
 
-As mentioned above, API allows developers to bind listeners to handling lifecycle events via *addEventListener* method above. Each event  type corresponds to a abstract [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/Runnable.php) class:
+As mentioned above, API allows developers to bind listeners to handling lifecycle events via *addEventListener* method above. Each event  type corresponds to a abstract [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/blob/master/src/Runnable.php) class:
 
 | Type | Class | Description |
 | --- | --- | --- |
@@ -246,7 +246,7 @@ API comes with [Lucinda\STDOUT\Attributes](#class-attributes), which holds the f
 
 ### Handling
 
-Once above steps are done, developers are finally able to handle requests into responses via *run* method of [Lucinda\STDOUT\FrontController](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/FrontController.php), which:
+Once above steps are done, developers are finally able to handle requests into responses via *run* method of [Lucinda\STDOUT\FrontController](https://github.com/aherne/php-servlets-api/blob/master/src/FrontController.php), which:
 
 - detects [Lucinda\STDOUT\EventListeners\Start](#abstract-class-eventlisteners-start) listeners and executes them in order they were registered
 - encapsulates [configuration](#configuration) XML file into [Lucinda\STDOUT\Application](#class-application) object
@@ -262,7 +262,7 @@ Once above steps are done, developers are finally able to handle requests into r
 - sends [Lucinda\MVC\Response](https://github.com/aherne/mvc#class-response) back to caller, containing headers and body
 - detects [Lucinda\STDOUT\EventListeners\End](#abstract-class-eventlisteners-end) listeners and executes them in order they were registered
 
-All components that are in developers' responsibility ([Lucinda\STDOUT\Controller](#abstract-class-controller), [Lucinda\MVC\ViewResolver](https://github.com/aherne/mvc#abstract-class-viewresolver), along with event listeners themselves, implement [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/Runnable.php) interface.
+All components that are in developers' responsibility ([Lucinda\STDOUT\Controller](#abstract-class-controller), [Lucinda\MVC\ViewResolver](https://github.com/aherne/mvc#abstract-class-viewresolver), along with event listeners themselves, implement [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/blob/master/src/Runnable.php) interface.
 
 ## Installation
 
@@ -296,9 +296,9 @@ $controller->run();
 
 For tests and examples, check following files/folders in API sources:
 
-- [test.php](https://github.com/aherne/php-servlets-api/blob/v3.1.0/test.php): runs unit tests in console
-- [unit-tests.xml](https://github.com/aherne/php-servlets-api/blob/v3.1.0/unit-tests.xml): sets up unit tests and mocks "loggers" tag
-- [tests](https://github.com/aherne/php-servlets-api/blob/v3.1.0/tests): unit tests for classes from [src](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src) folder
+- [test.php](https://github.com/aherne/php-servlets-api/blob/master/test.php): runs unit tests in console
+- [unit-tests.xml](https://github.com/aherne/php-servlets-api/blob/master/unit-tests.xml): sets up unit tests and mocks "loggers" tag
+- [tests](https://github.com/aherne/php-servlets-api/blob/master/tests): unit tests for classes from [src](https://github.com/aherne/php-servlets-api/blob/master/src) folder
 
 ## Reference Guide
 
@@ -323,7 +323,7 @@ Apart of classes mentioned in **[binding events](#binding-events)**, following a
 
 ### Class Application
 
-Class [Lucinda\STDOUT\Application](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/Application.php) encapsulates information detected from XML and defines following public methods relevant to developers:
+Class [Lucinda\STDOUT\Application](https://github.com/aherne/php-servlets-api/blob/master/src/Application.php) encapsulates information detected from XML and defines following public methods relevant to developers:
 
 | Method | Arguments | Returns | Description |
 | --- | --- | --- | --- |
@@ -332,7 +332,7 @@ Class [Lucinda\STDOUT\Application](https://github.com/aherne/php-servlets-api/bl
 
 ### Class Request
 
-Class [Lucinda\STDOUT\Request](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/Request.php) encapsulates information detected about user request based on superglobals ($\_SERVER, $\_GET, $\_POST, $\_FILES) and defines following public methods relevant to developers:
+Class [Lucinda\STDOUT\Request](https://github.com/aherne/php-servlets-api/blob/master/src/Request.php) encapsulates information detected about user request based on superglobals ($\_SERVER, $\_GET, $\_POST, $\_FILES) and defines following public methods relevant to developers:
 
 | Method | Arguments | Returns | Description |
 | --- | --- | --- | --- |
@@ -351,7 +351,7 @@ Class [Lucinda\STDOUT\Request](https://github.com/aherne/php-servlets-api/blob/v
 
 ### Class Request Client
 
-Class [Lucinda\STDOUT\Request\Client](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/Request/Client.php) encapsulates client information detected from request based on $\_SERVER superglobal  and defines following public methods relevant to developers:
+Class [Lucinda\STDOUT\Request\Client](https://github.com/aherne/php-servlets-api/blob/master/src/Request/Client.php) encapsulates client information detected from request based on $\_SERVER superglobal  and defines following public methods relevant to developers:
 
 | Method | Arguments | Returns | Description |
 | --- | --- | --- | --- |
@@ -361,7 +361,7 @@ Class [Lucinda\STDOUT\Request\Client](https://github.com/aherne/php-servlets-api
 
 ### Class Request Server
 
-Class [Lucinda\STDOUT\Request\Server](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/Request/Server.php) encapsulates web server information detected from request based on $\_SERVER superglobal  and defines following public methods relevant to developers:
+Class [Lucinda\STDOUT\Request\Server](https://github.com/aherne/php-servlets-api/blob/master/src/Request/Server.php) encapsulates web server information detected from request based on $\_SERVER superglobal  and defines following public methods relevant to developers:
 
 | Method | Arguments | Returns | Description |
 | --- | --- | --- | --- |
@@ -373,7 +373,7 @@ Class [Lucinda\STDOUT\Request\Server](https://github.com/aherne/php-servlets-api
 
 ### Class Request URI
 
-Class [Lucinda\STDOUT\Request\URI](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/Request/URI.php) encapsulates path information detected from request based on $\_SERVER superglobal  and defines following public methods relevant to developers:
+Class [Lucinda\STDOUT\Request\URI](https://github.com/aherne/php-servlets-api/blob/master/src/Request/URI.php) encapsulates path information detected from request based on $\_SERVER superglobal  and defines following public methods relevant to developers:
 
 | Method | Arguments | Returns | Description |
 | --- | --- | --- | --- |
@@ -387,7 +387,7 @@ To understand how requested URI is processed by this class, check [specification
 
 ### Class Request UploadedFile
 
-Class [Lucinda\STDOUT\Request\UploadedFiles\File](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/Request/UploadedFiles\File.php) encapsulates information about a single file uploaded based on $\_FILES superglobal  and defines following public methods relevant to developers:
+Class [Lucinda\STDOUT\Request\UploadedFiles\File](https://github.com/aherne/php-servlets-api/blob/master/src/Request/UploadedFiles\File.php) encapsulates information about a single file uploaded based on $\_FILES superglobal  and defines following public methods relevant to developers:
 
 | Method | Arguments | Returns | Description |
 | --- | --- | --- | --- |
@@ -407,7 +407,7 @@ To understand how uploaded files are processed into this class, check [specifica
 
 ### Class Session
 
-Class [Lucinda\STDOUT\Session](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/Session.php) encapsulates operations to perform with a http session via $\_SESSION superglobal and defines following public methods, all relevant to developers:
+Class [Lucinda\STDOUT\Session](https://github.com/aherne/php-servlets-api/blob/master/src/Session.php) encapsulates operations to perform with a http session via $\_SESSION superglobal and defines following public methods, all relevant to developers:
 
 | Method | Arguments | Returns | Description |
 | --- | --- | --- | --- |
@@ -421,7 +421,7 @@ Class [Lucinda\STDOUT\Session](https://github.com/aherne/php-servlets-api/blob/v
 
 ### Class Cookies
 
-Class [Lucinda\STDOUT\Cookies](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/Cookies.php) encapsulates operations to perform with a http cookie via $\_COOKIE superglobal and defines following public methods, all relevant to developers:
+Class [Lucinda\STDOUT\Cookies](https://github.com/aherne/php-servlets-api/blob/master/src/Cookies.php) encapsulates operations to perform with a http cookie via $\_COOKIE superglobal and defines following public methods, all relevant to developers:
 
 | Method | Arguments | Returns | Description |
 | --- | --- | --- | --- |
@@ -432,7 +432,7 @@ Class [Lucinda\STDOUT\Cookies](https://github.com/aherne/php-servlets-api/blob/v
 
 ### Interface ParameterValidator
 
-Interface [Lucinda\STDOUT\EventListeners\Validators\ParameterValidator](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/EventListeners/Validators/ParameterValidator.php) implements blueprint for a single request parameter value validation via method:
+Interface [Lucinda\STDOUT\EventListeners\Validators\ParameterValidator](https://github.com/aherne/php-servlets-api/blob/master/src/EventListeners/Validators/ParameterValidator.php) implements blueprint for a single request parameter value validation via method:
 
 | Method | Arguments | Returns | Description |
 | --- | --- | --- | --- |
@@ -457,7 +457,7 @@ To understand more how parameters work, check [specifications](#how-are-paramete
 
 ### Abstract Class EventListeners Start
 
-Abstract class [Lucinda\STDOUT\EventListeners\Start](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/EventListeners/Start.php) implements [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/Runnable.php)) and listens to events that execute BEFORE [configuration](#configuration) XML is read.
+Abstract class [Lucinda\STDOUT\EventListeners\Start](https://github.com/aherne/php-servlets-api/blob/master/src/EventListeners/Start.php) implements [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/blob/master/src/Runnable.php)) and listens to events that execute BEFORE [configuration](#configuration) XML is read.
 
 Developers need to implement a *run* method, where they are able to access following protected fields injected by API via constructor:
 
@@ -482,7 +482,7 @@ class StartBenchmark extends Start
 
 ### Abstract Class EventListeners Application
 
-Abstract class [Lucinda\STDOUT\EventListeners\Application](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/EventListeners/Application.php) implements [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/Runnable.php)) and listens to events that execute AFTER [configuration](#configuration) XML is read.
+Abstract class [Lucinda\STDOUT\EventListeners\Application](https://github.com/aherne/php-servlets-api/blob/master/src/EventListeners/Application.php) implements [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/blob/master/src/Runnable.php)) and listens to events that execute AFTER [configuration](#configuration) XML is read.
 
 Developers need to implement a *run* method, where they are able to access following protected fields injected by API via constructor:
 
@@ -508,7 +508,7 @@ class DataSourceInjector extends Application
 
 ### Abstract Class EventListeners Request
 
-Abstract class [Lucinda\STDOUT\EventListeners\Request](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/EventListeners/Request.php) implements [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/Runnable.php)) and listens to events that execute AFTER [Lucinda\STDOUT\Request](#class-request), [Lucinda\STDOUT\Session](#class-session) and [Lucinda\STDOUT\Cookies](#class-cookies) objects are created.
+Abstract class [Lucinda\STDOUT\EventListeners\Request](https://github.com/aherne/php-servlets-api/blob/master/src/EventListeners/Request.php) implements [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/blob/master/src/Runnable.php)) and listens to events that execute AFTER [Lucinda\STDOUT\Request](#class-request), [Lucinda\STDOUT\Session](#class-session) and [Lucinda\STDOUT\Cookies](#class-cookies) objects are created.
 
 Developers need to implement a *run* method, where they are able to access following protected fields injected by API via constructor:
 
@@ -539,7 +539,7 @@ class DataSourceInjector extends Request
 
 ### Abstract Class EventListeners Response
 
-Abstract class [Lucinda\STDOUT\EventListeners\Response](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/EventListeners/Response.php) implements [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/Runnable.php)) and listens to events that execute AFTER [Lucinda\MVC\Response](https://github.com/aherne/mvc#class-response) body was set but before it's committed back to caller.
+Abstract class [Lucinda\STDOUT\EventListeners\Response](https://github.com/aherne/php-servlets-api/blob/master/src/EventListeners/Response.php) implements [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/blob/master/src/Runnable.php)) and listens to events that execute AFTER [Lucinda\MVC\Response](https://github.com/aherne/mvc#class-response) body was set but before it's committed back to caller.
 
 Developers need to implement a *run* method, where they are able to access following protected fields injected by API via constructor:
 
@@ -572,7 +572,7 @@ class DataSourceInjector extends Response
 
 ### Abstract Class EventListeners End
 
-Abstract class [Lucinda\STDOUT\EventListeners\End](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/EventListeners/End.php) implements [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/Runnable.php)) and listens to events that execute AFTER [Lucinda\MVC\Response](https://github.com/aherne/mvc#class-response) was rendered back to caller.
+Abstract class [Lucinda\STDOUT\EventListeners\End](https://github.com/aherne/php-servlets-api/blob/master/src/EventListeners/End.php) implements [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/blob/master/src/Runnable.php)) and listens to events that execute AFTER [Lucinda\MVC\Response](https://github.com/aherne/mvc#class-response) was rendered back to caller.
 
 Developers need to implement a *run* method, where they are able to access following protected fields injected by API via constructor:
 
@@ -602,7 +602,7 @@ class EndBenchmark extends End
 
 ### Abstract Class Controller
 
-Abstract class [Lucinda\STDOUT\Controller](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/Controller.php) implements [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/Runnable.php)) to set up response (views in particular) by binding information detected beforehand to models. It defines following public method relevant to developers:
+Abstract class [Lucinda\STDOUT\Controller](https://github.com/aherne/php-servlets-api/blob/master/src/Controller.php) implements [Lucinda\STDOUT\Runnable](https://github.com/aherne/php-servlets-api/blob/master/src/Runnable.php)) to set up response (views in particular) by binding information detected beforehand to models. It defines following public method relevant to developers:
 
 | Method | Arguments | Returns | Description |
 | --- | --- | --- | --- |
@@ -649,7 +649,7 @@ To understand more about how controllers are detected, check [specifications](#h
 
 ### Class Attributes
 
-Class [Lucinda\STDOUT\Attributes](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/Attributes.php) encapsulates data collected throughout request-response cycle, each corresponding to a getter and a setter, and made available to subsequent event listeners or controllers. API already comes with following:
+Class [Lucinda\STDOUT\Attributes](https://github.com/aherne/php-servlets-api/blob/master/src/Attributes.php) encapsulates data collected throughout request-response cycle, each corresponding to a getter and a setter, and made available to subsequent event listeners or controllers. API already comes with following:
 
 | Method | Arguments | Returns | Description |
 | --- | --- | --- | --- |
@@ -706,7 +706,7 @@ There will be following situations for above:
 | --- | --- | --- |
 | / | index | Because requested page came empty, that identified by *default_route* is used |
 | /users | users | Because requested page is matched to a route, specific route is used |
-| /hello | - | Because no route is found matching the one requested a [Lucinda\STDOUT\PathNotFoundException](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/PathNotFoundException.php) is thrown |
+| /hello | - | Because no route is found matching the one requested a [Lucinda\STDOUT\PathNotFoundException](https://github.com/aherne/php-servlets-api/blob/master/src/PathNotFoundException.php) is thrown |
 
 ### How Are Controllers Located
 
@@ -736,16 +736,16 @@ To better understand how *validators* attribute in **[application](#application)
 When a GET request to */users/aherne* is received, API will:
 
 - detect route with id *users/(uname)* and that value of "uname" path parameter is "aherne"
-- check if route is called with GET method. If not, a [Lucinda\STDOUT\MethodNotAllowedException](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/MethodNotAllowedException.php) is thrown!
-- load *UserNameValidator* file in *application/validators* folder, instances class and runs *validate* method on "aherne" value. If validation fails, a [Lucinda\STDOUT\ValidationFailedException](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/ValidationFailedException.php) is thrown!
+- check if route is called with GET method. If not, a [Lucinda\STDOUT\MethodNotAllowedException](https://github.com/aherne/php-servlets-api/blob/master/src/MethodNotAllowedException.php) is thrown!
+- load *UserNameValidator* file in *application/validators* folder, instances class and runs *validate* method on "aherne" value. If validation fails, a [Lucinda\STDOUT\ValidationFailedException](https://github.com/aherne/php-servlets-api/blob/master/src/ValidationFailedException.php) is thrown!
 
 When a POST request to */users/aherne* is received with *id=1&name=Lucian&group=admin* payload, API will: 
 
 - detect route with id *user/info* and POST parameters *id=1&name=Lucian&group=admin*
-- check if route is called with POST method. If not, a [Lucinda\STDOUT\MethodNotAllowedException](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/MethodNotAllowedException.php) is thrown!
+- check if route is called with POST method. If not, a [Lucinda\STDOUT\MethodNotAllowedException](https://github.com/aherne/php-servlets-api/blob/master/src/MethodNotAllowedException.php) is thrown!
 - for each post parameter, if name of parameter matches a *name* in **[parameter](#route-parameters)** XML tag:
     - loads class in *application/validators* folder (eg: *UserIdValidator* that will validate value of *id* post parameter) and instances it
-    - runs *validate* method on parameter value (eg: 1).  If validation fails, a [Lucinda\STDOUT\ValidationFailedException](https://github.com/aherne/php-servlets-api/blob/v3.1.0/src/ValidationFailedException.php) is thrown!
+    - runs *validate* method on parameter value (eg: 1).  If validation fails, a [Lucinda\STDOUT\ValidationFailedException](https://github.com/aherne/php-servlets-api/blob/master/src/ValidationFailedException.php) is thrown!
 
 Once a validator is located, following logic is used to match folder defined by *validators* attribute in **[application](#application)** XML tag with class name defined by *class* attribute in **[parameter](#route-parameters)** XML tag:
 
