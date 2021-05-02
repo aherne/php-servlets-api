@@ -135,7 +135,7 @@ Where:
 - *https_only*: (optional) marks session cookie as accessible over secure HTTPS connections. Value: "1"
 - *headers_only*: (optional) marks session cookie as accessible only through the HTTP protocol. Value: "1"
 - *referrer_check*: (optional) substring you want to check each HTTP Referer for in order to validate session cookie. Example: "Chrome"
-- *handler*: (optional) user-defined session handler (including namespace or subfolder) that implements [\SessionHandlerInterface](https://www.php.net/manual/en/class.sessionhandlerinterface.php). Example: "application/models/RedisHandler"
+- *handler*: (optional) name of user-defined PS-4 autoload compliant class (including namespace) that implements [\SessionHandlerInterface](https://www.php.net/manual/en/class.sessionhandlerinterface.php). Example: "application/models/RedisHandler"
 - *auto_start*: (optional) signals session to be started automatically for each request. Value: "1"
 
 Tag example:
@@ -512,7 +512,7 @@ namespace Lucinda\Project\EventListeners;
 
 use Lucinda\STDOUT\EventListeners\Request;
 
-class DataSourceInjector extends Request
+class Security extends Request
 {
     public function run(): void
     {
@@ -546,7 +546,7 @@ namespace Lucinda\Project\EventListeners;
 
 use Lucinda\STDOUT\EventListeners\Response;
 
-class DataSourceInjector extends Response
+class HttpCaching extends Response
 {
     public function run(): void
     {
