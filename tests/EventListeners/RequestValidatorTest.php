@@ -38,7 +38,7 @@ class RequestValidatorTest
             'SCRIPT_FILENAME' => '/var/www/html/documentation/index.php',
             'QUERY_STRING' =>''
         ];
-        $validator = new RequestValidator($attributes, new Application(dirname(__DIR__)."/configuration.xml"), new Request(), new Session(), new Cookies());
+        $validator = new RequestValidator($attributes, new Application(dirname(__DIR__)."/mocks/configuration.xml"), new Request(), new Session(), new Cookies());
         $validator->run();
         
         $results = [];

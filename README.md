@@ -18,10 +18,10 @@ Table of contents:
     - [How Is Route Detected](#how-is-route-detected)
     - [How Are Controllers Located](#how-are-controllers-located)
     - [How Are Parameter Validators Working](#how-are-parameter-validators-working)
-    - [How Are Event Listeners Located](#how-are-event-listeners-located)
     - [How to Set Cookies Path and Domain](#how-to-set-cookies-path-and-domain)
     - [How Are Uploaded Files Processed](#how-are-uploaded-files-processed)
     - [How Is Requested URI Processed](#how-is-requested-uri-processed)
+    - [How Are Views Located](#how-are-views-located)
 
 ## About
 
@@ -56,25 +56,7 @@ To configure this API you must have a XML with following tags inside:
 
 ### Application
 
-Maximal syntax of this tag is:
-
-```xml
-<application default_format="..." default_route="..." version="...">
-	<paths controllers="..." resolvers="..." validators="..." views="..."/>
-</application>
-```
-
-Most of tag logic is already covered by Abstract MVC API [specification](https://github.com/aherne/mvc#application). Following extra attributes are defined:
-
-- *validators*: (optional) holds folder in which user-defined request parameter validators will be located. Each validator must be a [Lucinda\STDOUT\EventListeners\Validators\ParameterValidator](#interface-parametervalidator) instance!
-
-Tag example:
-
-```xml
-<application default_format="html" default_route="index" version="1.0.1">
-	<paths controllers="application/controllers" resolvers="application/resolvers" validators="application/validators" views="application/views"/>
-</application>
-```
+Tag documentation is completely covered by inherited Abstract MVC API [specification](https://github.com/aherne/mvc#application)! Since STDIN for this API is made of HTTP(s) requests, value of *default_route* attribute must point to **index** (homepage) for requests that come with no route. 
 
 ### Resolvers
 
@@ -97,20 +79,21 @@ Maximal syntax of this tag is:
 Most of tag logic is already covered by Abstract MVC API [specification](https://github.com/aherne/mvc#routes). Following extra observations need to be made:
 
 - *id*: (mandatory) requested requested resource url without trailing slash. Can be an exact url (eg: *foo/bar*) or a url pattern (eg: *user/(id)*). If pattern is used, each variable must be named and enclosed in parenthesis!
-- *controller*: (optional) holds user-defined controller (including namespace or subfolder) that will mitigate requests and responses based on models, found in folder defined by *controllers* attribute of **paths** tag @ **[application](#application)**. Must be a [Lucinda\STDOUT\Controller](#abstract-class-controller) instance!
+- *controller*: (optional) name of user-defined PS-4 autoload compliant class (including namespace) that will mitigate requests and responses based on models.<br/>Class must be a [Lucinda\STDOUT\Controller](#abstract-class-controller) instance!
 - *method*: (optional) holds single HTTP method by which resource MUST be requested with. If request comes with a different method, a [Lucinda\STDOUT\MethodNotAllowedException](https://github.com/aherne/php-servlets-api/blob/master/src/MethodNotAllowedException.php) is thrown!
-
 
 Tag example:
 
 ```xml
 <routes>
-    <route id="index" controller="HomepageController" view="index"/>
-    <route id="user/(id)" controller="UserInfoController" view="user-info">
+    <route id="index" controller="Lucinda\Project\Controllers\Homepage" view="index"/>
+    <route id="user/(id)" controller="Lucinda\Project\Controllers\UserInfo" view="user-info">
 </routes>
 ```
 
 **^ It is mandatory to define a route for that defined by default_route attribute @ [application](#application) XML tag!**
+
+If request came without route, **default** route is used. If, however, request came with a route that matches no **id**, a [Lucinda\STDOUT\PathNotFoundException](https://github.com/aherne/php-servlets-api/blob/master/src/PathNotFoundException.php) is thrown!
 
 #### Route Parameters
 
@@ -119,7 +102,7 @@ Each **route** tag can hold one or more rules to validate values of request and 
 - *name*: (mandatory) name of request or path parameter you want to validate. Examples:
     - *foo*, if request was GET and came with query-string *?foo=bar*
     - *id*, if route url is *user/(id)*
-- *validator*: (mandatory) holds user-defined class (including namespace or subfolder) that validates value of parameter, found in folder defined by *validators* attribute of **paths** tag @ **[application](#application)**. Must be a [Lucinda\STDOUT\EventListeners\Validators\ParameterValidator](#interface-parametervalidator) instance!
+- *validator*: (mandatory)  name of user-defined PS-4 autoload compliant class (including namespace) that will validate value of parameter.<br/>Must be a [Lucinda\STDOUT\EventListeners\Validators\ParameterValidator](#interface-parametervalidator) instance!
 - *mandatory*: (optional) holds whether or not parameter is mandatory (value can be 0 or 1). If none, mandatory (1) is assumed!
 
 **^ If parameter names collide, path parameters take precedence over request parameters!**
@@ -128,9 +111,9 @@ Tag example:
 
 ```xml
 <routes>
-    <route id="index" controller="HomepageController" view="index"/>
-    <route id="user/(id)" controller="UserInfoController" view="user-info" method="GET">
-        <parameter name="id" validator="UserNameValidator"/>
+    <route id="index" controller="Lucinda\Project\Controllers\Homepage" view="index"/>
+    <route id="user/(id)" controller="Lucinda\Project\Controllers\UserInfo" view="user-info" method="GET">
+        <parameter name="id" validator="Lucinda\Project\ParameterValidators\UserNameValidator"/>
     </route>
 </routes>
 ```
@@ -227,9 +210,8 @@ Listeners must extend matching event class and implement required *run* method h
 
 ```php
 $handler = new Lucinda\STDOUT\FrontController("stdout.xml", new FrameworkAttributes("application/listeners");
-$handler->addEventListener(Lucinda\STDOUT\EventType::APPLICATION, "LoggingListener");
-$handler->addEventListener(Lucinda\STDOUT\EventType::APPLICATION, "LoggingListener");
-$handler->addEventListener(Lucinda\STDOUT\EventType::REQUEST, "SecurityListener");
+$handler->addEventListener(Lucinda\STDOUT\EventType::APPLICATION, Lucinda\Project\EventListeners\Logging::class);
+$handler->addEventListener(Lucinda\STDOUT\EventType::REQUEST, Lucinda\Project\EventListeners\Security::class);
 $handler->run();
 ```
 
@@ -312,14 +294,11 @@ These classes are fully implemented by API:
     - [Lucinda\STDOUT\Request\UploadedFiles\File](#class-request-uploadedfile): encapsulates information about an uploaded file
 - [Lucinda\STDOUT\Session](#class-session): encapsulates operations to perform with a http session mapped to $\_SESSION superglobal
 - [Lucinda\STDOUT\Cookies](#class-cookies): encapsulates operations to perform with a http cookie mapped to $\_COOKIE superglobal
-- [Lucinda\MVC\Response](https://github.com/aherne/mvc#class-response): encapsulates response to send back to caller
-    - [Lucinda\MVC\Response\Status](https://github.com/aherne/mvc#class-response-status): encapsulates response HTTP status
-    - [Lucinda\MVC\Response\View](https://github.com/aherne/mvc#class-response-view): encapsulates view template and data that will be bound into a response body
 
 Apart of classes mentioned in **[binding events](#binding-events)**, following abstract classes require to be extended by developers in order to gain an ability:
 
 - [Lucinda\STDOUT\Controller](#abstract-class-controller): encapsulates binding [Lucinda\STDOUT\Request](#class-request) to [Lucinda\MVC\Response](https://github.com/aherne/mvc#class-response) based on user request and XML info
-- [Lucinda\MVC\ViewResolver](https://github.com/aherne/mvc#abstract-class-viewresolver): encapsulates conversion of [Lucinda\MVC\Response\View](https://github.com/aherne/mvc#class-response-view) into a [Lucinda\MVC\Response](https://github.com/aherne/mvc#class-response) body
+- [Lucinda\STDOUT\EventListeners\Validators\ParameterValidator](#interface-parametervalidator): performs validation of a request parameter value
 
 ### Class Application
 
@@ -441,6 +420,8 @@ Interface [Lucinda\STDOUT\EventListeners\Validators\ParameterValidator](https://
 Example of a class that validates user name received as parameter (eg: /user/(name) route):
 
 ```php
+namespace Lucinda\Project\ParameterValidators;
+
 use Lucinda\STDOUT\EventListeners\Validators\ParameterValidator;
 
 class UserNameValidator implements ParameterValidator
@@ -468,6 +449,8 @@ Developers need to implement a *run* method, where they are able to access follo
 A common example of a START listener is the need to set start time, in order to benchmark duration of handling later on:
 
 ```php
+namespace Lucinda\Project\EventListeners;
+
 use Lucinda\STDOUT\EventListeners\Start;
 
 class StartBenchmark extends Start
@@ -494,6 +477,8 @@ Developers need to implement a *run* method, where they are able to access follo
 A common example of a APPLICATION listener is the need to set database credentials for later use in connection:
 
 ```php
+namespace Lucinda\Project\EventListeners;
+
 use Lucinda\STDOUT\EventListeners\Application;
 
 class DataSourceInjector extends Application
@@ -523,6 +508,8 @@ Developers need to implement a *run* method, where they are able to access follo
 A common example of a REQUEST listener is the need to authorize request:
 
 ```php
+namespace Lucinda\Project\EventListeners;
+
 use Lucinda\STDOUT\EventListeners\Request;
 
 class DataSourceInjector extends Request
@@ -555,6 +542,8 @@ Developers need to implement a *run* method, where they are able to access follo
 A common example of a RESPONSE listener is applying HTTP caching:
 
 ```php
+namespace Lucinda\Project\EventListeners;
+
 use Lucinda\STDOUT\EventListeners\Response;
 
 class DataSourceInjector extends Response
@@ -588,6 +577,8 @@ Developers need to implement a *run* method, where they are able to access follo
 A common example of a START listener is the need to set end time, in order to benchmark duration of handling:
 
 ```php
+namespace Lucinda\Project\EventListeners;
+
 use Lucinda\STDOUT\EventListeners\End;
 
 class EndBenchmark extends End
@@ -628,7 +619,9 @@ $this->response->view()["hello"] = "world";
 Example of controller for */users* route:
 
 ```php
-class UsersController extends \Lucinda\STDOUT\Controller
+namespace Lucinda\Project\Controllers;
+
+class Users extends \Lucinda\STDOUT\Controller
 {
     public function run(): void
     {
@@ -642,7 +635,7 @@ class UsersController extends \Lucinda\STDOUT\Controller
 Defined in XML as:
 
 ```xml
-<route id="users" controller="UsersController" view="users"/>
+<route id="users" controller="Lucinda\Project\Controllers\Users" view="users"/>
 ```
 
 To understand more about how controllers are detected, check [specifications](#how-are-controllers-located)!
@@ -673,10 +666,10 @@ Since this API works on top of [Abstract MVC API](https://github.com/aherne/mvc)
 - [How Is Route Detected](#how-is-route-detected)
 - [How Are Controllers Located](#how-are-controllers-located)
 - [How Are Parameter Validators Working](#how-are-parameter-validators-working)
-- [How Are Event Listeners Located](#how-are-event-listeners-located)
 - [How to Set Cookies Path and Domain](#how-to-set-cookies-path-and-domain)
 - [How Are Uploaded Files Processed](#how-are-uploaded-files-processed)
 - [How Is Requested URI Processed](#how-is-requested-uri-processed)
+- [How Are Views Located](#how-are-views-located)
 
 ### How Is Response Format Detected
 
@@ -697,6 +690,7 @@ This follows parent API [specifications](https://github.com/aherne/mvc#how-are-v
 <routes>
     <route id="index" .../>
     <route id="users" .../>
+    <route id="user/(id)" .../>
 </routes>
 ```
 
@@ -707,6 +701,7 @@ There will be following situations for above:
 | / | index | Because requested page came empty, that identified by *default_route* is used |
 | /users | users | Because requested page is matched to a route, specific route is used |
 | /hello | - | Because no route is found matching the one requested a [Lucinda\STDOUT\PathNotFoundException](https://github.com/aherne/php-servlets-api/blob/master/src/PathNotFoundException.php) is thrown |
+| /user/12 | user/(id) | Because requested page matched one with a route parameter, specific route is used and id=12 path parameter is detected |
 
 ### How Are Controllers Located
 
@@ -717,55 +712,32 @@ This follows parent API [specifications](https://github.com/aherne/mvc#how-are-c
 To better understand how *validators* attribute in **[application](#application)** XML tag plays together with **parameter** sub-tags in **[routes](#route-parameters)** tag in order to locate validators to run based on incoming request, let's take this XML for example:
 
 ```xml
-<application default_route="default" ...>
-	<paths validators="application/validators" .../>
-</application>
-...
 <routes>
     <route id="users/(uname)" method="GET" ...>
-    	<parameter name="uname" class="UserNameValidator"/>
+    	<parameter name="uname" class="Lucinda\Project\ParameterValidators\UserName"/>
     </route>
     <route id="user/info" method="POST" ...>
-    	<parameter name="id" class="UserIdValidator"/>
-    	<parameter name="name" class="UserNameValidator"/>
+    	<parameter name="id" class="Lucinda\Project\ParameterValidators\UserId"/>
+    	<parameter name="name" class="Lucinda\Project\ParameterValidators\UserName" mandatory="0"/>
     </route>
     ...
 </routes>
 ```
 
-When a GET request to */users/aherne* is received, API will:
+When a request to */users/aherne* is received, API will:
 
-- detect route with id *users/(uname)* and that value of "uname" path parameter is "aherne"
+- detect route with id *users/(uname)* and request parameters received (path parameters, GET, POST)
 - check if route is called with GET method. If not, a [Lucinda\STDOUT\MethodNotAllowedException](https://github.com/aherne/php-servlets-api/blob/master/src/MethodNotAllowedException.php) is thrown!
-- load *UserNameValidator* file in *application/validators* folder, instances class and runs *validate* method on "aherne" value. If validation fails, a [Lucinda\STDOUT\ValidationFailedException](https://github.com/aherne/php-servlets-api/blob/master/src/ValidationFailedException.php) is thrown!
+- instances *Lucinda\Project\ParameterValidators\UserName* and runs *validate* method on value of "uname" path parameter. If param not sent or validation fails, a [Lucinda\STDOUT\ValidationFailedException](https://github.com/aherne/php-servlets-api/blob/master/src/ValidationFailedException.php) is thrown!
 
-When a POST request to */users/aherne* is received with *id=1&name=Lucian&group=admin* payload, API will: 
+When a request to */users/info* is received, API will: 
 
-- detect route with id *user/info* and POST parameters *id=1&name=Lucian&group=admin*
+- detect route with id *user/info* and request parameters received (path parameters, GET, POST)
 - check if route is called with POST method. If not, a [Lucinda\STDOUT\MethodNotAllowedException](https://github.com/aherne/php-servlets-api/blob/master/src/MethodNotAllowedException.php) is thrown!
-- for each post parameter, if name of parameter matches a *name* in **[parameter](#route-parameters)** XML tag:
-    - loads class in *application/validators* folder (eg: *UserIdValidator* that will validate value of *id* post parameter) and instances it
-    - runs *validate* method on parameter value (eg: 1).  If validation fails, a [Lucinda\STDOUT\ValidationFailedException](https://github.com/aherne/php-servlets-api/blob/master/src/ValidationFailedException.php) is thrown!
+- instances *Lucinda\Project\ParameterValidators\UserId* and runs *validate* on value of "id" request parameter. If *param not sent or validation fails*, a [Lucinda\STDOUT\ValidationFailedException](https://github.com/aherne/php-servlets-api/blob/master/src/ValidationFailedException.php) will be thrown!
+- instances *Lucinda\Project\ParameterValidators\UserName* and runs *validate* on value of "name" request parameter. *If param sent and validation fails*, a [Lucinda\STDOUT\ValidationFailedException](https://github.com/aherne/php-servlets-api/blob/master/src/ValidationFailedException.php) will be thrown!
 
-Once a validator is located, following logic is used to match folder defined by *validators* attribute in **[application](#application)** XML tag with class name defined by *class* attribute in **[parameter](#route-parameters)** XML tag:
-
-| *validators* | *class* | File Loaded | Class Instanced |
-| --- | --- | --- | --- |
-| application/validators | TestEvent | application/validators/TestEvent.php | TestEvent |
-| application/validators | foo/TestEvent | application/validators/foo/TestEvent.php | TestEvent |
-| application/validators | \Foo\TestEvent | application/validators/TestEvent.php | \Foo\TestEvent |
-| application/validators | foo/\Bar\TestEvent | application/validators/foo/TestEvent.php | \Bar\TestEvent |
-
-### How Are Event Listeners Located
-
-To better understand how *$folder* @ [Lucinda\STDOUT\Attributes](#class-attributes) and *$className* @ [Lucinda\MVC\FrontController](#initialization) play together in locating event listener later on, let's take a look at table below:
-
-| $folder | $className | File Loaded | Class Instanced |
-| --- | --- | --- | --- |
-| application/events | TestEvent | application/events/TestEvent.php | TestEvent |
-| application/events | foo/TestEvent | application/events/foo/TestEvent.php | TestEvent |
-| application/events | \Foo\TestEvent | application/events/TestEvent.php | \Foo\TestEvent |
-| application/events | foo/\Bar\TestEvent | application/events/foo/TestEvent.php | \Bar\TestEvent |
+All parameter validators need to be PSR-4 autoload compliant and implement [Lucinda\STDOUT\EventListeners\Validators\ParameterValidator](#interface-parametervalidator)! 
 
 ### How to Set Cookies Path and Domain
 
@@ -817,3 +789,7 @@ Examples:
 | --- | --- | --- | --- | --- | --- |
 | /aaa/bbb | /aaa/bbb/ccc/index.php | /ddd?a=b | ccc | ddd | ?a=b |
 | /aaa/bbb | /aaa/bbb/index.php | /ddd/fff |  | ddd/fff |  |
+
+### How Are Views Located
+
+This follows parent API [specifications](https://github.com/aherne/mvc#how-are-views-located) in its entirety. Extension is yet to be decided, since it depends on type of view resolved!
