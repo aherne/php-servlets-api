@@ -21,11 +21,9 @@ class FormatValidator
     public function __construct(Application $application, string $url)
     {
         $extension = $application->getDefaultFormat();
-        if (!$application->getAutoRouting()) {
-            $route = $application->routes($url);
-            if ($route->getFormat()) {
-                $extension = $route->getFormat();
-            }
+        $route = $application->routes($url);
+        if ($route->getFormat()) {
+            $extension = $route->getFormat();
         }
         
         if ($application->resolvers($extension)===null) {

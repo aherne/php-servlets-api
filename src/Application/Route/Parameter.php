@@ -22,12 +22,12 @@ class Parameter
     {
         $this->name = (string) $info["name"];
         if (!$this->name) {
-            throw new ConfigurationException("Attribute 'name' of tag 'parameter' is mandatory");
+            throw new ConfigurationException("Attribute 'name' is mandatory for 'parameter' tag");
         }
         
         $this->validator = (string) $info["validator"];
         if (!$this->validator) {
-            throw new ConfigurationException("Attribute 'validator' of tag 'parameter' is mandatory");
+            throw new ConfigurationException("Attribute 'validator' is mandatory for 'parameter' tag");
         }
         
         $mandatory = (string) $info["mandatory"];

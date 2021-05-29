@@ -10,7 +10,7 @@ class ApplicationTest
     
     public function __construct()
     {
-        $this->object = new Application(__DIR__."/configuration.xml");
+        $this->object = new Application(__DIR__."/mocks/configuration.xml");
     }
 
     public function getDefaultRoute()
@@ -23,43 +23,16 @@ class ApplicationTest
     {
         return new Result($this->object->getDefaultFormat()=="html");
     }
-        
-
-    public function getControllersPath()
-    {
-        return new Result($this->object->getControllersPath()=="tests/mocks/controllers");
-    }
     
-    
-    public function getValidatorsPath()
-    {
-        return new Result($this->object->getValidatorsPath()=="tests/mocks/validators");
-    }
-        
-
-    public function getViewResolversPath()
-    {
-        return new Result($this->object->getViewResolversPath()=="tests/mocks/resolvers");
-    }
-        
-
     public function getViewsPath()
     {
         return new Result($this->object->getViewsPath()=="tests/mocks/views");
     }
-        
-
-    public function getAutoRouting()
-    {
-        return new Result(!$this->object->getAutoRouting());
-    }
-        
-
+       
     public function getVersion()
     {
         return new Result($this->object->getVersion()=="1.0.0");
     }
-        
 
     public function getTag()
     {

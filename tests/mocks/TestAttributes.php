@@ -1,5 +1,5 @@
 <?php
-namespace Test\Lucinda\STDOUT;
+namespace Test\Lucinda\STDOUT\mocks;
 
 use Lucinda\STDOUT\Attributes;
 

@@ -1,11 +1,12 @@
 <?php
+namespace Test\Lucinda\STDOUT\mocks\EventListeners;
+
 use Lucinda\STDOUT\EventListeners\End;
-use Test\Lucinda\STDOUT\TestAttributes;
 
 class EndTracker extends End
 {
     /**
-     * @var TestAttributes
+     * @var \Test\Lucinda\STDOUT\mocks\TestAttributes
      */
     protected $attributes;
     

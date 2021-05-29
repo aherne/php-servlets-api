@@ -10,13 +10,7 @@ class AttributesTest
     
     public function __construct()
     {
-        $this->object = new Attributes("tests/mocks/events");
-    }
-    
-
-    public function getEventsFolder()
-    {
-        return new Result($this->object->getEventsFolder()=="tests/mocks/events");
+        $this->object = new Attributes();
     }
         
 

@@ -1,11 +1,12 @@
 <?php
+namespace Test\Lucinda\STDOUT\mocks\EventListeners;
+
 use Lucinda\STDOUT\EventListeners\Start;
-use Test\Lucinda\STDOUT\TestAttributes;
 
 class StartTracker extends Start
 {
     /**
-     * @var TestAttributes
+     * @var \Test\Lucinda\STDOUT\mocks\TestAttributes
      */
     protected $attributes;
     

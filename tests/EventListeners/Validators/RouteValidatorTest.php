@@ -36,7 +36,7 @@ class RouteValidatorTest
             'SCRIPT_FILENAME' => '/var/www/html/documentation/index.php',
             'QUERY_STRING' =>''
         ];
-        $this->object = new RouteValidator(new Application(dirname(__DIR__, 2)."/configuration.xml"), new Request());
+        $this->object = new RouteValidator(new Application(dirname(__DIR__, 2)."/mocks/configuration.xml"), new Request());
     }
 
     public function getUrl()

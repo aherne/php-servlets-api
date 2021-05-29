@@ -1,7 +1,9 @@
 <?php
+namespace Test\Lucinda\STDOUT\mocks\Controllers;
+
 use Lucinda\STDOUT\Controller;
 
-class UsersController extends Controller
+class Users extends Controller
 {
     public function run(): void
     {

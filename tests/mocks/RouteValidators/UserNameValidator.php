@@ -1,4 +1,6 @@
 <?php
+namespace Test\Lucinda\STDOUT\mocks\RouteValidators;
+
 use Lucinda\STDOUT\EventListeners\Validators\ParameterValidator;
 
 class UserNameValidator implements ParameterValidator

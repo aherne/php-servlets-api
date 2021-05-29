@@ -6,31 +6,10 @@ namespace Lucinda\STDOUT;
  */
 class Attributes
 {
-    private $eventsFolder;
     private $requestedPage;
     private $requestedResponseFormat;
     private $pathParameters=array();
     private $validParameters=array();
-    
-    /**
-     * Sets path to event listeners classes
-     *
-     * @param string $eventsFolder
-     */
-    public function __construct(string $eventsFolder)
-    {
-        $this->eventsFolder = $eventsFolder;
-    }
-    
-    /**
-     * Gets path to event listeners classes
-     *
-     * @return string
-     */
-    public function getEventsFolder(): string
-    {
-        return $this->eventsFolder;
-    }
     
     /**
      * Sets requested page detected by matching original requested to XML directives

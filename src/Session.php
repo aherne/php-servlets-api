@@ -1,8 +1,6 @@
 <?php
 namespace Lucinda\STDOUT;
 
-use Lucinda\MVC\Locators\ClassFinder;
-
 /**
  * Encapsulates SESSION operations and parameters
 */
@@ -40,9 +38,7 @@ class Session
         if ($value = $options->getReferrerCheck()) {
             ini_set("session.referer_check", $value);
         }
-        if ($value = $options->getHandler()) {
-            $classFinder = new ClassFinder("");
-            $className = $classFinder->find($value);
+        if ($className = $options->getHandler()) {
             session_set_save_handler(new $className(), true);
         }
         if ($value = $options->isAutoStart()) {

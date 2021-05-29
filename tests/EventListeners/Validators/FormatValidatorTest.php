@@ -9,7 +9,7 @@ class FormatValidatorTest
 {
     public function getFormat()
     {
-        $validator = new FormatValidator(new Application(dirname(__DIR__, 2)."/configuration.xml"), "user/(name)");
+        $validator = new FormatValidator(new Application(dirname(__DIR__, 2)."/mocks/configuration.xml"), "user/(name)");
         return new Result($validator->getFormat()=="json");
     }
 }

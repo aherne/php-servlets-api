@@ -4,6 +4,9 @@ namespace Test\Lucinda\STDOUT;
 use Lucinda\STDOUT\FrontController;
 use Lucinda\STDOUT\EventType;
 use Lucinda\UnitTest\Result;
+use Test\Lucinda\STDOUT\mocks\TestAttributes;
+use Test\Lucinda\STDOUT\mocks\EventListeners\StartTracker;
+use Test\Lucinda\STDOUT\mocks\EventListeners\EndTracker;
 
 class FrontControllerTest
 {
@@ -13,13 +16,13 @@ class FrontControllerTest
     public function __construct()
     {
         $this->attributes = new TestAttributes(__DIR__."/mocks/events");
-        $this->object = new FrontController(__DIR__."/configuration.xml", $this->attributes);
+        $this->object = new FrontController(__DIR__."/mocks/configuration.xml", $this->attributes);
     }
 
     public function addEventListener()
     {
-        $this->object->addEventListener(EventType::START, "StartTracker");
-        $this->object->addEventListener(EventType::END, "EndTracker");
+        $this->object->addEventListener(EventType::START, StartTracker::class);
+        $this->object->addEventListener(EventType::END, EndTracker::class);
         return new Result(true);
     }
         

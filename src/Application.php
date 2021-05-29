@@ -12,7 +12,6 @@ use Lucinda\STDOUT\Application\Route;
 class Application extends \Lucinda\MVC\Application
 {
     private $validatorsPath;
-    private $autoRouting;
     private $sessionOptions;
     private $cookiesOptions;
     
@@ -26,26 +25,10 @@ class Application extends \Lucinda\MVC\Application
     {
         $this->readXML($xmlFilePath);
         $this->setApplicationInfo();
-        if (!$this->autoRouting) {
-            $this->setRoutes();
-        }
+        $this->setRoutes();
         $this->setResolvers();
         $this->setSessionOptions();
         $this->setCookieOptions();
-    }
-    
-    /**
-     * Sets basic application info based on contents of "application" XML tag
-     * @throws ConfigurationException If xml content has failed validation.
-     */
-    protected function setApplicationInfo(): void
-    {
-        parent::setApplicationInfo();
-        
-        $xml = $this->getTag("application");
-        
-        $this->autoRouting = (int) $xml["auto_routing"];
-        $this->validatorsPath = (string) $xml->paths["validators"];
     }
     
     /**
@@ -59,7 +42,7 @@ class Application extends \Lucinda\MVC\Application
         foreach ($list as $info) {
             $id = (string) $info['id'];
             if (!$id) {
-                throw new ConfigurationException("Route missing 'id' attribute!");
+                throw new ConfigurationException("Attribute 'id' is mandatory for 'route' tag");
             }
             $this->routes[$id] = new Route($info);
         }
@@ -90,16 +73,6 @@ class Application extends \Lucinda\MVC\Application
     }
     
     /**
-     * Gets path to parameter validators folder.
-     *
-     * @return string
-     */
-    public function getValidatorsPath(): string
-    {
-        return $this->validatorsPath;
-    }
-    
-    /**
      * Gets  options to start session with based on "session" XML tag
      *
      * @return SessionOptions|NULL
@@ -117,17 +90,5 @@ class Application extends \Lucinda\MVC\Application
     public function getCookieOptions(): ?CookiesOptions
     {
         return $this->cookiesOptions;
-    }
-    
-    /**
-     * Gets whether or not application uses auto routing.
-     *
-     * @return boolean
-     * 		true: Controllers will be automatically discovered based on route requested
-     * 		false: Routes to controllers have been explicitly set in routes:route @ XML.
-     */
-    public function getAutoRouting(): bool
-    {
-        return $this->autoRouting;
     }
 }

@@ -4,7 +4,6 @@ namespace Lucinda\STDOUT\EventListeners\Validators;
 use Lucinda\STDOUT\Request;
 use Lucinda\STDOUT\Application;
 use Lucinda\STDOUT\PathNotFoundException;
-use Lucinda\MVC\Locators\ClassFinder;
 use Lucinda\STDOUT\MethodNotAllowedException;
 use Lucinda\STDOUT\ValidationFailedException;
 
@@ -26,10 +25,8 @@ class RouteValidator
     public function __construct(Application $application, Request $request)
     {
         $this->validateUrl($application, $request);
-        if (!$application->getAutoRouting()) {
-            $this->validateRequestMethod($application, $request);
-            $this->validateParameters($application, $request);
-        }
+        $this->validateRequestMethod($application, $request);
+        $this->validateParameters($application, $request);
     }
     
     /**
@@ -45,35 +42,33 @@ class RouteValidator
         if ($url=="") {
             $url = $application->getDefaultRoute();
         }
-        if (!$application->getAutoRouting()) {
-            if ($application->routes($url)===null) {
-                $matchFound = false;
-                $routes = $application->routes();
-                foreach ($routes as $route) {
-                    if (strpos($route->getID(), "(")!==false) {
-                        $matches = [];
-                        preg_match_all("/(\(([^)]+)\))/", $route->getID(), $matches);
-                        $names = $matches[2];
-                        $pattern = "/^".str_replace($matches[1], "([^\/]+)", str_replace("/", "\/", $route->getID()))."$/";
-                        $results = [];
-                        if (preg_match_all($pattern, $url, $results)==1) {
-                            $parameters = [];
-                            foreach ($results as $i=>$item) {
-                                if ($i==0) {
-                                    continue;
-                                }
-                                $parameters[$names[$i-1]]=$item[0];
+        if ($application->routes($url)===null) {
+            $matchFound = false;
+            $routes = $application->routes();
+            foreach ($routes as $route) {
+                if (strpos($route->getID(), "(")!==false) {
+                    $matches = [];
+                    preg_match_all("/(\(([^)]+)\))/", $route->getID(), $matches);
+                    $names = $matches[2];
+                    $pattern = "/^".str_replace($matches[1], "([^\/]+)", str_replace("/", "\/", $route->getID()))."$/";
+                    $results = [];
+                    if (preg_match_all($pattern, $url, $results)==1) {
+                        $parameters = [];
+                        foreach ($results as $i=>$item) {
+                            if ($i==0) {
+                                continue;
                             }
-                            $this->pathParameters = $parameters;
-                            $url = $route->getID();
-                            $matchFound = true;
-                            break;
+                            $parameters[$names[$i-1]]=$item[0];
                         }
+                        $this->pathParameters = $parameters;
+                        $url = $route->getID();
+                        $matchFound = true;
+                        break;
                     }
                 }
-                if (!$matchFound) {
-                    throw new PathNotFoundException("Route could not be matched to routes.route tag @ XML: ".$url);
-                }
+            }
+            if (!$matchFound) {
+                throw new PathNotFoundException("Route could not be matched to routes.route tag @ XML: ".$url);
             }
         }
         $this->url = $url;
@@ -110,12 +105,11 @@ class RouteValidator
         }
         
         $validators = $application->routes($this->url)->getValidParameters();
-        $classFinder = new ClassFinder($application->getValidatorsPath());
         foreach ($validators as $parameterName=>$class) {
             if ($class->isMandatory() && empty($parameters[$parameterName])) {
                 throw new ValidationFailedException("Parameter has no value: ".$parameterName);
             }
-            $className = $classFinder->find($class->getValidator());
+            $className = $class->getValidator();
             $object = new $className();
             $result = $object->validate(isset($parameters[$parameterName])?$parameters[$parameterName]:null);
             if ($result===null) {
