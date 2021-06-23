@@ -15,7 +15,8 @@
     },
     "autoload": {
     	"psr-4": {
-        	"Lucinda\\STDOUT\\": "src/"
+        	"Lucinda\\STDOUT\\": "src/",
+                "Test\\Lucinda\\STDOUT\\": "tests/"
     	}
     },
     "authors": [
