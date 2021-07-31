@@ -34,8 +34,8 @@ API does nothing more than standard MVC logic, so in real life it expects a web 
 
 - **[configuration](#configuration)**: setting up an XML file where this API is configured
 - **[binding points](#binding-points)**: binding user-defined components defined in XML/code to API prototypes in order to gain necessary abilities
-- **[initialization](#initialization)**: instancing [FrontController](https://github.com/aherne/php-servlets-api/blob/master/src/FrontController.php), a [Runnable](https://github.com/aherne/php-servlets-api/blob/master/src/Runnable.php) able to handle requests into responses later on based on above two
-- **[binding events](#binding-events)**: setting up [Runnable](https://github.com/aherne/php-servlets-api/blob/master/src/Runnable.php) classes that will be instanced and *run* when predefined events are reached during handling process
+- **[initialization](#initialization)**: instancing [FrontController](https://github.com/aherne/php-servlets-api/blob/master/src/FrontController.php), a [Runnable](https://github.com/aherne/mvc/blob/master/src/Runnable.php) able to handle requests into responses later on based on above two
+- **[binding events](#binding-events)**: setting up [Runnable](https://github.com/aherne/mvc/blob/master/src/Runnable.php) classes that will be instanced and *run* when predefined events are reached during handling process
 - **[configuring shared variables](#configuring-shared-variables)**: extend [Attributes](#class-attributes) class to encapsulate variables specific to your project, to be shared between event listeners and controllers
 - **[handling](#handling)**: calling *run* method @ [FrontController](https://github.com/aherne/php-servlets-api/blob/master/src/FrontController.php)  to finally handle requests into responses, triggering events above (if any)
 
@@ -202,7 +202,7 @@ and addEventListener method (see: [Binding Events](#binding-events) section)!
 
 Now that developers have finished setting up XML that configures the API, they are finally able to initialize it by instantiating [FrontController](https://github.com/aherne/php-servlets-api/blob/master/src/FrontController.php).
 
-Apart of method *run* required by [Runnable](https://github.com/aherne/php-servlets-api/blob/master/src/Runnable.php) interface it implements, class comes with following public methods:
+Apart of method *run* required by [Runnable](https://github.com/aherne/mvc/blob/master/src/Runnable.php) interface it implements, class comes with following public methods:
 
 | Method | Arguments | Returns | Description |
 | --- | --- | --- | --- |
@@ -225,7 +225,7 @@ $handler->run();
 
 ### Binding Events
 
-As mentioned above, API allows developers to bind listeners to handling lifecycle events via *addEventListener* method above. Each event  type corresponds to a abstract [Runnable](https://github.com/aherne/php-servlets-api/blob/master/src/Runnable.php) class:
+As mentioned above, API allows developers to bind listeners to handling lifecycle events via *addEventListener* method above. Each event  type corresponds to a abstract [Runnable](https://github.com/aherne/mvc/blob/master/src/Runnable.php) class:
 
 | Type | Class | Description |
 | --- | --- | --- |
@@ -273,7 +273,7 @@ Once above steps are done, developers are finally able to handle requests into r
 - sends [Lucinda\MVC\Response](https://github.com/aherne/mvc#class-response) back to caller, containing headers and body
 - detects [EventListeners\End](#abstract-class-eventlisteners-end) listeners and executes them in order they were registered
 
-All components that are in developers' responsibility ([Controller](#abstract-class-controller), [Lucinda\MVC\ViewResolver](https://github.com/aherne/mvc#abstract-class-viewresolver), along with event listeners themselves, implement [Runnable](https://github.com/aherne/php-servlets-api/blob/master/src/Runnable.php) interface.
+All components that are in developers' responsibility ([Controller](#abstract-class-controller), [Lucinda\MVC\ViewResolver](https://github.com/aherne/mvc#abstract-class-viewresolver), along with event listeners themselves, implement [Runnable](https://github.com/aherne/mvc/blob/master/src/Runnable.php) interface.
 
 ## Installation
 
@@ -461,7 +461,7 @@ To understand more how parameters work, check [specifications](#how-are-paramete
 
 ### Abstract Class EventListeners Start
 
-Abstract class [EventListeners\Start](https://github.com/aherne/php-servlets-api/blob/master/src/EventListeners/Start.php) implements [Runnable](https://github.com/aherne/php-servlets-api/blob/master/src/Runnable.php)) and listens to events that execute BEFORE [configuration](#configuration) XML is read.
+Abstract class [EventListeners\Start](https://github.com/aherne/php-servlets-api/blob/master/src/EventListeners/Start.php) implements [Runnable](https://github.com/aherne/mvc/blob/master/src/Runnable.php)) and listens to events that execute BEFORE [configuration](#configuration) XML is read.
 
 Developers need to implement a *run* method, where they are able to access following protected fields injected by API via constructor:
 
@@ -484,7 +484,7 @@ class StartBenchmark extends Lucinda\STDOUT\EventListeners\Start
 
 ### Abstract Class EventListeners Application
 
-Abstract class [EventListeners\Application](https://github.com/aherne/php-servlets-api/blob/master/src/EventListeners/Application.php) implements [Runnable](https://github.com/aherne/php-servlets-api/blob/master/src/Runnable.php)) and listens to events that execute AFTER [configuration](#configuration) XML is read.
+Abstract class [EventListeners\Application](https://github.com/aherne/php-servlets-api/blob/master/src/EventListeners/Application.php) implements [Runnable](https://github.com/aherne/mvc/blob/master/src/Runnable.php)) and listens to events that execute AFTER [configuration](#configuration) XML is read.
 
 Developers need to implement a *run* method, where they are able to access following protected fields injected by API via constructor:
 
@@ -499,7 +499,7 @@ https://github.com/aherne/lucinda-framework/blob/master/src/EventListeners/SQLDa
 
 ### Abstract Class EventListeners Request
 
-Abstract class [EventListeners\Request](https://github.com/aherne/php-servlets-api/blob/master/src/EventListeners/Request.php) implements [Runnable](https://github.com/aherne/php-servlets-api/blob/master/src/Runnable.php)) and listens to events that execute AFTER [Request](#class-request), [Session](#class-session) and [Cookies](#class-cookies) objects are created.
+Abstract class [EventListeners\Request](https://github.com/aherne/php-servlets-api/blob/master/src/EventListeners/Request.php) implements [Runnable](https://github.com/aherne/mvc/blob/master/src/Runnable.php)) and listens to events that execute AFTER [Request](#class-request), [Session](#class-session) and [Cookies](#class-cookies) objects are created.
 
 Developers need to implement a *run* method, where they are able to access following protected fields injected by API via constructor:
 
@@ -517,7 +517,7 @@ https://github.com/aherne/lucinda-framework/blob/master/src/EventListeners/Secur
 
 ### Abstract Class EventListeners Response
 
-Abstract class [EventListeners\Response](https://github.com/aherne/php-servlets-api/blob/master/src/EventListeners/Response.php) implements [Runnable](https://github.com/aherne/php-servlets-api/blob/master/src/Runnable.php)) and listens to events that execute AFTER [Lucinda\MVC\Response](https://github.com/aherne/mvc#class-response) body was set but before it's committed back to caller.
+Abstract class [EventListeners\Response](https://github.com/aherne/php-servlets-api/blob/master/src/EventListeners/Response.php) implements [Runnable](https://github.com/aherne/mvc/blob/master/src/Runnable.php)) and listens to events that execute AFTER [Lucinda\MVC\Response](https://github.com/aherne/mvc#class-response) body was set but before it's committed back to caller.
 
 Developers need to implement a *run* method, where they are able to access following protected fields injected by API via constructor:
 
@@ -536,7 +536,7 @@ https://github.com/aherne/lucinda-framework/blob/master/src/EventListeners/HttpC
 
 ### Abstract Class EventListeners End
 
-Abstract class [EventListeners\End](https://github.com/aherne/php-servlets-api/blob/master/src/EventListeners/End.php) implements [Runnable](https://github.com/aherne/php-servlets-api/blob/master/src/Runnable.php)) and listens to events that execute AFTER [Lucinda\MVC\Response](https://github.com/aherne/mvc#class-response) was rendered back to caller.
+Abstract class [EventListeners\End](https://github.com/aherne/php-servlets-api/blob/master/src/EventListeners/End.php) implements [Runnable](https://github.com/aherne/mvc/blob/master/src/Runnable.php)) and listens to events that execute AFTER [Lucinda\MVC\Response](https://github.com/aherne/mvc#class-response) was rendered back to caller.
 
 Developers need to implement a *run* method, where they are able to access following protected fields injected by API via constructor:
 
@@ -564,7 +564,7 @@ class EndBenchmark extends Lucinda\STDOUT\EventListeners\End
 
 ### Abstract Class Controller
 
-Abstract class [Controller](https://github.com/aherne/php-servlets-api/blob/master/src/Controller.php) implements [Runnable](https://github.com/aherne/php-servlets-api/blob/master/src/Runnable.php)) to set up response (views in particular) by binding information detected beforehand to models. It defines following public method relevant to developers:
+Abstract class [Controller](https://github.com/aherne/php-servlets-api/blob/master/src/Controller.php) implements [Runnable](https://github.com/aherne/mvc/blob/master/src/Runnable.php)) to set up response (views in particular) by binding information detected beforehand to models. It defines following public method relevant to developers:
 
 | Method | Arguments | Returns | Description |
 | --- | --- | --- | --- |
