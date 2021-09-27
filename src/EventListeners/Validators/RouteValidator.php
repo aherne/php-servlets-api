@@ -106,12 +106,17 @@ class RouteValidator
         
         $validators = $application->routes($this->url)->getValidParameters();
         foreach ($validators as $parameterName=>$class) {
-            if ($class->isMandatory() && empty($parameters[$parameterName])) {
-                throw new ValidationFailedException("Parameter has no value: ".$parameterName);
+            if (!isset($parameters[$parameterName])) {
+                if ($class->isMandatory()) {
+                    throw new ValidationFailedException("Parameter has no value: ".$parameterName);
+                } else {
+                    continue;
+                }
             }
+
             $className = $class->getValidator();
             $object = new $className();
-            $result = $object->validate(isset($parameters[$parameterName])?$parameters[$parameterName]:null);
+            $result = $object->validate($parameters[$parameterName]);
             if ($result===null) {
                 throw new ValidationFailedException("Parameter failed validation: ".$parameterName);
             }
