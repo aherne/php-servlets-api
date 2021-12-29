@@ -7,6 +7,8 @@ require("src/Application/Route.php");
 require("src/Session/Options.php");
 require("src/Cookies/Options.php");
 require("src/Request.php");
+require("src/Request/Method.php");
+require("src/Request/Protocol.php");
 require("src/Request/Client.php");
 require("src/Request/Server.php");
 require("src/Request/URI.php");
