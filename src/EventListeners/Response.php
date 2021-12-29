@@ -13,36 +13,12 @@ use Lucinda\STDOUT\Cookies;
  */
 abstract class Response implements Runnable
 {
-    /**
-     * @var Attributes
-     */
-    protected $attributes;
-    
-    /**
-     * @var Application
-     */
-    protected $application;
-    
-    /**
-     * @var Request
-     */
-    protected $request;
-    
-    /**
-     * @var Session
-     */
-    protected $session;
-    
-    /**
-     * @var Cookies
-     */
-    protected $cookies;
-    
-    /**
-     * @var \Lucinda\MVC\Response
-     */
-    protected $response;
-    
+    protected Attributes $attributes;
+    protected Application $application;
+    protected Request $request;
+    protected Session $session;
+    protected Cookies $cookies;
+    protected \Lucinda\MVC\Response $response;
     
     /**
      * Saves objects to be available in implemented run() methods.

@@ -6,10 +6,10 @@ namespace Lucinda\STDOUT\Request;
  */
 class URI
 {
-    private $contextPath;
-    private $page;
-    private $queryString;
-    private $parameters;
+    private string $contextPath;
+    private string $page;
+    private string $queryString;
+    private array $parameters;
 
     /**
      * Detects info based on values in $_SERVER superglobal
@@ -51,7 +51,7 @@ class URI
         if ($questionPosition!==false) {
             $urlCombined = substr($urlCombined, 0, $questionPosition);
         }
-        $this->page = (strpos($urlCombined, "/")===0?substr($urlCombined, 1):$urlCombined); // remove trailing slash
+        $this->page = (str_starts_with($urlCombined, "/") ?substr($urlCombined, 1):$urlCombined); // remove trailing slash
     }
 
     /**
@@ -87,15 +87,15 @@ class URI
     /**
      * Gets query string parameters detected by optional name
      *
-     * @param string|integer $name
+     * @param string $name
      * @return string|array|null
      */
-    public function parameters($name="")
+    public function parameters(string $name=""): string|array|null
     {
         if (!$name) {
             return $this->parameters;
         } else {
-            return (isset($this->parameters[$name])?$this->parameters[$name]:null);
+            return ($this->parameters[$name] ?? null);
         }
     }
 }

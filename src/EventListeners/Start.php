@@ -9,10 +9,7 @@ use Lucinda\STDOUT\Attributes;
  */
 abstract class Start implements Runnable
 {
-    /**
-     * @var Attributes
-     */
-    protected $attributes;
+    protected Attributes $attributes;
     
     
     /**

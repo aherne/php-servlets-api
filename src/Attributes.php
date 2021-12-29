@@ -6,10 +6,10 @@ namespace Lucinda\STDOUT;
  */
 class Attributes
 {
-    private $requestedPage;
-    private $requestedResponseFormat;
-    private $pathParameters=array();
-    private $validParameters=array();
+    private string $requestedPage;
+    private string $requestedResponseFormat;
+    private array $pathParameters = [];
+    private array $validParameters = [];
     
     /**
      * Sets requested page detected by matching original requested to XML directives
@@ -48,12 +48,12 @@ class Attributes
      * @param string $name
      * @return string|array|null
      */
-    public function getPathParameters(string $name="")
+    public function getPathParameters(string $name=""): string|array|null
     {
         if (!$name) {
             return $this->pathParameters;
         } else {
-            return (isset($this->pathParameters[$name])?$this->pathParameters[$name]:null);
+            return ($this->pathParameters[$name] ?? null);
         }
     }
     
@@ -73,12 +73,12 @@ class Attributes
      * @param string $name
      * @return string|array|null
      */
-    public function getValidParameters(string $name="")
+    public function getValidParameters(string $name=""): string|array|null
     {
         if (!$name) {
             return $this->validParameters;
         } else {
-            return (isset($this->validParameters[$name])?$this->validParameters[$name]:null);
+            return ($this->validParameters[$name] ?? null);
         }
     }
     

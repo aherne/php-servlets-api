@@ -2,6 +2,7 @@
 namespace Test\Lucinda\STDOUT\Application;
 
 use Lucinda\STDOUT\Application\Route;
+use Lucinda\STDOUT\Request\Method;
 use Lucinda\UnitTest\Result;
 
 class RouteTest
@@ -44,7 +45,7 @@ class RouteTest
 
     public function getValidRequestMethod()
     {
-        return new Result($this->object->getValidRequestMethod()=="GET");
+        return new Result($this->object->getValidRequestMethod()==Method::GET);
     }
         
 

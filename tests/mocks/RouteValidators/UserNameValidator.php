@@ -7,8 +7,8 @@ class UserNameValidator implements ParameterValidator
 {
     private $users_db = ["lucian"=>1];
     
-    public function validate($value)
+    public function validate(mixed $value): mixed
     {
-        return (isset($this->users_db[$value])?$this->users_db[$value]:null);
+        return ($this->users_db[$value] ?? null);
     }
 }

@@ -1,14 +1,21 @@
 <?php
 namespace Lucinda\STDOUT;
 
+use Lucinda\STDOUT\Cookies\Options;
+
 /**
  * Encapsulates COOKIE operations and parameters
  */
 class Cookies
 {
-    private $options;
-    
-    public function __construct(\Lucinda\STDOUT\Cookies\Options $options = null)
+    private ?Options $options = null;
+
+    /**
+     * Sets up cookies based on options.
+     *
+     * @param Options|null $options
+     */
+    public function __construct(Options $options = null)
     {
         $this->options = $options;
     }
@@ -20,7 +27,7 @@ class Cookies
      * @param mixed $value
      * @param int $expirationTime
      */
-    public function set(string $key, $value, int $expirationTime): void
+    public function set(string $key, mixed $value, int $expirationTime): void
     {
         if ($this->options) {
             setcookie($key, $value, time()+$expirationTime, $this->options->getPath(), $this->options->getDomain(), $this->options->isSecuredByHTTPS(), $this->options->isSecuredByHTTPheaders());
@@ -37,7 +44,7 @@ class Cookies
      * @param string $key
      * @return mixed
      */
-    public function get(string $key)
+    public function get(string $key): mixed
     {
         return $_COOKIE[$key];
     }

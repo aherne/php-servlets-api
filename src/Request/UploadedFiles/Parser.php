@@ -6,7 +6,7 @@ namespace Lucinda\STDOUT\Request\UploadedFiles;
  */
 class Parser
 {
-    private $contents;
+    private array $contents = [];
     
     /**
      * Parses through $_FILES superglobal and compiles a tree.

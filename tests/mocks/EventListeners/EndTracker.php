@@ -8,7 +8,7 @@ class EndTracker extends End
     /**
      * @var \Test\Lucinda\STDOUT\mocks\TestAttributes
      */
-    protected $attributes;
+    protected \Lucinda\STDOUT\Attributes $attributes;
     
     public function run(): void
     {

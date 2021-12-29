@@ -12,9 +12,9 @@ use Lucinda\MVC\Application\Format;
  */
 class FrontController implements Runnable
 {
-    private $documentDescriptor;
-    private $attributes;
-    private $events = [];
+    private string $documentDescriptor;
+    private Attributes $attributes;
+    private array $events = [];
     
     /**
      * Starts API front controller, setting up necessary variables
@@ -30,36 +30,34 @@ class FrontController implements Runnable
         
         // initialize events
         $this->events = [
-            EventType::START=>[],
-            EventType::APPLICATION=>[],
-            EventType::REQUEST=>["\\Lucinda\\STDOUT\\EventListeners\\RequestValidator"],
-            EventType::RESPONSE=>[],
-            EventType::END=>[]
+            EventType::START->value=>[],
+            EventType::APPLICATION->value=>[],
+            EventType::REQUEST->value=>["\\Lucinda\\STDOUT\\EventListeners\\RequestValidator"],
+            EventType::RESPONSE->value=>[],
+            EventType::END->value=>[]
         ];
     }
     
     /**
      * Adds an event listener
      *
-     * @param string $type One of EventType enum values
+     * @param EventType $type One of EventType enum values
      * @param string $className Name of event listener class (including namespace and subfolder, if any)
      */
-    public function addEventListener(string $type, string $className): void
+    public function addEventListener(EventType $type, string $className): void
     {
-        $this->events[$type][] = $className;
+        $this->events[$type->value][] = $className;
     }
     
     /**
      * Performs all steps required to convert request to response in procedural mode, while delegating to subcomponents, to maximize performance
      *
-     * @throws PathNotFoundException If an invalid route was requested from client or setup by developer in XML.
-     * @throws FileUploadException If file upload failed due to server constraints.
      * @throws ConfigurationException If any other situation where execution cannot continue.
      */
     public function run(): void
     {
         // execute events for START
-        foreach ($this->events[EventType::START] as $className) {
+        foreach ($this->events[EventType::START->value] as $className) {
             $runnable = new $className($this->attributes);
             $runnable->run();
         }
@@ -68,7 +66,7 @@ class FrontController implements Runnable
         $application = new Application($this->documentDescriptor);
         
         // execute events for APPLICATION
-        foreach ($this->events[EventType::APPLICATION] as $className) {
+        foreach ($this->events[EventType::APPLICATION->value] as $className) {
             $runnable = new $className($this->attributes, $application);
             $runnable->run();
         }
@@ -79,7 +77,7 @@ class FrontController implements Runnable
         $cookies = new Cookies($application->getCookieOptions());
         
         // execute events for REQUEST
-        foreach ($this->events[EventType::REQUEST] as $className) {
+        foreach ($this->events[EventType::REQUEST->value] as $className) {
             $runnable = new $className($this->attributes, $application, $request, $session, $cookies);
             $runnable->run();
         }
@@ -103,7 +101,7 @@ class FrontController implements Runnable
         }
         
         // execute events for RESPONSE
-        foreach ($this->events[EventType::RESPONSE] as $className) {
+        foreach ($this->events[EventType::RESPONSE->value] as $className) {
             $runnable = new $className($this->attributes, $application, $request, $session, $cookies, $response);
             $runnable->run();
         }
@@ -112,7 +110,7 @@ class FrontController implements Runnable
         $response->commit();
         
         // execute events for END
-        foreach ($this->events[EventType::END] as $className) {
+        foreach ($this->events[EventType::END->value] as $className) {
             $runnable = new $className($this->attributes, $application, $request, $session, $cookies, $response);
             $runnable->run();
         }

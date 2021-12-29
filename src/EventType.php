@@ -4,11 +4,11 @@ namespace Lucinda\STDOUT;
 /**
  * Enum of events supported by API for whom listeners can be attached
  */
-class EventType
+enum EventType: string
 {
-    const START = "start";
-    const APPLICATION = "application";
-    const REQUEST = "request";
-    const RESPONSE = "response";
-    const END = "end";
+    case START = "start";
+    case APPLICATION = "application";
+    case REQUEST = "request";
+    case RESPONSE = "response";
+    case END = "end";
 }

@@ -6,15 +6,15 @@ namespace Lucinda\STDOUT\Session;
  */
 class Options
 {
-    private $savePath = "";
-    private $name = "";
-    private $expiredTime = 0;
-    private $expiredOnBrowserClose = 0;
-    private $isSecuredByHTTPS = false;
-    private $isSecuredByHTTPheaders = false;
-    private $referrerCheck = "";
-    private $handlerFile = "";
-    private $autoStart = false;
+    private string $savePath;
+    private string $name;
+    private int $expiredTime;
+    private int $expiredOnBrowserClose;
+    private bool $isSecuredByHTTPS;
+    private bool $isSecuredByHTTPheaders;
+    private string $referrerCheck;
+    private string $handlerFile;
+    private bool $autoStart;
     
     /**
      * Saves session options based on XML tag "session"
@@ -75,7 +75,7 @@ class Options
     }
     
     /**
-     * Gets whether or not sessions are accepted only if protocol is HTTPS
+     * Gets whether sessions are accepted only if protocol is HTTPS
      *
      * @return bool
      */
@@ -85,7 +85,7 @@ class Options
     }
         
     /**
-     * Gets whether or not session id cookie is available to client via JavaScript
+     * Gets whether session id cookie is available to client via JavaScript
      *
      * @return bool
      */
@@ -115,7 +115,7 @@ class Options
     }
     
     /**
-     * Gets whether or not session should start automatically
+     * Gets whether session should start automatically
      *
      * @return bool
      */

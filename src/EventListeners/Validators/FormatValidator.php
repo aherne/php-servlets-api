@@ -9,7 +9,7 @@ use Lucinda\MVC\ConfigurationException;
  */
 class FormatValidator
 {
-    private $format;
+    private string $format;
     
     /**
      * Performs detection process

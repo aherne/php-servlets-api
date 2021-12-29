@@ -12,15 +12,16 @@ use Lucinda\STDOUT\ValidationFailedException;
  */
 class RouteValidator
 {
-    private $url;
-    private $pathParameters=[];
-    private $validParameters=[];
-    
+    private string $url;
+    private array $pathParameters=[];
+    private array $validParameters=[];
+
     /**
      * Performs detection process
      *
      * @param Application $application
      * @param Request $request
+     * @throws PathNotFoundException|MethodNotAllowedException|ValidationFailedException
      */
     public function __construct(Application $application, Request $request)
     {
@@ -46,7 +47,7 @@ class RouteValidator
             $matchFound = false;
             $routes = $application->routes();
             foreach ($routes as $route) {
-                if (strpos($route->getID(), "(")!==false) {
+                if (str_contains($route->getID(), "(")) {
                     $matches = [];
                     preg_match_all("/(\(([^)]+)\))/", $route->getID(), $matches);
                     $names = $matches[2];
@@ -84,8 +85,8 @@ class RouteValidator
     private function validateRequestMethod(Application $application, Request $request): void
     {
         $validRequestMethod = $application->routes($this->url)->getValidRequestMethod();
-        if ($validRequestMethod && strcasecmp($validRequestMethod, $request->getMethod())!==0) {
-            throw new MethodNotAllowedException("Route allows only request method: ".$validRequestMethod);
+        if ($validRequestMethod && ($validRequestMethod->value != $request->getMethod()->value)) {
+            throw new MethodNotAllowedException("Route allows only request method: ".$validRequestMethod->value);
         }
     }
     

@@ -6,10 +6,10 @@ namespace Lucinda\STDOUT\Cookies;
  */
 class Options
 {
-    private $path = "";
-    private $domain = "";
-    private $isSecuredByHTTPS = false;
-    private $isSecuredByHTTPheaders = false;
+    private string $path;
+    private string $domain;
+    private bool $isSecuredByHTTPS;
+    private bool $isSecuredByHTTPheaders;
     
     /**
      * Saves session options based on XML tag "cookie"
@@ -45,7 +45,7 @@ class Options
     }
     
     /**
-     * Gets whether or not cookies are available only if protocol is HTTPS
+     * Gets whether cookies are available only if protocol is HTTPS
      *
      * @return bool
      */
@@ -55,7 +55,7 @@ class Options
     }
     
     /**
-     * Gets whether or not cookies are not available to client via JavaScript
+     * Gets whether cookies are not available to client via JavaScript
      *
      * @return bool
      */

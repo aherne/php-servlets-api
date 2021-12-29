@@ -6,12 +6,12 @@ namespace Lucinda\STDOUT\Request;
  */
 class Server
 {
-    private $name;
-    private $iP;
-    private $port;
-    private $email;
-    private $software;
-    
+    private string $name;
+    private string $ip;
+    private int $port;
+    private string $email;
+    private string $software;
+
     /**
      * Detects info based on values in $_SERVER superglobal
      */
@@ -23,7 +23,7 @@ class Server
         $this->setEmail();
         $this->setSoftware();
     }
-    
+
     /**
      * Sets server host name.
      */
@@ -31,7 +31,7 @@ class Server
     {
         $this->name = $_SERVER["SERVER_NAME"];
     }
-    
+
     /**
      * Gets server host name.
      *
@@ -41,15 +41,15 @@ class Server
     {
         return $this->name;
     }
-    
+
     /**
      * Sets server IP address.
      */
     private function setIP(): void
     {
-        $this->iP = $_SERVER["SERVER_ADDR"];
+        $this->ip = $_SERVER["SERVER_ADDR"];
     }
-    
+
     /**
      * Gets server IP address
      *
@@ -57,7 +57,7 @@ class Server
      */
     public function getIP(): string
     {
-        return $this->iP;
+        return $this->ip;
     }
     
     

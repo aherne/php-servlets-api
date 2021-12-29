@@ -1,6 +1,8 @@
 <?php
 namespace Lucinda\STDOUT;
 
+use Lucinda\STDOUT\Session\Options;
+
 /**
  * Encapsulates SESSION operations and parameters
 */
@@ -9,9 +11,9 @@ class Session
     /**
      * Configures session based on information set in XML "session" tag and starts it, if "auto_start" attribute is on
      *
-     * @param \Lucinda\STDOUT\Session\Options $options
+     * @param Options|null $options
      */
-    public function __construct(\Lucinda\STDOUT\Session\Options $options = null)
+    public function __construct(Options $options = null)
     {
         if ($options==null) {
             return;
@@ -70,7 +72,7 @@ class Session
      * @param string $key
      * @param mixed $value
      */
-    public function set(string $key, $value): void
+    public function set(string $key, mixed $value): void
     {
         $_SESSION[$key] = $value;
     }
@@ -81,7 +83,7 @@ class Session
      * @param string $key
      * @return mixed
      */
-    public function get(string $key)
+    public function get(string $key): mixed
     {
         return $_SESSION[$key];
     }

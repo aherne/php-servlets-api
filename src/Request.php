@@ -2,6 +2,8 @@
 namespace Lucinda\STDOUT;
 
 use Lucinda\STDOUT\Request\Client;
+use Lucinda\STDOUT\Request\Method;
+use Lucinda\STDOUT\Request\Protocol;
 use Lucinda\STDOUT\Request\Server;
 use Lucinda\STDOUT\Request\URI;
 use Lucinda\STDOUT\Request\UploadedFiles;
@@ -13,14 +15,14 @@ use Lucinda\MVC\ConfigurationException;
  */
 class Request
 {
-    private $client;
-    private $server;
-    private $uRI;
-    private $method;
-    private $protocol;
-    private $headers = array();
-    private $parameters = array();
-    private $uploadedFiles = array();
+    private Client $client;
+    private Server $server;
+    private URI $uRI;
+    private Method $method;
+    private Protocol $protocol;
+    private array $headers = array();
+    private array $parameters = array();
+    private array $uploadedFiles = array();
 
     /**
      * Detects all aspects of a request.
@@ -100,7 +102,7 @@ class Request
     private function setHeaders(): void
     {
         foreach ($_SERVER as $name => $value) {
-            if (strpos($name, "HTTP_") === 0) {
+            if (str_starts_with($name, "HTTP_")) {
                 $this->headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value;
             }
         }
@@ -112,12 +114,12 @@ class Request
      * @param string $name
      * @return string|array|null
      */
-    public function headers(string $name="")
+    public function headers(string $name=""): string|array|null
     {
         if (!$name) {
             return $this->headers;
         } else {
-            return (isset($this->headers[$name])?$this->headers[$name]:null);
+            return ($this->headers[$name] ?? null);
         }
     }
 
@@ -148,15 +150,15 @@ class Request
     /**
      * Gets request parameters detected by optional name
      *
-     * @param string|integer $name
+     * @param string $name
      * @return string|array|null
      */
-    public function parameters($name="")
+    public function parameters(string $name=""): array|string|null
     {
         if (!$name) {
             return $this->parameters;
         } else {
-            return (isset($this->parameters[$name])?$this->parameters[$name]:null);
+            return ($this->parameters[$name] ?? null);
         }
     }
 
@@ -174,15 +176,15 @@ class Request
     /**
      * Gets uploaded files detected by optional request parameter name
      *
-     * @param string|integer $name
+     * @param string $name
      * @return File|array|null
      */
-    public function uploadedFiles($name="")
+    public function uploadedFiles(string $name=""): array|File|null
     {
         if (!$name) {
             return $this->uploadedFiles;
         } else {
-            return (isset($this->uploadedFiles[$name])?$this->uploadedFiles[$name]:null);
+            return ($this->uploadedFiles[$name] ?? null);
         }
     }
 
@@ -191,16 +193,16 @@ class Request
      */
     private function setMethod(): void
     {
-        $this->method=$_SERVER["REQUEST_METHOD"];
+        $this->method = Method::tryFrom($_SERVER["REQUEST_METHOD"]);
     }
 
     /**
      * Gets HTTP request method in which URI was requested.
      *
      * @example GET
-     * @return string
+     * @return Method
      */
-    public function getMethod(): string
+    public function getMethod(): Method
     {
         return $this->method;
     }
@@ -210,16 +212,16 @@ class Request
      */
     private function setProtocol(): void
     {
-        $this->protocol = (!empty($_SERVER['HTTPS'])?"https":"http");
+        $this->protocol = Protocol::tryFrom(!empty($_SERVER['HTTPS'])?"https":"http");
     }
 
     /**
      * Gets protocol for which URI was requested.
      *
      * @example https
-     * @return string
+     * @return Protocol
      */
-    public function getProtocol(): string
+    public function getProtocol(): Protocol
     {
         return $this->protocol;
     }

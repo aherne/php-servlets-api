@@ -67,13 +67,13 @@ class RequestTest
     
     public function getMethod()
     {
-        return new Result($this->object->getMethod()=="GET");
+        return new Result($this->object->getMethod()==Request\Method::GET);
     }
     
     
     public function getProtocol()
     {
-        return new Result($this->object->getProtocol()=="http");
+        return new Result($this->object->getProtocol()==Request\Protocol::HTTP);
     }
     
     

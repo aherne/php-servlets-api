@@ -12,30 +12,11 @@ use Lucinda\STDOUT\Session;
  */
 abstract class Request implements Runnable
 {
-    /**
-     * @var Attributes
-     */
-    protected $attributes;
-    
-    /**
-     * @var Application
-     */
-    protected $application;
-    
-    /**
-     * @var \Lucinda\STDOUT\Request
-     */
-    protected $request;
-    
-    /**
-     * @var Session
-     */
-    protected $session;
-    
-    /**
-     * @var Cookies
-     */
-    protected $cookies;
+    protected Attributes $attributes;
+    protected Application $application;
+    protected \Lucinda\STDOUT\Request $request;
+    protected Session $session;
+    protected Cookies $cookies;
     
     
     /**

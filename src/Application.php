@@ -11,9 +11,8 @@ use Lucinda\STDOUT\Application\Route;
  */
 class Application extends \Lucinda\MVC\Application
 {
-    private $validatorsPath;
-    private $sessionOptions;
-    private $cookiesOptions;
+    private ?SessionOptions $sessionOptions = null;
+    private ?CookiesOptions $cookiesOptions = null;
     
     /**
      * Populates attributes based on an XML file

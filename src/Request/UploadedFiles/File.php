@@ -6,10 +6,10 @@ namespace Lucinda\STDOUT\Request\UploadedFiles;
  */
 class File
 {
-    private $name;
-    private $location;
-    private $contentType;
-    private $size;
+    private string $name;
+    private string $location;
+    private string $contentType;
+    private int $size;
     
     /**
      * Detects info based on values in $_SERVER superglobal

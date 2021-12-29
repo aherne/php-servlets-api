@@ -9,10 +9,11 @@ use Lucinda\STDOUT\Request\UploadedFiles\Parser;
  */
 class UploadedFiles
 {
-    protected $attributes =  array();
-        
+    protected array $attributes =  array();
+
     /**
-     * Converts information in $_FILES superglobal into a tree of UploadedFile objects
+     * Converts information in $_FILES super-global into a tree of UploadedFile objects
+     * @throws UploadedFiles\Exception
      */
     public function __construct()
     {
@@ -22,13 +23,15 @@ class UploadedFiles
         $requestParser = new Parser();
         $this->attributes = $this->makeObjects($requestParser->getResult());
     }
-    
+
     /**
      * Performs recursive conversion between array of properties and UploadedFile
      *
-     * @param array|File $array
+     * @param array $array
+     * @return array|File
+     * @throws UploadedFiles\Exception
      */
-    private function makeObjects(array $array)
+    private function makeObjects(array $array): array|File
     {
         $ret = array();
         foreach ($array as $k => $v) {
@@ -46,7 +49,7 @@ class UploadedFiles
     }
     
     /**
-     * Decapsulates attributes as array.
+     * Gets attributes as array.
      *
      * @return array
      */

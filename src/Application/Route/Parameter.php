@@ -8,9 +8,9 @@ use Lucinda\MVC\ConfigurationException;
  */
 class Parameter
 {
-    private $name;
-    private $validator;
-    private $isMandatory = true;
+    private string $name;
+    private string $validator;
+    private bool $isMandatory = true;
     
     /**
      * Saves validation settings from XML tag 'parameter'
@@ -57,7 +57,7 @@ class Parameter
     }
     
     /**
-     * Checks whether or not parameter is mandatory
+     * Checks whether parameter is mandatory
      *
      * @return boolean
      */

@@ -6,9 +6,9 @@ namespace Lucinda\STDOUT\Request;
  */
 class Client
 {
-    private $name;
-    private $ip;
-    private $port;
+    private string $name;
+    private string $ip;
+    private int $port;
     
     /**
      * Detects info based on values in $_SERVER superglobal
@@ -25,7 +25,7 @@ class Client
      */
     private function setName(): void
     {
-        $this->name = (isset($_SERVER["REMOTE_HOST"])?$_SERVER["REMOTE_HOST"]:"");
+        $this->name = ($_SERVER["REMOTE_HOST"] ?? "");
     }
 
     /**
