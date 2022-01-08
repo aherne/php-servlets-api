@@ -6,7 +6,7 @@
     "homepage": "https://github.com/aherne/php-servlets-api",
     "license": "MIT",
     "require": {
-        "php": "^7.1",
+        "php": "^7.1|^8.0",
         "ext-simplexml": "*",
         "lucinda/abstract_mvc": "^1.0"
     },
