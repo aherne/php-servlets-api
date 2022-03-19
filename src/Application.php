@@ -37,7 +37,7 @@ class Application extends \Lucinda\MVC\Application
     protected function setRoutes(): void
     {
         $xml = $this->getTag("routes");
-        $list = $xml->xpath("//route");
+        $list = $xml->xpath("route");
         foreach ($list as $info) {
             $id = (string) $info['id'];
             if (!$id) {
