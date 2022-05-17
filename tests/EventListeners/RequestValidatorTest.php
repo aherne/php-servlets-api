@@ -1,4 +1,5 @@
 <?php
+
 namespace Test\Lucinda\STDOUT\EventListeners;
 
 use Lucinda\STDOUT\EventListeners\RequestValidator;
@@ -40,14 +41,14 @@ class RequestValidatorTest
         ];
         $validator = new RequestValidator($attributes, new Application(dirname(__DIR__)."/mocks/configuration.xml"), new Request(), new Session(), new Cookies());
         $validator->run();
-        
+
         $results = [];
-        
+
         $results[] = new Result($attributes->getValidPage()=="user/(name)");
         $results[] = new Result($attributes->getPathParameters()==["name"=>"lucian"]);
         $results[] = new Result($attributes->getValidParameters()==["name"=>1]);
         $results[] = new Result($attributes->getValidFormat()=="json");
-        
+
         return $results;
     }
 }

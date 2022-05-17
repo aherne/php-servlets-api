@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\STDOUT;
 
 use Lucinda\STDOUT\Session\Options as SessionOptions;
@@ -13,7 +14,7 @@ class Application extends \Lucinda\MVC\Application
 {
     private ?SessionOptions $sessionOptions = null;
     private ?CookiesOptions $cookiesOptions = null;
-    
+
     /**
      * Populates attributes based on an XML file
      *
@@ -29,7 +30,7 @@ class Application extends \Lucinda\MVC\Application
         $this->setSessionOptions();
         $this->setCookieOptions();
     }
-    
+
     /**
      * {@inheritDoc}
      * @see \Lucinda\MVC\Application::setRoutes()
@@ -46,31 +47,31 @@ class Application extends \Lucinda\MVC\Application
             $this->routes[$id] = new Route($info);
         }
     }
-    
+
     /**
      * Sets options to start session with based on "session" XML tag
      */
     private function setSessionOptions(): void
     {
         $xml = $this->getTag("session");
-        if ($xml===null) {
+        if (empty($xml)) {
             return;
         }
         $this->sessionOptions = new SessionOptions($xml);
     }
-    
+
     /**
      * Sets options to create cookies with based on "cookies" XML tag
      */
     private function setCookieOptions(): void
     {
         $xml = $this->getTag("cookies");
-        if ($xml===null) {
+        if (empty($xml)) {
             return;
         }
         $this->cookiesOptions = new CookiesOptions($xml);
     }
-    
+
     /**
      * Gets  options to start session with based on "session" XML tag
      *
@@ -80,7 +81,7 @@ class Application extends \Lucinda\MVC\Application
     {
         return $this->sessionOptions;
     }
-    
+
     /**
      * Gets options to create cookies with based on "cookies" XML tag
      *

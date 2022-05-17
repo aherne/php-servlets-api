@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\STDOUT\Cookies;
 
 /**
@@ -10,7 +11,7 @@ class Options
     private string $domain;
     private bool $isSecuredByHTTPS;
     private bool $isSecuredByHTTPheaders;
-    
+
     /**
      * Saves session options based on XML tag "cookie"
      *
@@ -23,7 +24,7 @@ class Options
         $this->isSecuredByHTTPS = (bool) $info["https_only"];
         $this->isSecuredByHTTPheaders = (bool) $info["headers_only"];
     }
-    
+
     /**
      * Gets path on the server in which the cookie will be available on.
      *
@@ -33,7 +34,7 @@ class Options
     {
         return $this->path;
     }
-    
+
     /**
      * Gets (sub)domain that the cookie is available to.
      *
@@ -43,7 +44,7 @@ class Options
     {
         return $this->domain;
     }
-    
+
     /**
      * Gets whether cookies are available only if protocol is HTTPS
      *
@@ -53,7 +54,7 @@ class Options
     {
         return $this->isSecuredByHTTPS;
     }
-    
+
     /**
      * Gets whether cookies are not available to client via JavaScript
      *

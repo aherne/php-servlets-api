@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\STDOUT\EventListeners;
 
 use Lucinda\STDOUT\EventListeners\Validators\RouteValidator;
@@ -19,7 +20,7 @@ class RequestValidator extends Request
         $this->attributes->setValidPage($routeValidator->getUrl());
         $this->attributes->setPathParameters($routeValidator->getPathParameters());
         $this->attributes->setValidParameters($routeValidator->getValidParameters());
-                
+
         $formatValidator = new FormatValidator($this->application, $routeValidator->getUrl());
         $this->attributes->setValidFormat($formatValidator->getFormat());
     }

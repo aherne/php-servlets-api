@@ -1,4 +1,5 @@
 <?php
+
 namespace Test\Lucinda\STDOUT\mocks\Controllers;
 
 use Lucinda\STDOUT\Controller;

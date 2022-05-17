@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\STDOUT;
 
 use Lucinda\STDOUT\Cookies\Options;
@@ -19,7 +20,7 @@ class Cookies
     {
         $this->options = $options;
     }
-    
+
     /**
      * Adds/updates a cookie param.
      *
@@ -30,14 +31,22 @@ class Cookies
     public function set(string $key, mixed $value, int $expirationTime): void
     {
         if ($this->options) {
-            setcookie($key, $value, time()+$expirationTime, $this->options->getPath(), $this->options->getDomain(), $this->options->isSecuredByHTTPS(), $this->options->isSecuredByHTTPheaders());
+            setcookie(
+                $key,
+                $value,
+                time()+$expirationTime,
+                $this->options->getPath(),
+                $this->options->getDomain(),
+                $this->options->isSecuredByHTTPS(),
+                $this->options->isSecuredByHTTPheaders()
+            );
             $_COOKIE[$key] = $value;
         } else {
             setcookie($key, $value, time()+$expirationTime, "/");
             $_COOKIE[$key] = $value;
         }
     }
-    
+
     /**
      * Gets value of cookie param.
      *
@@ -48,7 +57,7 @@ class Cookies
     {
         return $_COOKIE[$key];
     }
-    
+
     /**
      * Checks if cookie param exists.
      *
@@ -59,7 +68,7 @@ class Cookies
     {
         return isset($_COOKIE[$key]);
     }
-    
+
     /**
      * Deletes cookie param.
      *
@@ -68,7 +77,6 @@ class Cookies
     public function remove(string $key): void
     {
         setcookie($key, "", 1);
-        setcookie($key, false);
         unset($_COOKIE[$key]);
     }
 }

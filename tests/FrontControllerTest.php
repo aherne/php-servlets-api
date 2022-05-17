@@ -1,4 +1,5 @@
 <?php
+
 namespace Test\Lucinda\STDOUT;
 
 use Lucinda\STDOUT\FrontController;
@@ -12,7 +13,7 @@ class FrontControllerTest
 {
     private $object;
     private $attributes;
-    
+
     public function __construct()
     {
         $this->attributes = new TestAttributes(__DIR__."/mocks/events");
@@ -25,7 +26,7 @@ class FrontControllerTest
         $this->object->addEventListener(EventType::END, EndTracker::class);
         return new Result(true);
     }
-        
+
 
     public function run()
     {
@@ -57,7 +58,7 @@ class FrontControllerTest
         $this->object->run();
         $response = ob_get_contents();
         ob_clean();
-        
+
         $results = [];
         $results[] = new Result($response=="Test: <strong>me</strong>", "tested response");
         $results[] = new Result($this->attributes->getStartTime() && $this->attributes->getEndTime() && $this->attributes->getEndTime()>$this->attributes->getStartTime(), "tested event listeners");

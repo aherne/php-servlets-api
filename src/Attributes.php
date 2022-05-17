@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\STDOUT;
 
 /**
@@ -8,9 +9,15 @@ class Attributes
 {
     private string $requestedPage;
     private string $requestedResponseFormat;
+    /**
+     * @var array<string,string>
+     */
     private array $pathParameters = [];
+    /**
+     * @var array<string,mixed>
+     */
     private array $validParameters = [];
-    
+
     /**
      * Sets requested page detected by matching original requested to XML directives
      *
@@ -20,7 +27,7 @@ class Attributes
     {
         $this->requestedPage = $page;
     }
-    
+
     /**
      * Gets requested page detected by matching original requested to XML directives
      *
@@ -31,22 +38,22 @@ class Attributes
     {
         return $this->requestedPage;
     }
-    
+
     /**
      * Gets path parameters detected from requested page, optionally by parameter name
      *
-     * @param string[string] $parameters
+     * @param array<string,string> $parameters
      */
     public function setPathParameters(array $parameters): void
     {
         $this->pathParameters = $parameters;
     }
-    
+
     /**
      * Gets path parameters detected from requested page, optionally by parameter name
      *
      * @param string $name
-     * @return string|array|null
+     * @return string|array<string,string>|null
      */
     public function getPathParameters(string $name=""): string|array|null
     {
@@ -56,24 +63,24 @@ class Attributes
             return ($this->pathParameters[$name] ?? null);
         }
     }
-    
+
     /**
      * Sets route/request parameter validation results for requested page, optionally by parameter name
      *
-     * @param string[string] $parameters
+     * @param array<string,mixed> $parameters
      */
     public function setValidParameters(array $parameters): void
     {
         $this->validParameters = $parameters;
     }
-    
+
     /**
      * Gets route/request parameter validation results for requested page, optionally by parameter name
      *
      * @param string $name
-     * @return string|array|null
+     * @return mixed
      */
-    public function getValidParameters(string $name=""): string|array|null
+    public function getValidParameters(string $name=""): mixed
     {
         if (!$name) {
             return $this->validParameters;
@@ -81,7 +88,7 @@ class Attributes
             return ($this->validParameters[$name] ?? null);
         }
     }
-    
+
     /**
      * Gets requested response format detected by matching original to XML directives
      *
@@ -91,7 +98,7 @@ class Attributes
     {
         $this->requestedResponseFormat = $format;
     }
-    
+
     /**
      * Gets requested response format detected by matching original requested to XML directives
      *

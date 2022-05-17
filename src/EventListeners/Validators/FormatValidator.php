@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\STDOUT\EventListeners\Validators;
 
 use Lucinda\STDOUT\Application;
@@ -10,7 +11,7 @@ use Lucinda\MVC\ConfigurationException;
 class FormatValidator
 {
     private string $format;
-    
+
     /**
      * Performs detection process
      *
@@ -25,14 +26,14 @@ class FormatValidator
         if ($route->getFormat()) {
             $extension = $route->getFormat();
         }
-        
+
         if ($application->resolvers($extension)===null) {
             throw new ConfigurationException("Format could not be matched to formats.format tag @ XML: ".$extension);
         }
-        
+
         $this->format = $extension;
     }
-    
+
     /**
      * Gets final response format
      *

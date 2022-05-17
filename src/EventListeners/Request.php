@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\STDOUT\EventListeners;
 
 use Lucinda\STDOUT\Application;
@@ -17,8 +18,8 @@ abstract class Request implements Runnable
     protected \Lucinda\STDOUT\Request $request;
     protected Session $session;
     protected Cookies $cookies;
-    
-    
+
+
     /**
      * Saves objects to be available in implemented run() methods.
      *
@@ -28,8 +29,13 @@ abstract class Request implements Runnable
      * @param Session $session
      * @param Cookies $cookies
      */
-    public function __construct(Attributes $attributes, Application $application, \Lucinda\STDOUT\Request $request, Session $session, Cookies $cookies)
-    {
+    public function __construct(
+        Attributes $attributes,
+        Application $application,
+        \Lucinda\STDOUT\Request $request,
+        Session $session,
+        Cookies $cookies
+    ) {
         $this->attributes = $attributes;
         $this->application = $application;
         $this->request = $request;

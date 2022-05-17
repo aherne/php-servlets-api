@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\STDOUT\Application;
 
 use Lucinda\MVC\ConfigurationException;
@@ -11,6 +12,9 @@ use Lucinda\STDOUT\Request\Method;
 class Route extends \Lucinda\MVC\Application\Route
 {
     private ?Method $requestMethod = null;
+    /**
+     * @var array<string,string>
+     */
     private array $parameters = [];
 
     /**
@@ -44,7 +48,7 @@ class Route extends \Lucinda\MVC\Application\Route
             throw new ConfigurationException("Invalid request method: ".$method);
         }
     }
-    
+
     /**
      * Gets valid request method for current route
      *
@@ -68,11 +72,11 @@ class Route extends \Lucinda\MVC\Application\Route
             $this->parameters[(string) $parameter["name"]] = new Parameter($parameter);
         }
     }
-    
+
     /**
      * Gets validator for route/request parameter by its name for current route
      *
-     * @return array
+     * @return array<string,string>
      */
     public function getValidParameters(): array
     {

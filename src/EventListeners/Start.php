@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\STDOUT\EventListeners;
 
 use Lucinda\MVC\Runnable;
@@ -10,8 +11,8 @@ use Lucinda\STDOUT\Attributes;
 abstract class Start implements Runnable
 {
     protected Attributes $attributes;
-    
-    
+
+
     /**
      * Saves objects to be available in implemented run() methods.
      *

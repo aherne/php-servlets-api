@@ -1,4 +1,5 @@
 <?php
+
 namespace Test\Lucinda\STDOUT\EventListeners\Validators;
 
 use Lucinda\STDOUT\Request;
@@ -9,7 +10,7 @@ use Lucinda\UnitTest\Result;
 class RouteValidatorTest
 {
     private $object;
-    
+
     public function __construct()
     {
         $_SERVER = [
@@ -43,13 +44,13 @@ class RouteValidatorTest
     {
         return new Result($this->object->getUrl()=="user/(name)");
     }
-        
+
 
     public function getPathParameters()
     {
         return new Result($this->object->getPathParameters()==["name"=>"lucian"]);
     }
-        
+
 
     public function getValidParameters()
     {

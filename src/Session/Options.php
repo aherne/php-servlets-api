@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\STDOUT\Session;
 
 /**
@@ -15,7 +16,7 @@ class Options
     private string $referrerCheck;
     private string $handlerFile;
     private bool $autoStart;
-    
+
     /**
      * Saves session options based on XML tag "session"
      *
@@ -33,7 +34,7 @@ class Options
         $this->handlerFile = (string) $info["handler"];
         $this->autoStart = (bool) $info["auto_start"];
     }
-    
+
     /**
      * Gets path that is going to be used when storing sessions.
      *
@@ -43,7 +44,7 @@ class Options
     {
         return $this->savePath;
     }
-        
+
     /**
      * Gets name of session cookie.
      *
@@ -53,7 +54,7 @@ class Options
     {
         return $this->name;
     }
-    
+
     /**
      * Gets session cookie's expiration time.
      *
@@ -63,7 +64,7 @@ class Options
     {
         return $this->expiredTime;
     }
-    
+
     /**
      * Gets session expiration time on browser close.
      *
@@ -73,7 +74,7 @@ class Options
     {
         return $this->expiredOnBrowserClose;
     }
-    
+
     /**
      * Gets whether sessions are accepted only if protocol is HTTPS
      *
@@ -83,7 +84,7 @@ class Options
     {
         return $this->isSecuredByHTTPS;
     }
-        
+
     /**
      * Gets whether session id cookie is available to client via JavaScript
      *
@@ -93,7 +94,7 @@ class Options
     {
         return $this->isSecuredByHTTPheaders;
     }
-        
+
     /**
      * Gets HTTP referrer for whom sessions are accepted
      *
@@ -103,7 +104,7 @@ class Options
     {
         return $this->referrerCheck;
     }
-    
+
     /**
      * Gets handler file name
      *
@@ -113,7 +114,7 @@ class Options
     {
         return $this->handlerFile;
     }
-    
+
     /**
      * Gets whether session should start automatically
      *

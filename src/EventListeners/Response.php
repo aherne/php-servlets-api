@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\STDOUT\EventListeners;
 
 use Lucinda\MVC\Runnable;
@@ -19,7 +20,7 @@ abstract class Response implements Runnable
     protected Session $session;
     protected Cookies $cookies;
     protected \Lucinda\MVC\Response $response;
-    
+
     /**
      * Saves objects to be available in implemented run() methods.
      *
@@ -30,8 +31,14 @@ abstract class Response implements Runnable
      * @param Cookies $cookies
      * @param \Lucinda\MVC\Response $response
      */
-    public function __construct(Attributes $attributes, Application $application, Request $request, Session $session, Cookies $cookies, \Lucinda\MVC\Response $response)
-    {
+    public function __construct(
+        Attributes $attributes,
+        Application $application,
+        Request $request,
+        Session $session,
+        Cookies $cookies,
+        \Lucinda\MVC\Response $response
+    ) {
         $this->attributes = $attributes;
         $this->application = $application;
         $this->request = $request;

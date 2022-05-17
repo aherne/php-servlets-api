@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\STDOUT\EventListeners\Validators;
 
 use Lucinda\STDOUT\Request;
@@ -13,7 +14,13 @@ use Lucinda\STDOUT\ValidationFailedException;
 class RouteValidator
 {
     private string $url;
+    /**
+     * @var array<string,string>
+     */
     private array $pathParameters=[];
+    /**
+     * @var array<string,mixed>
+     */
     private array $validParameters=[];
 
     /**
@@ -29,7 +36,7 @@ class RouteValidator
         $this->validateRequestMethod($application, $request);
         $this->validateParameters($application, $request);
     }
-    
+
     /**
      * Matches requested page to a 'route' and detects path parameters, if any
      *
@@ -74,7 +81,7 @@ class RouteValidator
         }
         $this->url = $url;
     }
-    
+
     /**
      * Matches request method supported by detected route, if any, to that used in request
      *
@@ -89,7 +96,7 @@ class RouteValidator
             throw new MethodNotAllowedException("Route allows only request method: ".$validRequestMethod->value);
         }
     }
-    
+
     /**
      * Validates request and path parameters based on matching 'parameter' subtags of found 'route'
      *
@@ -104,7 +111,7 @@ class RouteValidator
         foreach ($this->pathParameters as $k=>$v) {
             $parameters[$k] = $v;
         }
-        
+
         $validators = $application->routes($this->url)->getValidParameters();
         foreach ($validators as $parameterName=>$class) {
             if (!isset($parameters[$parameterName])) {
@@ -124,7 +131,7 @@ class RouteValidator
             $this->validParameters[$parameterName] = $result;
         }
     }
-    
+
     /**
      * Gets route requested (value of 'url' of matching 'route' XML tag)
      *
@@ -134,21 +141,21 @@ class RouteValidator
     {
         return $this->url;
     }
-    
+
     /**
      * Gets path parameters detected from requested page
      *
-     * @return array
+     * @return array<string,string>
      */
     public function getPathParameters(): array
     {
         return $this->pathParameters;
     }
-    
+
     /**
      * Gets route/request parameter validation results for requested page
      *
-     * @return array
+     * @return array<string,mixed>
      */
     public function getValidParameters(): array
     {

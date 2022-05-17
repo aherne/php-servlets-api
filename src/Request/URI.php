@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\STDOUT\Request;
 
 /**
@@ -9,25 +10,32 @@ class URI
     private string $contextPath;
     private string $page;
     private string $queryString;
-    private array $parameters;
+    /**
+     * @var array<string,mixed>
+     */
+    private array $parameters = [];
 
     /**
      * Detects info based on values in $_SERVER superglobal
+     *
+     * @param array<string,string> $server
      */
-    public function __construct()
+    public function __construct(array $server)
     {
-        $this->setContextPath();
-        $this->setPage();
-        $this->setQueryString();
-        $this->parameters = $_GET;
+        $this->setContextPath($server);
+        $this->setPage($server);
+        $this->setQueryString($server);
+        parse_str($this->queryString, $this->parameters);
     }
 
     /**
      * Sets context path from requested URL.
+     *
+     * @param array<string,string> $server
      */
-    private function setContextPath(): void
+    private function setContextPath(array $server): void
     {
-        $this->contextPath = str_replace(array($_SERVER["DOCUMENT_ROOT"],"/index.php"), "", $_SERVER["SCRIPT_FILENAME"]);
+        $this->contextPath = str_replace(array($server["DOCUMENT_ROOT"],"/index.php"), "", $server["SCRIPT_FILENAME"]);
     }
 
     /**
@@ -43,15 +51,17 @@ class URI
 
     /**
      * Sets original page requested path based on REQUEST_URI
+     *
+     * @param array<string,string> $server
      */
-    private function setPage(): void
+    private function setPage(array $server): void
     {
-        $urlCombined = substr($_SERVER["REQUEST_URI"], strlen($this->contextPath));
+        $urlCombined = substr($server["REQUEST_URI"], strlen($this->contextPath));
         $questionPosition = strpos($urlCombined, "?");
         if ($questionPosition!==false) {
             $urlCombined = substr($urlCombined, 0, $questionPosition);
         }
-        $this->page = (str_starts_with($urlCombined, "/") ?substr($urlCombined, 1):$urlCombined); // remove trailing slash
+        $this->page = (str_starts_with($urlCombined, "/") ? substr($urlCombined, 1) : $urlCombined); // remove trailing slash
     }
 
     /**
@@ -67,10 +77,12 @@ class URI
 
     /**
      * Sets query string part from requested URL
+     *
+     * @param array<string,string> $server
      */
-    private function setQueryString(): void
+    private function setQueryString(array $server): void
     {
-        $this->queryString = $_SERVER["QUERY_STRING"];
+        $this->queryString = $server["QUERY_STRING"];
     }
 
     /**
@@ -88,9 +100,9 @@ class URI
      * Gets query string parameters detected by optional name
      *
      * @param string $name
-     * @return string|array|null
+     * @return mixed
      */
-    public function parameters(string $name=""): string|array|null
+    public function parameters(string $name=""): mixed
     {
         if (!$name) {
             return $this->parameters;

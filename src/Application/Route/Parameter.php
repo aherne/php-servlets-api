@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\STDOUT\Application\Route;
 
 use Lucinda\MVC\ConfigurationException;
@@ -11,7 +12,7 @@ class Parameter
     private string $name;
     private string $validator;
     private bool $isMandatory = true;
-    
+
     /**
      * Saves validation settings from XML tag 'parameter'
      *
@@ -24,18 +25,18 @@ class Parameter
         if (!$this->name) {
             throw new ConfigurationException("Attribute 'name' is mandatory for 'parameter' tag");
         }
-        
+
         $this->validator = (string) $info["validator"];
         if (!$this->validator) {
             throw new ConfigurationException("Attribute 'validator' is mandatory for 'parameter' tag");
         }
-        
+
         $mandatory = (string) $info["mandatory"];
         if ($mandatory==="0") {
             $this->isMandatory = false;
         }
     }
-    
+
     /**
      * Gets parameter name
      *
@@ -45,7 +46,7 @@ class Parameter
     {
         return $this->name;
     }
-    
+
     /**
      * Gets class that will be used for validating parameter value
      *
@@ -55,7 +56,7 @@ class Parameter
     {
         return $this->validator;
     }
-    
+
     /**
      * Checks whether parameter is mandatory
      *

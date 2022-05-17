@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\STDOUT;
 
 use Lucinda\STDOUT\Session\Options;
@@ -18,36 +19,54 @@ class Session
         if ($options==null) {
             return;
         }
-        
-        if ($value = $options->getSavePath()) {
-            ini_set("session.save_path", $value);
+
+        $settings = $this->getSettings($options);
+        foreach ($settings as $key=>$value) {
+            ini_set("session.".$key, $value);
         }
-        if ($value = $options->getName()) {
-            ini_set("session.name", $value);
-        }
-        if ($value = $options->getExpiredTime()) {
-            ini_set("session.gc_maxlifetime", $value);
-        }
-        if ($value = $options->getExpiredOnBrowserClose()) {
-            ini_set("session.cookie_lifetime", $value);
-        }
-        if ($value = $options->isSecuredByHTTPS()) {
-            ini_set("session.cookie_secure", $value);
-        }
-        if ($value = $options->isSecuredByHTTPheaders()) {
-            ini_set("session.cookie_httponly", $value);
-        }
-        if ($value = $options->getReferrerCheck()) {
-            ini_set("session.referer_check", $value);
-        }
+
         if ($className = $options->getHandler()) {
             session_set_save_handler(new $className(), true);
         }
-        if ($value = $options->isAutoStart()) {
+
+        if ($options->isAutoStart()) {
             $this->start();
         }
     }
-    
+
+    /**
+     * Gets settings to configure PHP session driver with
+     *
+     * @param Options $options
+     * @return array<string,int|string|bool>
+     */
+    private function getSettings(Options $options): array
+    {
+        $output = [];
+        if ($value = $options->getSavePath()) {
+            $output["save_path"] = $value;
+        }
+        if ($value = $options->getName()) {
+            $output["name"] = $value;
+        }
+        if ($value = $options->getExpiredTime()) {
+            $output["gc_maxlifetime"] = $value;
+        }
+        if ($value = $options->getExpiredOnBrowserClose()) {
+            $output["cookie_lifetime"] = $value;
+        }
+        if ($value = $options->isSecuredByHTTPS()) {
+            $output["cookie_secure"] = $value;
+        }
+        if ($value = $options->isSecuredByHTTPheaders()) {
+            $output["cookie_httponly"] = $value;
+        }
+        if ($value = $options->getReferrerCheck()) {
+            $output["referer_check"] = $value;
+        }
+        return $output;
+    }
+
     /**
      * Starts session.
      */
@@ -55,7 +74,7 @@ class Session
     {
         session_start();
     }
-    
+
     /**
      * Checks if session is started.
      *
@@ -65,7 +84,7 @@ class Session
     {
         return (session_id() != "");
     }
-    
+
     /**
      * Adds/updates a session param.
      *
@@ -76,7 +95,7 @@ class Session
     {
         $_SESSION[$key] = $value;
     }
-    
+
     /**
      * Gets session param value.
      *
@@ -87,7 +106,7 @@ class Session
     {
         return $_SESSION[$key];
     }
-    
+
     /**
      * Checks if session param exists.
      *
@@ -98,7 +117,7 @@ class Session
     {
         return isset($_SESSION[$key]);
     }
-    
+
     /**
      * Deletes a session param.
      *
@@ -108,7 +127,7 @@ class Session
     {
         unset($_SESSION[$key]);
     }
-    
+
     /**
      * Closes session.
      */

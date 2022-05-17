@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\STDOUT\Request;
 
 /**
@@ -14,22 +15,26 @@ class Server
 
     /**
      * Detects info based on values in $_SERVER superglobal
+     *
+     * @param array<string,string> $server
      */
-    public function __construct()
+    public function __construct(array $server)
     {
-        $this->setIP();
-        $this->setName();
-        $this->setPort();
-        $this->setEmail();
-        $this->setSoftware();
+        $this->setIP($server);
+        $this->setName($server);
+        $this->setPort($server);
+        $this->setEmail($server);
+        $this->setSoftware($server);
     }
 
     /**
      * Sets server host name.
+     *
+     * @param array<string,string> $server
      */
-    private function setName(): void
+    private function setName(array $server): void
     {
-        $this->name = $_SERVER["SERVER_NAME"];
+        $this->name = $server["SERVER_NAME"];
     }
 
     /**
@@ -44,10 +49,12 @@ class Server
 
     /**
      * Sets server IP address.
+     *
+     * @param array<string,string> $server
      */
-    private function setIP(): void
+    private function setIP(array $server): void
     {
-        $this->ip = $_SERVER["SERVER_ADDR"];
+        $this->ip = $server["SERVER_ADDR"];
     }
 
     /**
@@ -59,16 +66,18 @@ class Server
     {
         return $this->ip;
     }
-    
-    
+
+
     /**
      * Sets server port
+     *
+     * @param array<string,string> $server
      */
-    private function setPort(): void
+    private function setPort(array $server): void
     {
-        $this->port = $_SERVER["SERVER_PORT"];
+        $this->port = (int) $server["SERVER_PORT"];
     }
-    
+
     /**
      * Gets server port
      *
@@ -78,15 +87,17 @@ class Server
     {
         return $this->port;
     }
-    
+
     /**
      * Sets server admin email.
+     *
+     * @param array<string,string> $server
      */
-    private function setEmail(): void
+    private function setEmail(array $server): void
     {
-        $this->email = $_SERVER["SERVER_ADMIN"];
+        $this->email = $server["SERVER_ADMIN"];
     }
-    
+
     /**
      * Gets server admin email.
      *
@@ -96,15 +107,17 @@ class Server
     {
         return $this->email;
     }
-    
+
     /**
      * Sets software web server is using.
+     *
+     * @param array<string,string> $server
      */
-    private function setSoftware(): void
+    private function setSoftware(array $server): void
     {
-        $this->software = $_SERVER["SERVER_SOFTWARE"];
+        $this->software = $server["SERVER_SOFTWARE"];
     }
-    
+
     /**
      * Gets software web server is using.
      *

@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\STDOUT\Request;
 
 /**
@@ -9,23 +10,27 @@ class Client
     private string $name;
     private string $ip;
     private int $port;
-    
+
     /**
      * Detects info based on values in $_SERVER superglobal
+     *
+     * @param array<string,string> $server
      */
-    public function __construct()
+    public function __construct(array $server)
     {
-        $this->setName();
-        $this->setIP();
-        $this->setPort();
+        $this->setName($server);
+        $this->setIP($server);
+        $this->setPort($server);
     }
-    
+
     /**
      * Sets host name.
+     *
+     * @param array<string,string> $server
      */
-    private function setName(): void
+    private function setName(array $server): void
     {
-        $this->name = ($_SERVER["REMOTE_HOST"] ?? "");
+        $this->name = ($server["REMOTE_HOST"] ?? "");
     }
 
     /**
@@ -37,15 +42,17 @@ class Client
     {
         return $this->name;
     }
-    
+
     /**
      * Sets IP address.
+     *
+     * @param array<string,string> $server
      */
-    private function setIP(): void
+    private function setIP(array $server): void
     {
-        $this->ip = $_SERVER["REMOTE_ADDR"];
+        $this->ip = $server["REMOTE_ADDR"];
     }
-    
+
     /**
      * Gets IP address
      *
@@ -55,15 +62,17 @@ class Client
     {
         return $this->ip;
     }
-    
+
     /**
      * Sets  port
+     *
+     * @param array<string,string> $server
      */
-    private function setPort(): void
+    private function setPort(array $server): void
     {
-        $this->port = $_SERVER["REMOTE_PORT"];
+        $this->port = (int) $server["REMOTE_PORT"];
     }
-    
+
     /**
      * Gets  port
      *

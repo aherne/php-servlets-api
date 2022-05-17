@@ -1,4 +1,5 @@
 <?php
+
 namespace Lucinda\STDOUT\Request\UploadedFiles;
 
 /**
@@ -10,24 +11,24 @@ class File
     private string $location;
     private string $contentType;
     private int $size;
-    
+
     /**
      * Detects info based on values in $_SERVER superglobal
      *
-     * @param array $values
+     * @param array<string,mixed> $values
      */
     public function __construct(array $values)
     {
         if ($values['error']!=0) {
             throw new Exception($this->getErrorMessage($values['error'], $values['name']));
         }
-        
+
         $this->setName($values['name']);
         $this->setContentType($values['type']);
         $this->setLocation($values['tmp_name']);
         $this->setSize($values['size']);
     }
-    
+
     /**
      * Checks if file uploaded with error
      *
@@ -40,28 +41,23 @@ class File
         switch ($errorCode) {
             case UPLOAD_ERR_INI_SIZE:
                 return "The uploaded file exceeds the upload_max_filesize directive in php.ini: ".$fileName;
-                break;
             case UPLOAD_ERR_FORM_SIZE:
                 return "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form: ".$fileName;
-                break;
             case UPLOAD_ERR_PARTIAL:
                 return "The uploaded file was only partially uploaded: ".$fileName;
-                break;
             case UPLOAD_ERR_NO_FILE:
                 return "No file was uploaded!";
-                break;
             case UPLOAD_ERR_NO_TMP_DIR:
                 return "Missing a temporary folder!";
-                break;
             case UPLOAD_ERR_CANT_WRITE:
                 return "Failed to write file to disk: ".$fileName;
-                break;
             case UPLOAD_ERR_EXTENSION:
                 return "A PHP extension stopped the file upload: ".$fileName;
-                break;
+            default:
+                return "Unknown error!";
         }
     }
-    
+
     /**
      * Sets uploaded file name.
      *
@@ -71,7 +67,7 @@ class File
     {
         $this->name = $name;
     }
-    
+
     /**
      * Gets uploaded file name.
      *
@@ -81,7 +77,7 @@ class File
     {
         return $this->name;
     }
-    
+
     /**
      * Sets location for the file uploaded.
      *
@@ -91,18 +87,17 @@ class File
     {
         $this->location = $location;
     }
-        
+
     /**
      * Gets location for the file uploaded
      *
-     * @param string $location
      * @return string
      */
     public function getLocation(): string
     {
         return $this->location;
     }
-    
+
     /**
      * Sets file mime type.
      *
@@ -112,7 +107,7 @@ class File
     {
         $this->contentType = $contentType;
     }
-        
+
     /**
      * Gets file mime type.
      *
@@ -132,7 +127,7 @@ class File
     {
         $this->size = $size;
     }
-        
+
     /**
      * Gets file size.
      *
@@ -142,7 +137,7 @@ class File
     {
         return $this->size;
     }
-    
+
     /**
      * Moves uploaded file to destination.
      *
@@ -153,7 +148,7 @@ class File
     {
         return move_uploaded_file($this->location, $destination);
     }
-    
+
     /**
      * Deletes uploaded file.
      *

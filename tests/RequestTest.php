@@ -1,4 +1,5 @@
 <?php
+
 namespace Test\Lucinda\STDOUT;
 
 use Lucinda\STDOUT\Request;
@@ -7,7 +8,7 @@ use Lucinda\UnitTest\Result;
 class RequestTest
 {
     private $object;
-    
+
     public function __construct()
     {
         $_SERVER = [
@@ -51,49 +52,49 @@ class RequestTest
     {
         return new Result($this->object->getClient()->getPort()==59300);
     }
-        
+
 
     public function getServer()
     {
         return new Result($this->object->getServer()->getPort()==80);
     }
-        
+
 
     public function getURI()
     {
         return new Result($this->object->getURI()->getPage()=="user/lucian");
     }
-    
-    
+
+
     public function getMethod()
     {
         return new Result($this->object->getMethod()==Request\Method::GET);
     }
-    
-    
+
+
     public function getProtocol()
     {
         return new Result($this->object->getProtocol()==Request\Protocol::HTTP);
     }
-    
-    
+
+
     public function getInputStream()
     {
         return new Result($this->object->getInputStream()==="");
     }
-        
+
 
     public function headers()
     {
         return new Result($this->object->headers("User-Agent")=="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:74.0) Gecko/20100101 Firefox/74.0");
     }
-        
+
 
     public function parameters()
     {
         return new Result($this->object->parameters("asd")=="fgh");
     }
-        
+
 
     public function uploadedFiles()
     {

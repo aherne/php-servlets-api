@@ -1,4 +1,5 @@
 <?php
+
 namespace Test\Lucinda\STDOUT\EventListeners\Validators;
 
 use Lucinda\STDOUT\EventListeners\Validators\FormatValidator;
