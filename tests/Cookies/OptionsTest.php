@@ -11,9 +11,13 @@ class OptionsTest
 
     public function __construct()
     {
-        $this->object = new Options(simplexml_load_string('
+        $this->object = new Options(
+            simplexml_load_string(
+                '
         <cookies path="foo/bar" domain="www.example.com" https_only="1" headers_only="1"/>
-        '));
+        '
+            )
+        );
     }
 
     public function getPath()

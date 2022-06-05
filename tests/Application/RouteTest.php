@@ -13,11 +13,15 @@ class RouteTest
 
     public function __construct()
     {
-        $this->object = new Route(simplexml_load_string('
+        $this->object = new Route(
+            simplexml_load_string(
+                '
       	<route id="user/(name)" controller="BlogController" view="blog" format="json" method="GET">
       		<parameter name="name" validator="UserNameValidator" mandatory="1"/>
       	</route>
-        '));
+        '
+            )
+        );
     }
 
     public function getID()

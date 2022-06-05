@@ -11,9 +11,13 @@ class OptionsTest
 
     public function __construct()
     {
-        $this->object = new Options(simplexml_load_string('
+        $this->object = new Options(
+            simplexml_load_string(
+                '
         <session save_path="foo/bar" name="sessid_new" expired_time="1" expired_on_close="2" https_only="1" headers_only="1" referrer_check="qwerty" handler="MyHandler" auto_start="1"/>
-        '));
+        '
+            )
+        );
     }
 
     public function getSavePath()

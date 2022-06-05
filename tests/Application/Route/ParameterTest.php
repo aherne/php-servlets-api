@@ -11,9 +11,13 @@ class ParameterTest
 
     public function __construct()
     {
-        $this->object = new Parameter(simplexml_load_string('
+        $this->object = new Parameter(
+            simplexml_load_string(
+                '
         <parameter name="id" validator="UserIdValidator" mandatory="1"/>
-        '));
+        '
+            )
+        );
     }
 
 

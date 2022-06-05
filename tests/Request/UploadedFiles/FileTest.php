@@ -12,13 +12,15 @@ class FileTest
     public function __construct()
     {
         file_put_contents(dirname(__DIR__, 3)."/testfile.txt", "asdfg");
-        $this->object = new File([
+        $this->object = new File(
+            [
             "name"=>"testfile",
             "type"=>"text/plain",
             "tmp_name"=>dirname(__DIR__, 3)."/testfile.txt",
             "size"=>123456,
             "error"=>0
-        ]);
+            ]
+        );
     }
 
     public function getName()

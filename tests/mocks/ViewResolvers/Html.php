@@ -15,7 +15,7 @@ class Html extends ViewResolver
             }
             ob_start();
             $_VIEW = $view->getData();
-            require($view->getFile().".html");
+            include $view->getFile().".html";
             $output = ob_get_contents();
             ob_end_clean();
             $this->response->setBody($output);
