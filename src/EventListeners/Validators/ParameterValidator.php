@@ -10,7 +10,7 @@ interface ParameterValidator
     /**
      * Validates value of a parameter and returns result (eg: matching DB id) or NULL (if validation fails)
      *
-     * @param mixed $value
+     * @param  mixed $value
      * @return mixed
      */
     public function validate(mixed $value): mixed;

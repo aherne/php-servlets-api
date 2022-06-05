@@ -32,7 +32,7 @@ class Attributes
      * Gets requested page detected by matching original requested to XML directives
      *
      * @example /asd/def
-     * @return string
+     * @return  string
      */
     public function getValidPage(): string
     {
@@ -52,7 +52,7 @@ class Attributes
     /**
      * Gets path parameters detected from requested page, optionally by parameter name
      *
-     * @param string $name
+     * @param  string $name
      * @return string|array<string,string>|null
      */
     public function getPathParameters(string $name=""): string|array|null
@@ -77,7 +77,7 @@ class Attributes
     /**
      * Gets route/request parameter validation results for requested page, optionally by parameter name
      *
-     * @param string $name
+     * @param  string $name
      * @return mixed
      */
     public function getValidParameters(string $name=""): mixed
@@ -103,7 +103,7 @@ class Attributes
      * Gets requested response format detected by matching original requested to XML directives
      *
      * @example html
-     * @return string
+     * @return  string
      */
     public function getValidFormat(): string
     {

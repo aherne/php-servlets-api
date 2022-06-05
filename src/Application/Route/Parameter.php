@@ -16,7 +16,7 @@ class Parameter
     /**
      * Saves validation settings from XML tag 'parameter'
      *
-     * @param \SimpleXMLElement $info
+     * @param  \SimpleXMLElement $info
      * @throws ConfigurationException
      */
     public function __construct(\SimpleXMLElement $info)

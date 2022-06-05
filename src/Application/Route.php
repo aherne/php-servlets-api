@@ -20,7 +20,7 @@ class Route extends \Lucinda\MVC\Application\Route
     /**
      * Saves response format data detected from XML tag "route".
      *
-     * @param \SimpleXMLElement $info
+     * @param  \SimpleXMLElement $info
      * @throws ConfigurationException
      */
     public function __construct(\SimpleXMLElement $info)
@@ -33,7 +33,7 @@ class Route extends \Lucinda\MVC\Application\Route
     /**
      * Sets valid request method for route
      *
-     * @param \SimpleXMLElement $info
+     * @param  \SimpleXMLElement $info
      * @throws ConfigurationException
      */
     private function setValidRequestMethod(\SimpleXMLElement $info): void
@@ -62,7 +62,7 @@ class Route extends \Lucinda\MVC\Application\Route
     /**
      * Sets valid route/request parameters for route by name
      *
-     * @param \SimpleXMLElement $info
+     * @param  \SimpleXMLElement $info
      * @throws ConfigurationException
      */
     private function setValidParameters(\SimpleXMLElement $info): void

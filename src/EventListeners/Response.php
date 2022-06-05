@@ -24,11 +24,11 @@ abstract class Response implements Runnable
     /**
      * Saves objects to be available in implemented run() methods.
      *
-     * @param Attributes $attributes
-     * @param Application $application
-     * @param Request $request
-     * @param Session $session
-     * @param Cookies $cookies
+     * @param Attributes            $attributes
+     * @param Application           $application
+     * @param Request               $request
+     * @param Session               $session
+     * @param Cookies               $cookies
      * @param \Lucinda\MVC\Response $response
      */
     public function __construct(

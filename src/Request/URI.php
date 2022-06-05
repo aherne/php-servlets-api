@@ -42,7 +42,7 @@ class URI
      * Gets context path from requested URL.
      *
      * @example "/servlets/" when url is "http://www.test.com/servlets/test.html?a=b&c=d"
-     * @return string
+     * @return  string
      */
     public function getContextPath(): string
     {
@@ -68,7 +68,7 @@ class URI
      * Gets original page requested path.
      *
      * @example "mypage.json" when url is "http://www.test.com/servlets/mypage.json?a=b&c=d"
-     * @return string
+     * @return  string
      */
     public function getPage(): string
     {
@@ -89,7 +89,7 @@ class URI
      * Gets query string part from requested URL.
      *
      * @example "a=b&c=d" when url is "http://www.test.com/servlets/mypage.json?a=b&c=d"
-     * @return string
+     * @return  string
      */
     public function getQueryString(): string
     {
@@ -99,7 +99,7 @@ class URI
     /**
      * Gets query string parameters detected by optional name
      *
-     * @param string $name
+     * @param  string $name
      * @return mixed
      */
     public function parameters(string $name=""): mixed

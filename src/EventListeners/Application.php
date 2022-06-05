@@ -17,7 +17,7 @@ abstract class Application implements Runnable
     /**
      * Saves objects to be available in implemented run() methods.
      *
-     * @param Attributes $attributes
+     * @param Attributes                  $attributes
      * @param \Lucinda\STDOUT\Application $application
      */
     public function __construct(

@@ -6,7 +6,7 @@ use Lucinda\STDOUT\Session\Options;
 
 /**
  * Encapsulates SESSION operations and parameters
-*/
+ */
 class Session
 {
     /**
@@ -37,7 +37,7 @@ class Session
     /**
      * Gets settings to configure PHP session driver with
      *
-     * @param Options $options
+     * @param  Options $options
      * @return array<string,int|string|bool>
      */
     private function getSettings(Options $options): array
@@ -89,7 +89,7 @@ class Session
      * Adds/updates a session param.
      *
      * @param string $key
-     * @param mixed $value
+     * @param mixed  $value
      */
     public function set(string $key, mixed $value): void
     {
@@ -99,7 +99,7 @@ class Session
     /**
      * Gets session param value.
      *
-     * @param string $key
+     * @param  string $key
      * @return mixed
      */
     public function get(string $key): mixed
@@ -110,7 +110,7 @@ class Session
     /**
      * Checks if session param exists.
      *
-     * @param string $key
+     * @param  string $key
      * @return bool
      */
     public function contains(string $key): bool

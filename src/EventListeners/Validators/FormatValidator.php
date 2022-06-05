@@ -15,8 +15,8 @@ class FormatValidator
     /**
      * Performs detection process
      *
-     * @param Application $application
-     * @param string $url
+     * @param  Application $application
+     * @param  string      $url
      * @throws ConfigurationException
      */
     public function __construct(Application $application, string $url)

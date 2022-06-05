@@ -18,7 +18,7 @@ class Application extends \Lucinda\MVC\Application
     /**
      * Populates attributes based on an XML file
      *
-     * @param string $xmlFilePath XML file url
+     * @param  string $xmlFilePath XML file url
      * @throws ConfigurationException If xml content has failed validation.
      */
     public function __construct(string $xmlFilePath)
@@ -33,6 +33,7 @@ class Application extends \Lucinda\MVC\Application
 
     /**
      * {@inheritDoc}
+     *
      * @see \Lucinda\MVC\Application::setRoutes()
      */
     protected function setRoutes(): void

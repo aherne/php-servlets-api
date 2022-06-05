@@ -26,8 +26,8 @@ class RouteValidator
     /**
      * Performs detection process
      *
-     * @param Application $application
-     * @param Request $request
+     * @param  Application $application
+     * @param  Request     $request
      * @throws PathNotFoundException|MethodNotAllowedException|ValidationFailedException
      */
     public function __construct(Application $application, Request $request)
@@ -40,8 +40,8 @@ class RouteValidator
     /**
      * Matches requested page to a 'route' and detects path parameters, if any
      *
-     * @param Application $application
-     * @param Request $request
+     * @param  Application $application
+     * @param  Request     $request
      * @throws PathNotFoundException
      */
     private function validateUrl(Application $application, Request $request): void
@@ -85,8 +85,8 @@ class RouteValidator
     /**
      * Matches request method supported by detected route, if any, to that used in request
      *
-     * @param Application $application
-     * @param Request $request
+     * @param  Application $application
+     * @param  Request     $request
      * @throws MethodNotAllowedException
      */
     private function validateRequestMethod(Application $application, Request $request): void
@@ -100,8 +100,8 @@ class RouteValidator
     /**
      * Validates request and path parameters based on matching 'parameter' subtags of found 'route'
      *
-     * @param Application $application
-     * @param Request $request
+     * @param  Application $application
+     * @param  Request     $request
      * @throws ValidationFailedException
      */
     private function validateParameters(Application $application, Request $request): void

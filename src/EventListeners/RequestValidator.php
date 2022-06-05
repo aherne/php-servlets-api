@@ -12,6 +12,7 @@ class RequestValidator extends Request
 {
     /**
      * Performs request validation
+     *
      * @throws \Lucinda\MVC\ConfigurationException
      */
     public function run(): void

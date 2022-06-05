@@ -32,29 +32,29 @@ class File
     /**
      * Checks if file uploaded with error
      *
-     * @param integer $errorCode
-     * @param string $fileName
+     * @param  integer $errorCode
+     * @param  string  $fileName
      * @return string
      */
     private function getErrorMessage(int $errorCode, string $fileName): string
     {
         switch ($errorCode) {
-            case UPLOAD_ERR_INI_SIZE:
-                return "The uploaded file exceeds the upload_max_filesize directive in php.ini: ".$fileName;
-            case UPLOAD_ERR_FORM_SIZE:
-                return "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form: ".$fileName;
-            case UPLOAD_ERR_PARTIAL:
-                return "The uploaded file was only partially uploaded: ".$fileName;
-            case UPLOAD_ERR_NO_FILE:
-                return "No file was uploaded!";
-            case UPLOAD_ERR_NO_TMP_DIR:
-                return "Missing a temporary folder!";
-            case UPLOAD_ERR_CANT_WRITE:
-                return "Failed to write file to disk: ".$fileName;
-            case UPLOAD_ERR_EXTENSION:
-                return "A PHP extension stopped the file upload: ".$fileName;
-            default:
-                return "Unknown error!";
+        case UPLOAD_ERR_INI_SIZE:
+            return "The uploaded file exceeds the upload_max_filesize directive in php.ini: ".$fileName;
+        case UPLOAD_ERR_FORM_SIZE:
+            return "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form: ".$fileName;
+        case UPLOAD_ERR_PARTIAL:
+            return "The uploaded file was only partially uploaded: ".$fileName;
+        case UPLOAD_ERR_NO_FILE:
+            return "No file was uploaded!";
+        case UPLOAD_ERR_NO_TMP_DIR:
+            return "Missing a temporary folder!";
+        case UPLOAD_ERR_CANT_WRITE:
+            return "Failed to write file to disk: ".$fileName;
+        case UPLOAD_ERR_EXTENSION:
+            return "A PHP extension stopped the file upload: ".$fileName;
+        default:
+            return "Unknown error!";
         }
     }
 
@@ -141,7 +141,7 @@ class File
     /**
      * Moves uploaded file to destination.
      *
-     * @param string $destination
+     * @param  string $destination
      * @return boolean
      */
     public function move(string $destination): bool

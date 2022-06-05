@@ -25,8 +25,8 @@ class Cookies
      * Adds/updates a cookie param.
      *
      * @param string $key
-     * @param mixed $value
-     * @param int $expirationTime
+     * @param mixed  $value
+     * @param int    $expirationTime
      */
     public function set(string $key, mixed $value, int $expirationTime): void
     {
@@ -50,7 +50,7 @@ class Cookies
     /**
      * Gets value of cookie param.
      *
-     * @param string $key
+     * @param  string $key
      * @return mixed
      */
     public function get(string $key): mixed
@@ -61,7 +61,7 @@ class Cookies
     /**
      * Checks if cookie param exists.
      *
-     * @param string $key
+     * @param  string $key
      * @return boolean
      */
     public function contains(string $key): bool

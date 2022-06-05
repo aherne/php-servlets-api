@@ -23,11 +23,11 @@ abstract class Request implements Runnable
     /**
      * Saves objects to be available in implemented run() methods.
      *
-     * @param Attributes $attributes
-     * @param Application $application
+     * @param Attributes              $attributes
+     * @param Application             $application
      * @param \Lucinda\STDOUT\Request $request
-     * @param Session $session
-     * @param Cookies $cookies
+     * @param Session                 $session
+     * @param Cookies                 $cookies
      */
     public function __construct(
         Attributes $attributes,

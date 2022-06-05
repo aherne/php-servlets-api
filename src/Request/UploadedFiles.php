@@ -18,7 +18,7 @@ class UploadedFiles
     /**
      * Converts information in $_FILES super-global into a tree of UploadedFile objects
      *
-     * @param array<string,mixed> $files
+     * @param  array<string,mixed> $files
      * @throws UploadedFiles\Exception
      */
     public function __construct(array $files)
@@ -33,7 +33,7 @@ class UploadedFiles
     /**
      * Reads file array at surface level
      *
-     * @param array<string,mixed> $files
+     * @param  array<string,mixed> $files
      * @return array<string,mixed>
      */
     private function makeArray(array $files): array
@@ -56,8 +56,8 @@ class UploadedFiles
     /**
      * Reads file array at lower level
      *
-     * @param mixed $key
-     * @param array<mixed> $value
+     * @param  mixed        $key
+     * @param  array<mixed> $value
      * @return array<mixed>
      */
     private function normalize(mixed $key, array $value): array
@@ -84,7 +84,7 @@ class UploadedFiles
     /**
      * Performs recursive conversion between array of properties and UploadedFile
      *
-     * @param array<string, mixed> $array
+     * @param  array<string, mixed> $array
      * @return array<string, mixed>|File
      * @throws UploadedFiles\Exception
      */

@@ -24,7 +24,7 @@ class FrontController implements Runnable
      * Starts API front controller, setting up necessary variables
      *
      * @param Attributes $attributes
-     * @param string $documentDescriptor
+     * @param string     $documentDescriptor
      */
     public function __construct(string $documentDescriptor, Attributes $attributes)
     {
@@ -45,8 +45,8 @@ class FrontController implements Runnable
     /**
      * Adds an event listener
      *
-     * @param EventType $type One of EventType enum values
-     * @param string $className Name of event listener class (including namespace and subfolder, if any)
+     * @param EventType $type      One of EventType enum values
+     * @param string    $className Name of event listener class (including namespace and subfolder, if any)
      */
     public function addEventListener(EventType $type, string $className): void
     {
@@ -124,7 +124,7 @@ class FrontController implements Runnable
     /**
      * Gets response template file
      *
-     * @param Application $application
+     * @param  Application $application
      * @return string
      */
     private function getTemplateFile(Application $application): string
@@ -136,7 +136,7 @@ class FrontController implements Runnable
     /**
      * Gets response content type
      *
-     * @param Format $format
+     * @param  Format $format
      * @return string
      */
     private function getContentType(Format $format): string

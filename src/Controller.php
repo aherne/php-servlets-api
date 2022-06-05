@@ -20,12 +20,12 @@ abstract class Controller implements Runnable
     /**
      * Saves objects to be available in implemented run() methods.
      *
-     * @param Attributes $attributes
+     * @param Attributes  $attributes
      * @param Application $application
-     * @param Request $request
-     * @param Session $session
-     * @param Cookies $cookies
-     * @param Response $response
+     * @param Request     $request
+     * @param Session     $session
+     * @param Cookies     $cookies
+     * @param Response    $response
      */
     public function __construct(
         Attributes $attributes,

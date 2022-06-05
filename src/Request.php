@@ -92,6 +92,7 @@ class Request
 
     /**
      * Gets information about server that received the request.
+     *
      * @return Server
      */
     public function getServer(): Server
@@ -111,6 +112,7 @@ class Request
 
     /**
      * Gets information about URI client requested (host, page, url, etc).
+     *
      * @return URI
      */
     public function getURI(): URI
@@ -140,7 +142,7 @@ class Request
     /**
      * Gets request headers detected by optional name
      *
-     * @param string $name
+     * @param  string $name
      * @return string|array<string,string>|null
      */
     public function headers(string $name=""): string|array|null
@@ -161,28 +163,28 @@ class Request
     private function setParameters(array $get, array $post): void
     {
         switch ($this->method) {
-            case Method::GET:
-                $this->parameters = $get;
-                break;
-            case Method::POST:
-                $this->parameters = $post;
-                break;
-            case Method::PUT:
-            case Method::DELETE:
-                $postVars = array();
-                parse_str(file_get_contents("php://input"), $postVars);
-                $this->parameters = $postVars;
-                break;
-            default:
-                $this->parameters = array();
-                break;
+        case Method::GET:
+            $this->parameters = $get;
+            break;
+        case Method::POST:
+            $this->parameters = $post;
+            break;
+        case Method::PUT:
+        case Method::DELETE:
+            $postVars = array();
+            parse_str(file_get_contents("php://input"), $postVars);
+            $this->parameters = $postVars;
+            break;
+        default:
+            $this->parameters = array();
+            break;
         }
     }
 
     /**
      * Gets request parameters detected by optional name
      *
-     * @param string $name
+     * @param  string $name
      * @return mixed
      */
     public function parameters(string $name=""): mixed
@@ -199,7 +201,7 @@ class Request
      * - uploaded file attributes (name, type, tmp_name, etc) are encapsulated into an UploadedFile instance
      * - array structure information is saved to follows exactly structure set in file input @ form.
      *
-     * @param array<string,mixed> $files
+     * @param  array<string,mixed> $files
      * @throws UploadedFiles\Exception
      */
     private function setUploadedFiles(array $files): void
@@ -211,7 +213,7 @@ class Request
     /**
      * Gets uploaded files detected by optional request parameter name
      *
-     * @param string $name
+     * @param  string $name
      * @return mixed
      */
     public function uploadedFiles(string $name=""): mixed
@@ -237,7 +239,7 @@ class Request
      * Gets HTTP request method in which URI was requested.
      *
      * @example GET
-     * @return Method
+     * @return  Method
      */
     public function getMethod(): Method
     {
@@ -258,7 +260,7 @@ class Request
      * Gets protocol for which URI was requested.
      *
      * @example https
-     * @return Protocol
+     * @return  Protocol
      */
     public function getProtocol(): Protocol
     {
