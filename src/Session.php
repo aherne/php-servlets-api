@@ -2,6 +2,7 @@
 
 namespace Lucinda\STDOUT;
 
+use Lucinda\STDOUT\Session\Cookie;
 use Lucinda\STDOUT\Session\Options;
 
 /**
@@ -27,10 +28,6 @@ class Session
 
         if ($className = $options->getHandler()) {
             session_set_save_handler(new $className(), true);
-        }
-
-        if ($options->isAutoStart()) {
-            $this->start();
         }
     }
 
@@ -64,15 +61,18 @@ class Session
         if ($value = $options->getReferrerCheck()) {
             $output["referer_check"] = $value;
         }
+        if ($options->isAutoStart()) {
+            $output["auto_start"] = 1;
+        }
         return $output;
     }
 
     /**
      * Starts session.
      */
-    public function start(): void
+    public function start(): bool
     {
-        session_start();
+        return session_start();
     }
 
     /**
@@ -82,7 +82,7 @@ class Session
      */
     public function isStarted(): bool
     {
-        return (session_id() != "");
+        return session_status() === PHP_SESSION_ACTIVE;
     }
 
     /**
@@ -131,8 +131,40 @@ class Session
     /**
      * Closes session.
      */
-    public function destroy(): void
+    public function destroy(): bool
     {
-        session_destroy();
+        $_SESSION = [];
+        setcookie(session_name(), "", time()-60);
+        return session_destroy();
+    }
+
+    /**
+     * Terminates current session and discards all changes
+     *
+     * @return bool
+     */
+    public function abort(): bool
+    {
+        return session_abort();
+    }
+
+    /**
+     * Terminates current session and saves all changes
+     *
+     * @return bool
+     */
+    public function commit(): bool
+    {
+        return session_write_close();
+    }
+
+    /**
+     * Gets access to session cookie operations
+     *
+     * @return Cookie
+     */
+    public function cookie(): Cookie
+    {
+        return new Cookie();
     }
 }

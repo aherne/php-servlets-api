@@ -163,21 +163,21 @@ class Request
     private function setParameters(array $get, array $post): void
     {
         switch ($this->method) {
-        case Method::GET:
-            $this->parameters = $get;
-            break;
-        case Method::POST:
-            $this->parameters = $post;
-            break;
-        case Method::PUT:
-        case Method::DELETE:
-            $postVars = array();
-            parse_str(file_get_contents("php://input"), $postVars);
-            $this->parameters = $postVars;
-            break;
-        default:
-            $this->parameters = array();
-            break;
+            case Method::GET:
+                $this->parameters = $get;
+                break;
+            case Method::POST:
+                $this->parameters = $post;
+                break;
+            case Method::PUT:
+            case Method::DELETE:
+                $postVars = array();
+                parse_str(file_get_contents("php://input"), $postVars);
+                $this->parameters = $postVars;
+                break;
+            default:
+                $this->parameters = array();
+                break;
         }
     }
 

@@ -76,7 +76,7 @@ class Cookies
      */
     public function remove(string $key): void
     {
-        setcookie($key, "", 1);
+        setcookie($key, "", time()-3600);
         unset($_COOKIE[$key]);
     }
 }
