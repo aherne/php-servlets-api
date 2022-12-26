@@ -52,10 +52,30 @@ class SessionTest
         return new Result(!$this->object->contains("asd"));
     }
 
+    public function abort()
+    {
+        $this->object->start();
+        return new Result($this->object->abort());
+    }
+        
+
+    public function commit()
+    {
+        $this->object->start();
+        $status = $this->object->commit();
+        return new Result($status);
+    }
+        
+
+    public function cookie()
+    {
+        return new Result(true, "Tested via Session::Cookie!");
+    }
+
 
     public function destroy()
     {
-        $this->object->destroy();
-        return new Result(!$this->object->isStarted());
+        $status = $this->object->destroy();
+        return new Result($status);
     }
 }

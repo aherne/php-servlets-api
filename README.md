@@ -415,15 +415,30 @@ To understand how uploaded files are processed into this class, check [specifica
 
 Class [Session](https://github.com/aherne/php-servlets-api/blob/master/src/Session.php) encapsulates operations to perform with a http session via $\_SESSION superglobal and defines following public methods, all relevant to developers:
 
-| Method | Arguments | Returns | Description |
-| --- | --- | --- | --- |
-| start | void | void | Starts session, using settings defined in [session](#session) XML tag |
-| isStarted | void | bool | Checks if session was started |
-| set | string $key, mixed $value | void | Sets session parameter by key and value |
-| get | string $key | mixed | Gets value of session parameter by key |
-| contains | string $key | bool | Checks if session contains parameter by key |
-| remove | string $key | void | Deletes session parameter by key, if any |
-| destroy | void | void | Destroys session, clearing of all parameters. |
+| Method    | Arguments | Returns                                 | Description |
+|-----------| --- |-----------------------------------------| --- |
+| start     | void | void                                    | Starts session, using settings defined in [session](#session) XML tag |
+| isStarted | void | bool                                    | Checks if session was started |
+| set       | string $key, mixed $value | void                                    | Sets session parameter by key and value |
+| get       | string $key | mixed                                   | Gets value of session parameter by key |
+| contains  | string $key | bool                                    | Checks if session contains parameter by key |
+| remove    | string $key | void                                    | Deletes session parameter by key, if any |
+| destroy   | void | bool                                    | Destroys session, clearing of all parameters. |
+| abort     | void | bool                                    | Terminates current session and discards all changes. |
+| commit    | void | bool                                    | Terminates current session and saves all changes. |
+| cookie    | void | [Session\Cookie](#class-session-cookie) | Gets access to session cookie operations. |
+
+#### Class Session Cookie
+
+Class [Session\Cookie](https://github.com/aherne/php-servlets-api/blob/master/src/Session.php) encapsulates operations to perform with a http session cookie and defines following public methods, all relevant to developers:
+
+| Method    | Arguments | Returns | Description                             |
+|-----------| --- |---------|-----------------------------------------|
+| getName     | void | string  | Get name of session id cookie           |
+| getID | void | string  | Get value of session id cookie          |
+| regenerateID       | void | bool    | Regenerate session id, keeping old session info |
+| createNewID       | void | bool   | Create new session id disregarding session info  |
+
 
 ### Class Cookies
 
