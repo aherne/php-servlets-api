@@ -313,7 +313,7 @@ class Application
      */
     public function routes($url="")
     {
-        if (!$url) {
+        if ($url==="") {
             return $this->routes;
         } else {
             return (isset($this->routes[$url])?$this->routes[$url]:null);
