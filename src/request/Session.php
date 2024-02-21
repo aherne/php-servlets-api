@@ -29,7 +29,7 @@ class Session
      */
     public function isStarted()
     {
-        return (session_id() != "");
+        return session_status() === PHP_SESSION_ACTIVE;
     }
     
     /**
