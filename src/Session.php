@@ -61,7 +61,7 @@ class Session
      */
     public function isStarted(): bool
     {
-        return (session_id() != "");
+        return session_status() === PHP_SESSION_ACTIVE;
     }
     
     /**
@@ -112,6 +112,8 @@ class Session
      */
     public function destroy(): void
     {
+        $_SESSION = [];
+        setcookie(session_name(), "", time()-60);
         session_destroy();
     }
 }
