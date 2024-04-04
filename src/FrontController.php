@@ -12,9 +12,9 @@ use Lucinda\MVC\Application\Format;
  */
 class FrontController implements Runnable
 {
-    private $documentDescriptor;
-    private $attributes;
-    private $events = [];
+    protected $documentDescriptor;
+    protected $attributes;
+    protected $events = [];
     
     /**
      * Starts API front controller, setting up necessary variables
@@ -50,7 +50,8 @@ class FrontController implements Runnable
     }
     
     /**
-     * Performs all steps required to convert request to response in procedural mode, while delegating to subcomponents, to maximize performance
+     * Performs all steps required to convert request to response in procedural mode, while delegating to subcomponents,
+     * to maximize performance
      *
      * @throws PathNotFoundException If an invalid route was requested from client or setup by developer in XML.
      * @throws FileUploadException If file upload failed due to server constraints.
@@ -59,19 +60,13 @@ class FrontController implements Runnable
     public function run(): void
     {
         // execute events for START
-        foreach ($this->events[EventType::START] as $className) {
-            $runnable = new $className($this->attributes);
-            $runnable->run();
-        }
+        $this->runStartEvents();
         
         // reads XML configuration file
         $application = new Application($this->documentDescriptor);
         
         // execute events for APPLICATION
-        foreach ($this->events[EventType::APPLICATION] as $className) {
-            $runnable = new $className($this->attributes, $application);
-            $runnable->run();
-        }
+        $this->runApplicationEvents($application);
         
         // reads user request, into request (RO), session (RW) and cookies (RW) objects
         $request = new Request();
@@ -79,41 +74,171 @@ class FrontController implements Runnable
         $cookies = new Cookies($application->getCookieOptions());
         
         // execute events for REQUEST
-        foreach ($this->events[EventType::REQUEST] as $className) {
-            $runnable = new $className($this->attributes, $application, $request, $session, $cookies);
-            $runnable->run();
-        }
+        $this->runRequestEvents($application, $request, $session, $cookies);
                 
-        // initializes response
+        // determine response format
         $format = $application->resolvers($this->attributes->getValidFormat());
+
+        // initializes response
         $response = new Response($this->getContentType($format), $this->getTemplateFile($application));
 
         // locates and runs page controller
-        $className  = $application->routes($this->attributes->getValidPage())->getController();
-        if ($className) {
-            $runnable = new $className($this->attributes, $application, $request, $session, $cookies, $response);
-            $runnable->run();
-        }
+        $this->runController($application, $request, $session, $cookies, $response);
 
         // resolves view into response body, unless output stream has been written to already
-        if ($response->getBody()===null) {
-            $className  = $format->getViewResolver();
-            $runnable = new $className($application, $response);
-            $runnable->run();
-        }
+        $this->runViewResolver($application, $format, $response);
         
         // execute events for RESPONSE
-        foreach ($this->events[EventType::RESPONSE] as $className) {
-            $runnable = new $className($this->attributes, $application, $request, $session, $cookies, $response);
-            $runnable->run();
-        }
+        $this->runResponseEvents($application, $request, $session, $cookies, $response);
 
         // commits response to caller
         $response->commit();
         
         // execute events for END
+        $this->runEndEvents($application, $request, $session, $cookies, $response);
+    }
+
+    /**
+     * Executes all event listeners set to be run before any handling of request
+     *
+     * @return void
+     */
+    protected function runStartEvents(): void
+    {
+        foreach ($this->events[EventType::START] as $className) {
+            $runnable = new $className($this->attributes);
+            $runnable->run();
+        }
+    }
+
+    /**
+     * Executes all event listeners set to be run after application configuration is read
+     *
+     * @param Application $application
+     * @return void
+     */
+    protected function runApplicationEvents(
+        Application $application
+    ): void
+    {
+        foreach ($this->events[EventType::APPLICATION] as $className) {
+            $runnable = new $className($this->attributes, $application);
+            $runnable->run();
+        }
+    }
+
+    /**
+     * Executes all event listeners set to be run after request information is read
+     *
+     * @param Application $application
+     * @param Request $request
+     * @param Session $session
+     * @param Cookies $cookies
+     * @return void
+     */
+    protected function runRequestEvents(
+        Application $application,
+        Request $request,
+        Session $session,
+        Cookies $cookies
+    ): void
+    {
+        foreach ($this->events[EventType::REQUEST] as $className) {
+            $runnable = new $className($this->attributes, $application, $request, $session, $cookies);
+            $runnable->run();
+        }
+    }
+
+    /**
+     * Executes all event listeners set to be run after response is compiled
+     *
+     * @param Application $application
+     * @param Request $request
+     * @param Session $session
+     * @param Cookies $cookies
+     * @param Response $response
+     * @return void
+     */
+    protected function runResponseEvents(
+        Application $application,
+        Request $request,
+        Session $session,
+        Cookies $cookies,
+        Response $response
+    ): void
+    {
+        foreach ($this->events[EventType::RESPONSE] as $className) {
+            $runnable = new $className($this->attributes, $application, $request, $session, $cookies, $response);
+            $runnable->run();
+        }
+    }
+
+    /**
+     * Executes all event listeners set to be run after response is committed to caller
+     *
+     * @param Application $application
+     * @param Request $request
+     * @param Session $session
+     * @param Cookies $cookies
+     * @param Response $response
+     * @return void
+     */
+    protected function runEndEvents(
+        Application $application,
+        Request $request,
+        Session $session,
+        Cookies $cookies,
+        Response $response
+    ): void
+    {
         foreach ($this->events[EventType::END] as $className) {
             $runnable = new $className($this->attributes, $application, $request, $session, $cookies, $response);
+            $runnable->run();
+        }
+    }
+
+    /**
+     * Detects and executes page controller, if any
+     *
+     * @param Application $application
+     * @param Request $request
+     * @param Session $session
+     * @param Cookies $cookies
+     * @param Response $response
+     * @return void
+     */
+    protected function runController(
+        Application $application,
+        Request $request,
+        Session $session,
+        Cookies $cookies,
+        Response $response
+    ): void
+    {
+        $className  = $application->routes($this->attributes->getValidPage())->getController();
+        if ($className) {
+            $runnable = new $className($this->attributes, $application, $request, $session, $cookies, $response);
+            $runnable->run();
+        }
+    }
+
+    /**
+     * Detects resolver to compile view into response body, if not already written
+     *
+     * @param Application $application
+     * @param Format $format
+     * @param Response $response
+     * @return void
+     */
+    protected function runViewResolver(
+        Application $application,
+        Format $format,
+        Response $response
+    ): void
+    {
+        if ($response->getBody()===null) {
+            $className  = $format->getViewResolver();
+            $runnable = new $className($application, $response);
             $runnable->run();
         }
     }
@@ -124,10 +249,10 @@ class FrontController implements Runnable
      * @param Application $application
      * @return string
      */
-    private function getTemplateFile(Application $application): string
+    protected function getTemplateFile(Application $application): string
     {
         $template = $application->routes($this->attributes->getValidPage())->getView();
-        return ($template?$application->getViewsPath()."/".$template:"");
+        return $template?$application->getViewsPath()."/".$template:"";
     }
     
     /**
@@ -136,7 +261,7 @@ class FrontController implements Runnable
      * @param Format $format
      * @return string
      */
-    private function getContentType(Format $format): string
+    protected function getContentType(Format $format): string
     {
         $charset = $format->getCharacterEncoding();
         return $format->getContentType().($charset?"; charset=".$charset:"");
