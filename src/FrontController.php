@@ -80,7 +80,7 @@ class FrontController implements Runnable
         $format = $application->resolvers($this->attributes->getValidFormat());
 
         // initializes response
-        $response = new Response($this->getContentType($format), $this->getTemplateFile($application));
+        $response = $this->generateResponse($application, $format);
 
         // locates and runs page controller
         $this->runController($application, $request, $session, $cookies, $response);
@@ -96,6 +96,24 @@ class FrontController implements Runnable
         
         // execute events for END
         $this->runEndEvents($application, $request, $session, $cookies, $response);
+    }
+
+    /**
+     * Generates response object based on content type and template file
+     *
+     * @param Application $application
+     * @param Format $format
+     * @return Response
+     */
+    protected function generateResponse(Application $application, Format $format): Response
+    {
+        $charset = $format->getCharacterEncoding();
+        $contentType = $format->getContentType().($charset?"; charset=".$charset:"");
+
+        $template = $application->routes($this->attributes->getValidPage())->getView();
+        $templateFile = $template?$application->getViewsPath()."/".$template:"";
+
+        return new Response($contentType, $templateFile);
     }
 
     /**
@@ -215,8 +233,7 @@ class FrontController implements Runnable
         Response $response
     ): void
     {
-        $className  = $application->routes($this->attributes->getValidPage())->getController();
-        if ($className) {
+        if ($className  = $application->routes($this->attributes->getValidPage())->getController()) {
             $runnable = new $className($this->attributes, $application, $request, $session, $cookies, $response);
             $runnable->run();
         }
@@ -241,29 +258,5 @@ class FrontController implements Runnable
             $runnable = new $className($application, $response);
             $runnable->run();
         }
-    }
-    
-    /**
-     * Gets response template file
-     *
-     * @param Application $application
-     * @return string
-     */
-    protected function getTemplateFile(Application $application): string
-    {
-        $template = $application->routes($this->attributes->getValidPage())->getView();
-        return $template?$application->getViewsPath()."/".$template:"";
-    }
-    
-    /**
-     * Gets response content type
-     *
-     * @param Format $format
-     * @return string
-     */
-    protected function getContentType(Format $format): string
-    {
-        $charset = $format->getCharacterEncoding();
-        return $format->getContentType().($charset?"; charset=".$charset:"");
     }
 }
