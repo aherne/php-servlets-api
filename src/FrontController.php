@@ -110,10 +110,10 @@ class FrontController implements Runnable
     protected function generateResponse(Application $application, Format $format): Response
     {
         $charset = $format->getCharacterEncoding();
-        $contentType = $format->getContentType().($charset?"; charset=".$charset:"");
+        $contentType = $format->getContentType().($charset ? "; charset=".$charset : "");
 
         $template = $application->routes($this->attributes->getValidPage())->getView();
-        $templateFile = $template?$application->getViewsPath()."/".$template:"";
+        $templateFile = $template ? $application->getViewsPath()."/".$template : "";
 
         return new Response($contentType, $templateFile);
     }
@@ -139,8 +139,7 @@ class FrontController implements Runnable
      */
     protected function runApplicationEvents(
         Application $application
-    ): void
-    {
+    ): void {
         foreach ($this->events[EventType::APPLICATION->value] as $className) {
             $runnable = new $className($this->attributes, $application);
             $runnable->run();
@@ -161,8 +160,7 @@ class FrontController implements Runnable
         Request $request,
         Session $session,
         Cookies $cookies
-    ): void
-    {
+    ): void {
         foreach ($this->events[EventType::REQUEST->value] as $className) {
             $runnable = new $className($this->attributes, $application, $request, $session, $cookies);
             $runnable->run();
@@ -185,8 +183,7 @@ class FrontController implements Runnable
         Session $session,
         Cookies $cookies,
         Response $response
-    ): void
-    {
+    ): void {
         foreach ($this->events[EventType::RESPONSE->value] as $className) {
             $runnable = new $className($this->attributes, $application, $request, $session, $cookies, $response);
             $runnable->run();
@@ -209,8 +206,7 @@ class FrontController implements Runnable
         Session $session,
         Cookies $cookies,
         Response $response
-    ): void
-    {
+    ): void {
         foreach ($this->events[EventType::END->value] as $className) {
             $runnable = new $className($this->attributes, $application, $request, $session, $cookies, $response);
             $runnable->run();
@@ -233,8 +229,7 @@ class FrontController implements Runnable
         Session $session,
         Cookies $cookies,
         Response $response
-    ): void
-    {
+    ): void {
         if ($className  = $application->routes($this->attributes->getValidPage())->getController()) {
             $runnable = new $className($this->attributes, $application, $request, $session, $cookies, $response);
             $runnable->run();
@@ -253,8 +248,7 @@ class FrontController implements Runnable
         Application $application,
         Format $format,
         Response $response
-    ): void
-    {
+    ): void {
         if ($response->getBody()===null) {
             $className  = $format->getViewResolver();
             $runnable = new $className($application, $response);
