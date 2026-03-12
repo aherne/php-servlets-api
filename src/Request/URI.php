@@ -5,7 +5,7 @@ namespace Lucinda\STDOUT\Request;
 /**
  * Encapsulates information about URI client requested.
  */
-class URI
+final class URI
 {
     private string $contextPath;
     private string $page;

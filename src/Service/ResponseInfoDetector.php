@@ -3,7 +3,6 @@
 namespace Lucinda\STDOUT\Service;
 
 use Lucinda\STDOUT\Validators\ValidatedRequest;
-use Lucinda\MVC\Response\View;
 use Lucinda\MVC\ConfigurationException;
 use Lucinda\MVC\Application;
 use Lucinda\STDOUT\Facets\ResolverInfo;

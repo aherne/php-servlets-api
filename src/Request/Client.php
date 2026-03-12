@@ -5,7 +5,7 @@ namespace Lucinda\STDOUT\Request;
 /**
  * Encapsulates information about client that made the request.
  */
-class Client
+final class Client
 {
     private string $name;
     private string $ip;

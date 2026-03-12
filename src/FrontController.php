@@ -25,7 +25,7 @@ use Lucinda\STDOUT\Service\ViewDetector;
 /**
  * Implements STDOUT front controller MVC functionality, integrating all API components as a whole.
  */
-class FrontController implements Runnable
+final class FrontController implements Runnable
 {
     protected string $documentDescriptor;
     protected FacetRegistry $facetRegistry;

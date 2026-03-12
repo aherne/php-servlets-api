@@ -5,7 +5,7 @@ namespace Lucinda\STDOUT\Request;
 /**
  * Encapsulates information about server that received the request.
  */
-class Server
+final class Server
 {
     private string $name;
     private string $ip;

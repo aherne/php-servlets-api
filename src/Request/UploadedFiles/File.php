@@ -5,7 +5,7 @@ namespace Lucinda\STDOUT\Request\UploadedFiles;
 /**
  * Bean holding information about an uploaded file
  */
-class File
+final class File
 {
     private string $name;
     private string $location;

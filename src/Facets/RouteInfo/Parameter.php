@@ -9,7 +9,7 @@ use Lucinda\STDOUT\EventListeners\Validators\ParameterValidator;
 /**
  * Encapsulates information necessary to validate a route/request parameter
  */
-class Parameter
+final class Parameter
 {
     private string $name;
     /** @var class-string<ParameterValidator> */

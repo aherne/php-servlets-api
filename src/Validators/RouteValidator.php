@@ -10,7 +10,7 @@ use Lucinda\STDOUT\MethodNotAllowedException;
 /**
  * Binds information in 'application', and 'routes' XML tags with request information in order to detect final requested route
  */
-class RouteValidator
+final class RouteValidator
 {
     private string $url;
     /**

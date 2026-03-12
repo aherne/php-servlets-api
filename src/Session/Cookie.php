@@ -5,7 +5,7 @@ namespace Lucinda\STDOUT\Session;
 /**
  * Encapsulates operations to perform on session id cookie
  */
-class Cookie
+final class Cookie
 {
     /**
      * Get name of session id cookie

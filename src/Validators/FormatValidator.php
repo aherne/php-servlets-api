@@ -8,7 +8,7 @@ use Lucinda\MVC\XmlReader\Exception;
 /**
  * Binds information in 'application', 'formats' and 'routes' XML tags based on route requested to detect final response format
  */
-class FormatValidator
+final class FormatValidator
 {
     private string $format;
 

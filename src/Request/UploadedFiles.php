@@ -8,7 +8,7 @@ use Lucinda\STDOUT\Request\UploadedFiles\Parser;
 /**
  * Encapsulates information of files sent via multipart forms into UploadedFile objects.
  */
-class UploadedFiles
+final class UploadedFiles
 {
     /**
      * @var array<mixed>
