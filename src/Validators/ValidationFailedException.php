@@ -1,6 +1,6 @@
 <?php
 
-namespace Lucinda\STDOUT;
+namespace Lucinda\STDOUT\Validators;
 
 /**
  * Exception thrown when a route/request parameter value fails validation.

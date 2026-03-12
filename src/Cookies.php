@@ -2,21 +2,23 @@
 
 namespace Lucinda\STDOUT;
 
+use Lucinda\MVC\Facet;
 use Lucinda\STDOUT\Cookies\Options;
+use Lucinda\STDOUT\Facets\CookiesOptions;
 
 /**
  * Encapsulates COOKIE operations and parameters
  */
-class Cookies
+final class Cookies implements Facet
 {
-    private ?Options $options = null;
+    private ?CookiesOptions $options = null;
 
     /**
      * Sets up cookies based on options.
      *
-     * @param Options|null $options
+     * @param CookiesOptions|null $options
      */
-    public function __construct(Options $options = null)
+    public function __construct(?CookiesOptions $options = null)
     {
         $this->options = $options;
     }

@@ -8,13 +8,13 @@ use Lucinda\STDOUT\Request\Protocol;
 use Lucinda\STDOUT\Request\Server;
 use Lucinda\STDOUT\Request\URI;
 use Lucinda\STDOUT\Request\UploadedFiles;
-use Lucinda\STDOUT\Request\UploadedFiles\File;
 use Lucinda\MVC\ConfigurationException;
+use Lucinda\MVC\Facet;
 
 /**
  * Detects information about request from $_SERVER, $_GET, $_POST, $_FILES. Once detected, parameters are immutable.
  */
-class Request
+final class Request implements Facet
 {
     private Client $client;
     private Server $server;

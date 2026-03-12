@@ -2,15 +2,18 @@
 
 namespace Lucinda\STDOUT;
 
-use Lucinda\STDOUT\Session\Options as SessionOptions;
-use Lucinda\STDOUT\Cookies\Options as CookiesOptions;
+use Lucinda\STDOUT\Facets\SessionOptions;
+use Lucinda\STDOUT\Facets\CookiesOptions;
+use Lucinda\STDOUT\Facets\RouteInfo;
+use Lucinda\STDOUT\Facets\ResolverInfo;
 use Lucinda\MVC\ConfigurationException;
-use Lucinda\STDOUT\Application\Route;
+use Lucinda\MVC\FacetsLists\ResolversList;
+use Lucinda\MVC\FacetsLists\RoutesList;
 
 /**
  * Compiles information about application.
  */
-class Application extends \Lucinda\MVC\Application
+final class Application extends \Lucinda\MVC\Application
 {
     private ?SessionOptions $sessionOptions = null;
     private ?CookiesOptions $cookiesOptions = null;
@@ -23,30 +26,29 @@ class Application extends \Lucinda\MVC\Application
      */
     public function __construct(string $xmlFilePath)
     {
-        $this->readXML($xmlFilePath);
-        $this->setApplicationInfo();
-        $this->setRoutes();
-        $this->setResolvers();
+        parent::__construct($xmlFilePath);
         $this->setSessionOptions();
         $this->setCookieOptions();
     }
 
     /**
-     * {@inheritDoc}
-     *
-     * @see \Lucinda\MVC\Application::setRoutes()
+     * Sets customized routes lists
      */
     protected function setRoutes(): void
     {
-        $xml = $this->getTag("routes");
-        $list = $xml->xpath("route");
-        foreach ($list as $info) {
-            $id = (string) $info['id'];
-            if (!$id) {
-                throw new ConfigurationException("Attribute 'id' is mandatory for 'route' tag");
-            }
-            $this->routes[$id] = new Route($info);
-        }
+        $list = new RoutesList(RouteInfo::class);
+        $this->routes = $list->convert($this->reader->getTag("routes"));
+    }
+
+        /**
+     * Sets view resolvers info based on contents of "resolvers" XML tag
+     *
+     * @throws XmlException If xml content has failed validation.
+     */
+    protected function setResolvers(): void
+    {
+        $list = new ResolversList(ResolverInfo::class);
+        $this->formats = $list->convert($this->reader->getTag("resolvers"));
     }
 
     /**
@@ -54,11 +56,10 @@ class Application extends \Lucinda\MVC\Application
      */
     private function setSessionOptions(): void
     {
-        $xml = $this->getTag("session");
-        if (empty($xml)) {
-            return;
+        if (!$this->reader->hasTag("session")) {
+            return; // it is ok not to have this tag
         }
-        $this->sessionOptions = new SessionOptions($xml);
+        $this->sessionOptions = new SessionOptions($this->reader->getTag("session"));
     }
 
     /**
@@ -66,11 +67,10 @@ class Application extends \Lucinda\MVC\Application
      */
     private function setCookieOptions(): void
     {
-        $xml = $this->getTag("cookies");
-        if (empty($xml)) {
-            return;
+        if (!$this->reader->hasTag("cookies")) {
+            return; // it is ok not to have this tag
         }
-        $this->cookiesOptions = new CookiesOptions($xml);
+        $this->cookiesOptions = new CookiesOptions($this->reader->getTag("cookies"));
     }
 
     /**
@@ -91,5 +91,13 @@ class Application extends \Lucinda\MVC\Application
     public function getCookieOptions(): ?CookiesOptions
     {
         return $this->cookiesOptions;
+    }
+
+    /**
+     * Gets all routes for later request validation
+     */
+    public function getAllRoutes(): array
+    {
+        return $this->routes;
     }
 }

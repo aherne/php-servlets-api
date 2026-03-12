@@ -1,6 +1,6 @@
 <?php
 
-namespace Lucinda\STDOUT\EventListeners\Validators;
+namespace Lucinda\STDOUT\Validators;
 
 /**
  * Defines blueprints for request/path parameter value validation

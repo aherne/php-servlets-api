@@ -2,20 +2,21 @@
 
 namespace Lucinda\STDOUT;
 
+use Lucinda\MVC\Facet;
+use Lucinda\STDOUT\Facets\SessionOptions;
 use Lucinda\STDOUT\Session\Cookie;
-use Lucinda\STDOUT\Session\Options;
 
 /**
  * Encapsulates SESSION operations and parameters
  */
-class Session
+final class Session implements Facet
 {
     /**
      * Configures session based on information set in XML "session" tag and starts it, if "auto_start" attribute is on
      *
-     * @param Options|null $options
+     * @param SessionOptions|null $options
      */
-    public function __construct(Options $options = null)
+    public function __construct(?SessionOptions $options = null)
     {
         if ($options==null) {
             return;
@@ -37,7 +38,7 @@ class Session
      * @param  Options $options
      * @return array<string,int|string|bool>
      */
-    private function getSettings(Options $options): array
+    private function getSettings(SessionOptions $options): array
     {
         $output = [];
         if ($value = $options->getSavePath()) {

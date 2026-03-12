@@ -1,12 +1,11 @@
 <?php
 
-namespace Lucinda\STDOUT\EventListeners\Validators;
+namespace Lucinda\STDOUT\Validators;
 
 use Lucinda\STDOUT\Request;
 use Lucinda\STDOUT\Application;
 use Lucinda\STDOUT\PathNotFoundException;
 use Lucinda\STDOUT\MethodNotAllowedException;
-use Lucinda\STDOUT\ValidationFailedException;
 
 /**
  * Binds information in 'application', and 'routes' XML tags with request information in order to detect final requested route
@@ -48,11 +47,11 @@ class RouteValidator
     {
         $url = $request->getURI()->getPage();
         if ($url=="") {
-            $url = $application->getDefaultRoute();
+            $url = $application->getApplicationInfo()->getDefaultRoute();
         }
-        if ($application->routes($url)===null) {
+        if ($application->getRoutes($url)===null) {
             $matchFound = false;
-            $routes = $application->routes();
+            $routes = $application->getAllRoutes();
             foreach ($routes as $route) {
                 if (str_contains($route->getID(), "(")) {
                     $matches = [];
@@ -91,7 +90,7 @@ class RouteValidator
      */
     private function validateRequestMethod(Application $application, Request $request): void
     {
-        $validRequestMethod = $application->routes($this->url)->getValidRequestMethod();
+        $validRequestMethod = $application->getRoutes($this->url)->getValidRequestMethod();
         if ($validRequestMethod && ($validRequestMethod->value != $request->getMethod()->value)) {
             throw new MethodNotAllowedException("Route allows only request method: ".$validRequestMethod->value);
         }
@@ -112,7 +111,7 @@ class RouteValidator
             $parameters[$k] = $v;
         }
 
-        $validators = $application->routes($this->url)->getValidParameters();
+        $validators = $application->getRoutes($this->url)->getValidParameters();
         foreach ($validators as $parameterName=>$class) {
             if (!isset($parameters[$parameterName])) {
                 if ($class->isMandatory()) {

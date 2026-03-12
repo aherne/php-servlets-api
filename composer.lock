@@ -1,0 +1,170 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "21cd59b5c75a659f2b027582546f3810",
+    "packages": [
+        {
+            "name": "lucinda/abstract_mvc",
+            "version": "v3.0.7",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aherne/mvc.git",
+                "reference": "235759f456ae8000d6b07edc66386d6610a577c9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aherne/mvc/zipball/235759f456ae8000d6b07edc66386d6610a577c9",
+                "reference": "235759f456ae8000d6b07edc66386d6610a577c9",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "lucinda/unit-testing": "^2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Lucinda\\MVC\\": "src/",
+                    "Test\\Lucinda\\MVC\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Lucian Popescu",
+                    "email": "lucian.gabriel.popescu@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Abstract MVC API to be extended based on STDIN type (url requests, exceptions)",
+            "keywords": [
+                "abstract",
+                "api",
+                "mvc"
+            ],
+            "support": {
+                "issues": "https://github.com/aherne/mvc/issues",
+                "source": "https://github.com/aherne/mvc/tree/v3.0.7"
+            },
+            "time": "2026-03-09T15:37:17+00:00"
+        }
+    ],
+    "packages-dev": [
+        {
+            "name": "lucinda/console",
+            "version": "v2.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aherne/console.git",
+                "reference": "d89c9079b7791c38e66fddb78e648d6a3ab1cfc5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aherne/console/zipball/d89c9079b7791c38e66fddb78e648d6a3ab1cfc5",
+                "reference": "d89c9079b7791c38e66fddb78e648d6a3ab1cfc5",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Lucinda\\Console\\": "src/",
+                    "Test\\Lucinda\\Console\\": "tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Lucian Popescu",
+                    "email": "lucian.gabriel.popescu@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Lucinda Console Table: API able to draw tables in UNIX consoles or windows command prompt",
+            "keywords": [
+                "command prompt",
+                "tables",
+                "unix console"
+            ],
+            "support": {
+                "issues": "https://github.com/aherne/console/issues",
+                "source": "https://github.com/aherne/console/tree/v2.0.5"
+            },
+            "time": "2022-12-25T17:58:22+00:00"
+        },
+        {
+            "name": "lucinda/unit-testing",
+            "version": "v2.0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/aherne/unit-testing.git",
+                "reference": "91dd817ca076c566660267c3416c47813b595ea9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/aherne/unit-testing/zipball/91dd817ca076c566660267c3416c47813b595ea9",
+                "reference": "91dd817ca076c566660267c3416c47813b595ea9",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-pdo": "*",
+                "ext-simplexml": "*",
+                "ext-tokenizer": "*",
+                "lucinda/console": "~2.0",
+                "php": "^8.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Lucinda\\UnitTest\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Lucian Popescu",
+                    "email": "lucian.gabriel.popescu@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Lightweight PHP8.1 library for unit testing with zero dependencies",
+            "homepage": "https://github.com/aherne/unit-testing",
+            "keywords": [
+                "unit testing"
+            ],
+            "support": {
+                "issues": "https://github.com/aherne/unit-testing/issues",
+                "source": "https://github.com/aherne/unit-testing/tree/v2.0.4"
+            },
+            "time": "2026-01-16T16:21:42+00:00"
+        }
+    ],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": {
+        "php": "^8.1",
+        "ext-simplexml": "*"
+    },
+    "platform-dev": [],
+    "plugin-api-version": "2.2.0"
+}

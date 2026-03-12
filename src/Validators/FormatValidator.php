@@ -1,9 +1,9 @@
 <?php
 
-namespace Lucinda\STDOUT\EventListeners\Validators;
+namespace Lucinda\STDOUT\Validators;
 
 use Lucinda\STDOUT\Application;
-use Lucinda\MVC\ConfigurationException;
+use Lucinda\MVC\XmlReader\Exception;
 
 /**
  * Binds information in 'application', 'formats' and 'routes' XML tags based on route requested to detect final response format
@@ -17,18 +17,18 @@ class FormatValidator
      *
      * @param  Application $application
      * @param  string      $url
-     * @throws ConfigurationException
+     * @throws Exception
      */
     public function __construct(Application $application, string $url)
     {
-        $extension = $application->getDefaultFormat();
-        $route = $application->routes($url);
+        $extension = $application->getApplicationInfo()->getDefaultFormat();
+        $route = $application->getRoutes($url); // assumes $url has already been validated
         if ($route->getFormat()) {
             $extension = $route->getFormat();
         }
 
-        if ($application->resolvers($extension)===null) {
-            throw new ConfigurationException("Format could not be matched to formats.format tag @ XML: ".$extension);
+        if ($application->getResolvers($extension)===null) {
+            throw new Exception("Format could not be matched to formats.format tag @ XML: ".$extension);
         }
 
         $this->format = $extension;
