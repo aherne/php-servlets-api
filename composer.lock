@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "lucinda/abstract_mvc",
-            "version": "v3.0.7",
+            "version": "v3.0.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aherne/mvc.git",
-                "reference": "235759f456ae8000d6b07edc66386d6610a577c9"
+                "reference": "7bc6f5b559ce91032148073aac5a7f7245e69472"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aherne/mvc/zipball/235759f456ae8000d6b07edc66386d6610a577c9",
-                "reference": "235759f456ae8000d6b07edc66386d6610a577c9",
+                "url": "https://api.github.com/repos/aherne/mvc/zipball/7bc6f5b559ce91032148073aac5a7f7245e69472",
+                "reference": "7bc6f5b559ce91032148073aac5a7f7245e69472",
                 "shasum": ""
             },
             "require": {
@@ -52,9 +52,9 @@
             ],
             "support": {
                 "issues": "https://github.com/aherne/mvc/issues",
-                "source": "https://github.com/aherne/mvc/tree/v3.0.7"
+                "source": "https://github.com/aherne/mvc/tree/v3.0.11"
             },
-            "time": "2026-03-09T15:37:17+00:00"
+            "time": "2026-03-25T06:58:02+00:00"
         }
     ],
     "packages-dev": [

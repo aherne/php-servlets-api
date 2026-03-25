@@ -3,7 +3,6 @@
 namespace Lucinda\STDOUT;
 
 use Lucinda\MVC\Runnable;
-use Lucinda\MVC\ConfigurationException;
 use Lucinda\MVC\Controller\ViewAware;
 use Lucinda\MVC\EventListener\Faceted;
 use Lucinda\MVC\EventListener\MultiFaceted;
@@ -16,11 +15,12 @@ use Lucinda\MVC\Response\Transformer\Status as TransformerStatus;
 use Lucinda\MVC\Response\Transformer\Headers as TransformerHeaders;
 use Lucinda\MVC\Response\View;
 use Lucinda\MVC\TerminationException;
-use Lucinda\STDOUT\Facets\ResolverInfo;
+use Lucinda\MVC\Service\ResolverInfoDetector;
+use Lucinda\MVC\Service\ViewDetector;
+use Lucinda\MVC\Facets\ResolverInfo;
 use Lucinda\STDOUT\Validators\ValidatedRequest;
 use Lucinda\STDOUT\Response as HttpResponse;
-use Lucinda\STDOUT\Service\ResponseInfoDetector;
-use Lucinda\STDOUT\Service\ViewDetector;
+use Lucinda\STDOUT\Service\ContentTypeDetector;
 
 /**
  * Implements STDOUT front controller MVC functionality, integrating all API components as a whole.
@@ -85,8 +85,9 @@ final class FrontController implements Runnable
             $this->runEvents(EventType::REQUEST);
 
             // determine response format
-            $responseInfoDetector = new ResponseInfoDetector($application, $requestValidator);
-            $response = new HttpResponse($responseInfoDetector->getContentType());
+            $responseInfoDetector = new ResolverInfoDetector($application, $requestValidator);
+            $contentTypeDetector = new ContentTypeDetector($responseInfoDetector->getResolver());
+            $response = new HttpResponse($contentTypeDetector->getContentType());
 
             // locates and runs page controller and sets up view
             $filledView = $this->runController($application, $requestValidator);
@@ -169,7 +170,7 @@ final class FrontController implements Runnable
         ValidatedRequest $validatedRequest
     ): ?View
     {
-        if ($className  = $application->getRoutes($validatedRequest->getPage())->getController()) {
+        if ($className  = $application->getRoutes($validatedRequest->getRoute())->getController()) {
             $object = $this->reflectionInjector->create($className);
             if ($object instanceof ViewAware) {
                 return $object->run();

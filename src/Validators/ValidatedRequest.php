@@ -3,10 +3,11 @@
 namespace Lucinda\STDOUT\Validators;
 
 use Lucinda\MVC\Facet;
+use Lucinda\MVC\RequestValidator;
 use Lucinda\STDOUT\Application;
 use Lucinda\STDOUT\Request;
 
-final class ValidatedRequest implements Facet
+final class ValidatedRequest implements Facet, RequestValidator
 {
     private string $page;
     private string $format;
@@ -24,7 +25,7 @@ final class ValidatedRequest implements Facet
         $this->format = $formatValidator->getFormat();
     }
 
-    public function getPage(): string
+    public function getRoute(): string
     {
         return $this->page;
     }
