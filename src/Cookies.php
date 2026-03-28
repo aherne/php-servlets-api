@@ -3,8 +3,7 @@
 namespace Lucinda\STDOUT;
 
 use Lucinda\MVC\Facet;
-use Lucinda\STDOUT\Cookies\Options;
-use Lucinda\STDOUT\Facets\CookiesOptions;
+use Lucinda\STDOUT\XmlTags\CookiesOptions;
 
 /**
  * Encapsulates COOKIE operations and parameters

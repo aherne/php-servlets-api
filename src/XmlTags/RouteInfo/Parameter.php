@@ -1,10 +1,10 @@
 <?php
 
-namespace Lucinda\STDOUT\Facets\RouteInfo;
+namespace Lucinda\STDOUT\XmlTags\RouteInfo;
 
 use Lucinda\MVC\XmlReader\Element;
 use Lucinda\MVC\XmlReader\Exception;
-use Lucinda\STDOUT\EventListeners\Validators\ParameterValidator;
+use Lucinda\STDOUT\Validators\ParameterValidator;
 
 /**
  * Encapsulates information necessary to validate a route/request parameter
@@ -65,7 +65,7 @@ final class Parameter
         if (empty($attributes["validator"])) {
             throw new Exception("Attribute 'validator' is mandatory for 'parameter' tag");
         }
-        if (!is_subclass_of($attributes["validator"], ParameterValidator::class, true)) {
+        if (!is_subclass_of($attributes["validator"], ParameterValidator::class)) {
             throw new Exception("Attribute 'validator' must point to a child of: ".ParameterValidator::class);
         }
         $this->validator = $attributes["validator"];

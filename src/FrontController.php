@@ -17,7 +17,7 @@ use Lucinda\MVC\Response\View;
 use Lucinda\MVC\TerminationException;
 use Lucinda\MVC\Service\ResolverInfoDetector;
 use Lucinda\MVC\Service\ViewDetector;
-use Lucinda\MVC\Facets\ResolverInfo;
+use Lucinda\MVC\XmlTags\ResolverInfo;
 use Lucinda\STDOUT\Validators\ValidatedRequest;
 use Lucinda\STDOUT\Response as HttpResponse;
 use Lucinda\STDOUT\Service\ContentTypeDetector;

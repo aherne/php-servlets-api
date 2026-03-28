@@ -1,12 +1,12 @@
 <?php
 
-namespace Lucinda\STDOUT\Facets;
+namespace Lucinda\STDOUT\XmlTags;
 
 use Lucinda\MVC\XmlReader\Element;
 use Lucinda\MVC\XmlReader\Exception;
 
 /**
- * Sets options to create session with based on contents of XML tag "session"
+ * Detects default session options from XML tag <session>
  */
 final class SessionOptions
 {

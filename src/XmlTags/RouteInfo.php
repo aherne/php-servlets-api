@@ -1,16 +1,15 @@
 <?php
 
-namespace Lucinda\STDOUT\Facets;
+namespace Lucinda\STDOUT\XmlTags;
 
-use Lucinda\MVC\Facets\RouteInfo as AbstractRouteInfo;
+use Lucinda\MVC\XmlTags\RouteInfo as AbstractRouteInfo;
 use Lucinda\MVC\XmlReader\Element;
 use Lucinda\MVC\XmlReader\Exception;
-use Lucinda\STDOUT\Controller;
-use Lucinda\STDOUT\Facets\RouteInfo\Parameter;
+use Lucinda\STDOUT\XmlTags\RouteInfo\Parameter;
 use Lucinda\STDOUT\Request\Method;
 
 /**
- * Encapsulates extra route information for request validation
+ * Overrides default RouteInfo class in order to add support for "method" attribute and <parameter> sub-tags
  */
 final class RouteInfo extends AbstractRouteInfo
 {

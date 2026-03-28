@@ -1,12 +1,12 @@
 <?php
 
-namespace Lucinda\STDOUT\Facets;
+namespace Lucinda\STDOUT\XmlTags;
 
 use Lucinda\MVC\XmlReader\Element;
 use Lucinda\MVC\XmlReader\Exception;
 
 /**
- * Sets options to create session with based on contents of XML tag "session"
+ * Detects default cookie options from XML tag <cookie>
  */
 final class CookiesOptions
 {
@@ -16,7 +16,7 @@ final class CookiesOptions
     private bool $isSecuredByHTTPheaders;
 
     /**
-     * Saves session options based on XML tag "cookie"
+     * Saves cookie options based on XML tag "cookie"
      *
      * @param Element $element
      */

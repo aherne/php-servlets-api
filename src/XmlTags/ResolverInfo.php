@@ -1,16 +1,24 @@
 <?php
 
-namespace Lucinda\STDOUT\Facets;
+namespace Lucinda\STDOUT\XmlTags;
 
-use Lucinda\MVC\Facets\ResolverInfo as AbstractResolverInfo;
+use Lucinda\MVC\XmlTags\ResolverInfo as AbstractResolverInfo;
 use Lucinda\MVC\XmlReader\Element;
 use Lucinda\MVC\XmlReader\Exception;
 
+/**
+ * Overrides default ResolverInfo by also covering "content_type" & "charset" XML attributes by default
+ */
 final class ResolverInfo extends AbstractResolverInfo
 {
     private string $contentType;
     private string $characterEncoding;
 
+    /**
+     * Bootstraps detection process
+     * 
+     * @param Element $element
+     */
     public function __construct(Element $element)
     {
         parent::__construct($element);

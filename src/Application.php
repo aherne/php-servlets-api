@@ -2,13 +2,13 @@
 
 namespace Lucinda\STDOUT;
 
-use Lucinda\STDOUT\Facets\SessionOptions;
-use Lucinda\STDOUT\Facets\CookiesOptions;
-use Lucinda\STDOUT\Facets\RouteInfo;
-use Lucinda\STDOUT\Facets\ResolverInfo;
+use Lucinda\STDOUT\XmlTags\SessionOptions;
+use Lucinda\STDOUT\XmlTags\CookiesOptions;
+use Lucinda\STDOUT\XmlTags\RouteInfo;
+use Lucinda\STDOUT\XmlTags\ResolverInfo;
 use Lucinda\MVC\ConfigurationException;
-use Lucinda\MVC\FacetsLists\ResolversList;
-use Lucinda\MVC\FacetsLists\RoutesList;
+use Lucinda\MVC\XmlTagsLists\ResolversList;
+use Lucinda\MVC\XmlTagsLists\RoutesList;
 
 /**
  * Compiles information about application.

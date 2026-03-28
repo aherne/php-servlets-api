@@ -3,7 +3,7 @@
 namespace Lucinda\STDOUT;
 
 use Lucinda\MVC\Facet;
-use Lucinda\STDOUT\Facets\SessionOptions;
+use Lucinda\STDOUT\XmlTags\SessionOptions;
 use Lucinda\STDOUT\Session\Cookie;
 
 /**
