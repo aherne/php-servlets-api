@@ -18,8 +18,8 @@ use Lucinda\MVC\TerminationException;
 use Lucinda\MVC\Service\ResolverInfoDetector;
 use Lucinda\MVC\Service\ViewDetector;
 use Lucinda\MVC\XmlTags\ResolverInfo;
+use Lucinda\MVC\Response\Http as HttpResponse;
 use Lucinda\STDOUT\Validators\ValidatedRequest;
-use Lucinda\STDOUT\Response as HttpResponse;
 use Lucinda\STDOUT\Service\ContentTypeDetector;
 
 /**
@@ -35,8 +35,8 @@ final class FrontController implements Runnable
     /**
      * Starts API front controller, setting up necessary variables
      *
-     * @param Attributes $attributes
      * @param string     $documentDescriptor
+     * @param EventScheduler $eventScheduler
      */
     public function __construct(
         string $documentDescriptor,
@@ -87,7 +87,8 @@ final class FrontController implements Runnable
             // determine response format
             $responseInfoDetector = new ResolverInfoDetector($application, $requestValidator);
             $contentTypeDetector = new ContentTypeDetector($responseInfoDetector->getResolver());
-            $response = new HttpResponse($contentTypeDetector->getContentType());
+            $response = new HttpResponse();
+            $response->setHeader("Content-Type", $contentTypeDetector->getContentType());
 
             // locates and runs page controller and sets up view
             $filledView = $this->runController($application, $requestValidator);
@@ -95,7 +96,9 @@ final class FrontController implements Runnable
             $view = $viewDetector->getView();
 
             // resolves view into response body, unless output stream has been written to already
-            $this->runViewResolver($responseInfoDetector->getResolver(), $response, $view);
+            if ($view!==null) {
+                $this->runViewResolver($responseInfoDetector->getResolver(), $response, $view);
+            }
 
             // execute events for RESPONSE
             $this->runResponseTransformers($response);
