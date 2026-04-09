@@ -44,6 +44,16 @@ final class Cookie
      */
     public function createNewID(): bool
     {
-        return session_create_id();
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            $_SESSION = [];
+            return session_regenerate_id(true);
+        }
+
+        $newSessionID = session_create_id();
+        if ($newSessionID === false || $newSessionID === "") {
+            return false;
+        }
+        session_id($newSessionID);
+        return true;
     }
 }

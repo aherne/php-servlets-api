@@ -61,7 +61,7 @@ final class ResolverInfo extends AbstractResolverInfo
      */
     private function setCharacterEncoding(array $attributes): void
     {
-        $this->contentType = $attributes["charset"]??"";
+        $this->characterEncoding = $attributes["charset"]??"";
     }
 
     /**

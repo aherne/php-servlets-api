@@ -3,93 +3,76 @@
 namespace Test\Lucinda\STDOUT\Request;
 
 use Lucinda\STDOUT\Request\UploadedFiles;
-use Lucinda\UnitTest\Result;
+use Lucinda\UnitTest\Validator\Objects;
 
 class UploadedFilesTest
 {
     public function toArray()
     {
         $files = [
-            "a"=>[
-                "name"=>"2021-05-10-210425.jpg",
-                "full_path"=>"2021-05-10-210425.jpg",
-                "type"=>"image\/jpeg",
-                "tmp_name"=>"\/tmp\/phprryscK",
-                "error"=>0,
-                "size"=>86181
+            "a" => [
+                "name" => "a.txt",
+                "type" => "text/plain",
+                "tmp_name" => "/tmp/a.txt",
+                "error" => 0,
+                "size" => 10,
             ],
-            "b"=>[
-                "name"=>[
-                    "2021-05-10-210444.jpg",
-                    "2021-05-10-210500.jpg"
+            "b" => [
+                "name" => [
+                    "b1.txt",
+                    "b2.txt",
                 ],
-                "full_path"=>[
-                    "2021-05-10-210444.jpg",
-                    "2021-05-10-210500.jpg"
+                "type" => [
+                    "text/plain",
+                    "text/plain",
                 ],
-                "type"=>[
-                    "image\/jpeg",
-                    "image\/jpeg"
+                "tmp_name" => [
+                    "/tmp/b1.txt",
+                    "/tmp/b2.txt",
                 ],
-                "tmp_name"=>[
-                    "\/tmp\/phpz4FYfK",
-                    "\/tmp\/phpt5LLTM"
-                ],
-                "error"=>[
+                "error" => [
                     0,
-                    0
+                    0,
                 ],
-                "size"=>[
-                    85973,
-                    54995
-                ]
+                "size" => [
+                    20,
+                    30,
+                ],
             ],
-            "d"=>[
-                "name"=>[
-                    "e"=>[
-                        "f"=>"2021-05-10-211351.jpg",
-                        "h"=>"2022-04-26-105639.jpg"
-                    ]
+            "d" => [
+                "name" => [
+                    "e" => [
+                        "f" => "nested.txt",
+                    ],
                 ],
-                "full_path"=>[
-                    "e"=>[
-                        "f"=>"2021-05-10-211351.jpg",
-                        "h"=>"2022-04-26-105639.jpg"
-                    ]
+                "type" => [
+                    "e" => [
+                        "f" => "text/plain",
+                    ],
                 ],
-                "type"=>[
-                    "e"=>[
-                        "f"=>"image\/jpeg",
-                        "h"=>"image\/jpeg"
-                    ]
+                "tmp_name" => [
+                    "e" => [
+                        "f" => "/tmp/nested.txt",
+                    ],
                 ],
-                "tmp_name"=>[
-                    "e"=>[
-                        "f"=>"\/tmp\/phpiBM3hJ",
-                        "h"=>"\/tmp\/phpy5kW3M"
-                    ]
+                "error" => [
+                    "e" => [
+                        "f" => 0,
+                    ],
                 ],
-                "error"=>[
-                    "e"=>[
-                        "f"=>0,
-                        "h"=>0
-                    ]
+                "size" => [
+                    "e" => [
+                        "f" => 40,
+                    ],
                 ],
-                "size"=>[
-                    "e"=>[
-                        "f"=>86527,
-                        "h"=>93095
-                    ]
-                ]
-            ]
+            ],
         ];
-        $uploadedFiles = new UploadedFiles($files);
-        $results = $uploadedFiles->toArray();
+        $result = (new UploadedFiles($files))->toArray();
 
-        $output = [];
-        $output[] = new Result(isset($results["a"]) && $results["a"]->getSize()==86181);
-        $output[] = new Result(isset($results["b"][1]) && $results["b"][1]->getSize()==54995);
-        $output[] = new Result(isset($results["d"]["e"]["f"]) && $results["d"]["e"]["f"]->getSize()==86527);
-        return $output;
+        return [
+            (new Objects($result["a"]))->assertInstanceOf(\Lucinda\STDOUT\Request\UploadedFiles\File::class),
+            (new Objects($result["b"][1]))->assertInstanceOf(\Lucinda\STDOUT\Request\UploadedFiles\File::class),
+            (new Objects($result["d"]["e"]["f"]))->assertInstanceOf(\Lucinda\STDOUT\Request\UploadedFiles\File::class),
+        ];
     }
 }

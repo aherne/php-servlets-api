@@ -1,71 +1,40 @@
 <?php
-
 namespace Test\Lucinda\STDOUT;
 
-use Lucinda\STDOUT\Application;
-use Lucinda\UnitTest\Result;
+use Lucinda\UnitTest\Validator\Arrays;
+use Lucinda\UnitTest\Validator\Objects;
+use Test\Lucinda\STDOUT\Support\TestHelper;
 
 class ApplicationTest
 {
-    private $object;
+    private \Lucinda\STDOUT\Application $object;
 
     public function __construct()
     {
-        $this->object = new Application(__DIR__."/mocks/configuration.xml");
-    }
-
-    public function getDefaultRoute()
-    {
-        return new Result($this->object->getDefaultRoute()=="index");
-    }
-
-
-    public function getDefaultFormat()
-    {
-        return new Result($this->object->getDefaultFormat()=="html");
-    }
-
-    public function getViewsPath()
-    {
-        return new Result($this->object->getViewsPath()=="tests/mocks/views");
-    }
-
-    public function getVersion()
-    {
-        return new Result($this->object->getVersion()=="1.0.0");
-    }
-
-    public function getTag()
-    {
-        return new Result($this->object->getTag("formats")!==null);
-    }
-
-
-    public function routes()
-    {
-        return new Result($this->object->routes("users")!==null);
-    }
-
-
-    public function resolvers()
-    {
-        return new Result($this->object->resolvers("html")!==null);
-    }
-
-
-    public function getXML()
-    {
-        return new Result($this->object->getXML() instanceof \SimpleXMLElement);
+        $this->object = TestHelper::application();
     }
 
     public function getSessionOptions()
     {
-        return new Result($this->object->getSessionOptions()->isSecuredByHTTPS());
+        return new Objects($this->object->getSessionOptions())->assertInstanceOf(
+            \Lucinda\STDOUT\XmlTags\SessionOptions::class
+        );
     }
-
 
     public function getCookieOptions()
     {
-        return new Result($this->object->getCookieOptions()->isSecuredByHTTPS());
+        return new Objects($this->object->getCookieOptions())->assertInstanceOf(
+            \Lucinda\STDOUT\XmlTags\CookiesOptions::class
+        );
+    }
+
+    public function getAllRoutes()
+    {
+        $routes = $this->object->getAllRoutes();
+        return [
+            (new Arrays($routes))->assertSize(2),
+            (new Arrays($routes))->assertContainsKey("users"),
+            (new Arrays($routes))->assertContainsKey("user/(name)"),
+        ];
     }
 }

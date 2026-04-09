@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<xml>
+  <cookies path="/" domain="example.com" https_only="1" headers_only="1"/>
+</xml>

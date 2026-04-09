@@ -95,7 +95,7 @@ final class SessionOptions
      *
      * @return string
      */
-    public function getSavePath(): string
+    public function getSavePath(): ?string
     {
         return $this->savePath;
     }
@@ -105,7 +105,7 @@ final class SessionOptions
      *
      * @return string
      */
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -115,7 +115,7 @@ final class SessionOptions
      *
      * @return int
      */
-    public function getExpiredTime(): int
+    public function getExpiredTime(): ?int
     {
         return $this->expiredTime;
     }
@@ -125,7 +125,7 @@ final class SessionOptions
      *
      * @return int
      */
-    public function getExpiredOnBrowserClose(): int
+    public function getExpiredOnBrowserClose(): ?int
     {
         return $this->expiredOnBrowserClose;
     }
@@ -135,7 +135,7 @@ final class SessionOptions
      *
      * @return bool
      */
-    public function isSecuredByHTTPS(): bool
+    public function isSecuredByHTTPS(): ?bool
     {
         return $this->isSecuredByHTTPS;
     }
@@ -145,7 +145,7 @@ final class SessionOptions
      *
      * @return bool
      */
-    public function isSecuredByHTTPheaders(): bool
+    public function isSecuredByHTTPheaders(): ?bool
     {
         return $this->isSecuredByHTTPheaders;
     }
@@ -155,7 +155,7 @@ final class SessionOptions
      *
      * @return string
      */
-    public function getReferrerCheck(): string
+    public function getReferrerCheck(): ?string
     {
         return $this->referrerCheck;
     }
@@ -165,7 +165,7 @@ final class SessionOptions
      *
      * @return string
      */
-    public function getHandler(): string
+    public function getHandler(): ?string
     {
         return $this->handlerFile;
     }
@@ -175,7 +175,7 @@ final class SessionOptions
      *
      * @return bool
      */
-    public function isAutoStart(): bool
+    public function isAutoStart(): ?bool
     {
         return $this->autoStart;
     }

@@ -1,44 +1,50 @@
 <?php
+
 namespace Test\Lucinda\STDOUT\Session;
-    
-use Lucinda\STDOUT\Session;
+
 use Lucinda\STDOUT\Session\Cookie;
-use Lucinda\UnitTest\Result;
+use Lucinda\UnitTest\Validator\Booleans;
+use Lucinda\UnitTest\Validator\Strings;
+use Test\Lucinda\STDOUT\Support\TestHelper;
 
 class CookieTest
 {
-    private Session $session;
-    private Cookie $cookie;
+    private \Lucinda\STDOUT\Session $session;
+    private Cookie $object;
 
     public function __construct()
     {
-        $this->session = new Session();
-        $this->cookie = new Cookie();
+        TestHelper::resetSessionState();
+        $this->session = new \Lucinda\STDOUT\Session();
+        $this->object = new Cookie();
     }
+
     public function getName()
     {
-        return new Result($this->cookie->getName()=="PHPSESSID");
+        return new Strings($this->object->getName())->assertEquals("PHPSESSID");
     }
+
     public function getID()
     {
         $this->session->start();
-        $sessionID = $this->cookie->getID();
+        $id = $this->object->getID();
         $this->session->destroy();
-        return new Result(strlen($sessionID)>=26);
+        return new Strings($id)->assertNotEmpty();
     }
+
     public function regenerateID()
     {
         $this->session->start();
-        $status = $this->cookie->regenerateID();
+        $status = $this->object->regenerateID();
         $this->session->destroy();
-        return new Result($status);
+        return new Booleans($status)->assertTrue();
     }
 
     public function createNewID()
     {
         $this->session->start();
-        $status = $this->cookie->createNewID();
+        $status = $this->object->createNewID();
         $this->session->destroy();
-        return new Result($status);
+        return new Booleans($status)->assertTrue();
     }
 }

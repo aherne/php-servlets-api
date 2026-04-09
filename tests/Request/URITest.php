@@ -3,44 +3,41 @@
 namespace Test\Lucinda\STDOUT\Request;
 
 use Lucinda\STDOUT\Request\URI;
-use Lucinda\UnitTest\Result;
+use Lucinda\UnitTest\Validator\Arrays;
+use Lucinda\UnitTest\Validator\Strings;
+use Test\Lucinda\STDOUT\Support\TestHelper;
 
 class URITest
 {
-    private $object;
+    private URI $object;
 
     public function __construct()
     {
-        $server = [
-            'REQUEST_URI' => '/user/lucian',
-            'REQUEST_METHOD' => 'GET',
-            'DOCUMENT_ROOT' => '/var/www/html/documentation',
-            'SCRIPT_FILENAME' => '/var/www/html/documentation/index.php',
-            'QUERY_STRING' =>'asd=fgh'
-        ];
-        $this->object = new URI($server);
+        $this->object = new URI(
+            TestHelper::requestServer([
+                "REQUEST_URI" => "/user/lucian?asd=fgh",
+                "QUERY_STRING" => "asd=fgh",
+            ])
+        );
     }
 
     public function getContextPath()
     {
-        return new Result($this->object->getContextPath()=="");
+        return new Strings($this->object->getContextPath())->assertEquals("");
     }
-
 
     public function getPage()
     {
-        return new Result($this->object->getPage()=="user/lucian");
+        return new Strings($this->object->getPage())->assertEquals("user/lucian");
     }
-
 
     public function getQueryString()
     {
-        return new Result($this->object->getQueryString()=="asd=fgh");
+        return new Strings($this->object->getQueryString())->assertEquals("asd=fgh");
     }
-
 
     public function parameters()
     {
-        return new Result($this->object->parameters("asd")=="fgh");
+        return new Arrays($this->object->parameters())->assertEquals(["asd" => "fgh"]);
     }
 }

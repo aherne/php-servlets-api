@@ -3,50 +3,41 @@
 namespace Test\Lucinda\STDOUT\Request;
 
 use Lucinda\STDOUT\Request\Server;
-use Lucinda\UnitTest\Result;
+use Lucinda\UnitTest\Validator\Integers;
+use Lucinda\UnitTest\Validator\Strings;
+use Test\Lucinda\STDOUT\Support\TestHelper;
 
 class ServerTest
 {
-    private $object;
+    private Server $object;
 
     public function __construct()
     {
-        $server = [
-            "SERVER_NAME"=>"www.example.com",
-            "SERVER_ADDR"=>"127.0.0.1",
-            "SERVER_PORT"=>80,
-            "SERVER_ADMIN"=>"admin@example.com",
-            'SERVER_SOFTWARE' => 'Apache/2.4.29 (Ubuntu)',
-        ];
-        $this->object = new Server($server);
+        $this->object = new Server(TestHelper::requestServer());
     }
 
     public function getName()
     {
-        return new Result($this->object->getName()=="www.example.com");
+        return new Strings($this->object->getName())->assertEquals("www.documentation.local");
     }
-
 
     public function getIP()
     {
-        return new Result($this->object->getIP()=="127.0.0.1");
+        return new Strings($this->object->getIP())->assertEquals("127.0.0.1");
     }
-
 
     public function getPort()
     {
-        return new Result($this->object->getPort()==80);
+        return new Integers($this->object->getPort())->assertEquals(8080);
     }
-
 
     public function getEmail()
     {
-        return new Result($this->object->getEmail()=="admin@example.com");
+        return new Strings($this->object->getEmail())->assertEquals("admin@test.local");
     }
-
 
     public function getSoftware()
     {
-        return new Result($this->object->getSoftware()=="Apache/2.4.29 (Ubuntu)");
+        return new Strings($this->object->getSoftware())->assertEquals("PHP Built-In Server");
     }
 }

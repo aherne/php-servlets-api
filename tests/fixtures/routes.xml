@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<xml>
+  <routes>
+    <route id="users" controller="Test\Lucinda\STDOUT\Support\Controllers\UsersController" view="hello" format="html" method="GET"/>
+    <route id="user/(name)" controller="Test\Lucinda\STDOUT\Support\Controllers\UserJsonController" format="json" method="GET">
+      <parameter name="name" validator="Test\Lucinda\STDOUT\Support\RouteValidators\NameLengthValidator"/>
+      <parameter name="page" validator="Test\Lucinda\STDOUT\Support\RouteValidators\PositiveIntegerValidator" mandatory="0"/>
+    </route>
+  </routes>
+</xml>

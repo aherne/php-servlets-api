@@ -3,36 +3,31 @@
 namespace Test\Lucinda\STDOUT\Request;
 
 use Lucinda\STDOUT\Request\Client;
-use Lucinda\UnitTest\Result;
+use Lucinda\UnitTest\Validator\Integers;
+use Lucinda\UnitTest\Validator\Strings;
+use Test\Lucinda\STDOUT\Support\TestHelper;
 
 class ClientTest
 {
-    private $object;
+    private Client $object;
 
     public function __construct()
     {
-        $server = [
-            "REMOTE_HOST"=>"www.example.com",
-            "REMOTE_ADDR"=>"127.0.0.1",
-            "REMOTE_PORT"=>59300
-        ];
-        $this->object = new Client($server);
+        $this->object = new Client(TestHelper::requestServer());
     }
 
     public function getName()
     {
-        return new Result($this->object->getName()=="www.example.com");
+        return new Strings($this->object->getName())->assertEquals("client.local");
     }
-
 
     public function getIP()
     {
-        return new Result($this->object->getIP()=="127.0.0.1");
+        return new Strings($this->object->getIP())->assertEquals("127.0.0.2");
     }
-
 
     public function getPort()
     {
-        return new Result($this->object->getPort()==59300);
+        return new Integers($this->object->getPort())->assertEquals(59300);
     }
 }

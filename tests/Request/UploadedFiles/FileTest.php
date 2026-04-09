@@ -3,59 +3,57 @@
 namespace Test\Lucinda\STDOUT\Request\UploadedFiles;
 
 use Lucinda\STDOUT\Request\UploadedFiles\File;
-use Lucinda\UnitTest\Result;
+use Lucinda\UnitTest\Validator\Booleans;
+use Lucinda\UnitTest\Validator\Files;
+use Lucinda\UnitTest\Validator\Integers;
+use Lucinda\UnitTest\Validator\Strings;
+use Test\Lucinda\STDOUT\Support\TestHelper;
 
 class FileTest
 {
-    private $object;
+    private File $object;
+    private string $path;
 
     public function __construct()
     {
-        file_put_contents(dirname(__DIR__, 3)."/testfile.txt", "asdfg");
-        $this->object = new File(
-            [
-            "name"=>"testfile",
-            "type"=>"text/plain",
-            "tmp_name"=>dirname(__DIR__, 3)."/testfile.txt",
-            "size"=>123456,
-            "error"=>0
-            ]
-        );
+        $this->path = TestHelper::tempFile("uploaded.txt", "content");
+        $this->object = new File([
+            "name" => "uploaded.txt",
+            "type" => "text/plain",
+            "tmp_name" => $this->path,
+            "size" => 7,
+            "error" => 0,
+        ]);
     }
 
     public function getName()
     {
-        return new Result($this->object->getName()=="testfile");
+        return new Strings($this->object->getName())->assertEquals("uploaded.txt");
     }
-
 
     public function getLocation()
     {
-        return new Result($this->object->getLocation()==dirname(__DIR__, 3)."/testfile.txt");
+        return new Strings($this->object->getLocation())->assertEquals($this->path);
     }
-
 
     public function getContentType()
     {
-        return new Result($this->object->getContentType()=="text/plain");
+        return new Strings($this->object->getContentType())->assertEquals("text/plain");
     }
-
 
     public function getSize()
     {
-        return new Result($this->object->getSize()==123456);
+        return new Integers($this->object->getSize())->assertEquals(7);
     }
-
 
     public function move()
     {
-        return new Result(false, "Moving uploaded file cannot be unit tested");
+        return new Booleans($this->object->move(TestHelper::fixturesPath("moved.txt")))->assertFalse();
     }
-
 
     public function delete()
     {
         $this->object->delete();
-        return new Result(!file_exists(dirname(__DIR__, 3)."/testfile.txt"));
+        return new Files($this->path)->assertNotExists();
     }
 }

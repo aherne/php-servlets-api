@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<xml>
+  <session save_path="/tmp" name="TESTSESSID" expired_time="60" expired_on_close="120" https_only="1" headers_only="1" auto_start="0"/>
+</xml>

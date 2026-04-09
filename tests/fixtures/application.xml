@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<xml>
+  <application default_format="html" default_route="users" views_folder="tests/fixtures/views" views_extension="phtml" version="1.0.0"/>
+</xml>
