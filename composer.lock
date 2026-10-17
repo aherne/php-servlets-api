@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "lucinda/abstract_mvc",
-            "version": "v3.0.13",
+            "version": "v3.0.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aherne/mvc.git",
-                "reference": "5ac2d502538bbc201ef21d8745805c619c7156e8"
+                "reference": "12ca62b16146f8cb0b66da4c66c5a875d4debcba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aherne/mvc/zipball/5ac2d502538bbc201ef21d8745805c619c7156e8",
-                "reference": "5ac2d502538bbc201ef21d8745805c619c7156e8",
+                "url": "https://api.github.com/repos/aherne/mvc/zipball/12ca62b16146f8cb0b66da4c66c5a875d4debcba",
+                "reference": "12ca62b16146f8cb0b66da4c66c5a875d4debcba",
                 "shasum": ""
             },
             "require": {
@@ -52,71 +52,24 @@
             ],
             "support": {
                 "issues": "https://github.com/aherne/mvc/issues",
-                "source": "https://github.com/aherne/mvc/tree/v3.0.13"
+                "source": "https://github.com/aherne/mvc/tree/v3.0.17"
             },
-            "time": "2026-03-28T14:08:33+00:00"
+            "time": "2026-04-09T08:30:53+00:00"
         }
     ],
     "packages-dev": [
         {
-            "name": "lucinda/console",
-            "version": "v2.0.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/aherne/console.git",
-                "reference": "d89c9079b7791c38e66fddb78e648d6a3ab1cfc5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/aherne/console/zipball/d89c9079b7791c38e66fddb78e648d6a3ab1cfc5",
-                "reference": "d89c9079b7791c38e66fddb78e648d6a3ab1cfc5",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^8.1"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Lucinda\\Console\\": "src/",
-                    "Test\\Lucinda\\Console\\": "tests/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Lucian Popescu",
-                    "email": "lucian.gabriel.popescu@gmail.com",
-                    "role": "Developer"
-                }
-            ],
-            "description": "Lucinda Console Table: API able to draw tables in UNIX consoles or windows command prompt",
-            "keywords": [
-                "command prompt",
-                "tables",
-                "unix console"
-            ],
-            "support": {
-                "issues": "https://github.com/aherne/console/issues",
-                "source": "https://github.com/aherne/console/tree/v2.0.5"
-            },
-            "time": "2022-12-25T17:58:22+00:00"
-        },
-        {
             "name": "lucinda/unit-testing",
-            "version": "v2.0.4",
+            "version": "v2.0.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aherne/unit-testing.git",
-                "reference": "91dd817ca076c566660267c3416c47813b595ea9"
+                "reference": "c7194bdaf76f84695026afc7571d5a193092808f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aherne/unit-testing/zipball/91dd817ca076c566660267c3416c47813b595ea9",
-                "reference": "91dd817ca076c566660267c3416c47813b595ea9",
+                "url": "https://api.github.com/repos/aherne/unit-testing/zipball/c7194bdaf76f84695026afc7571d5a193092808f",
+                "reference": "c7194bdaf76f84695026afc7571d5a193092808f",
                 "shasum": ""
             },
             "require": {
@@ -124,7 +77,6 @@
                 "ext-pdo": "*",
                 "ext-simplexml": "*",
                 "ext-tokenizer": "*",
-                "lucinda/console": "~2.0",
                 "php": "^8.1"
             },
             "type": "library",
@@ -151,20 +103,20 @@
             ],
             "support": {
                 "issues": "https://github.com/aherne/unit-testing/issues",
-                "source": "https://github.com/aherne/unit-testing/tree/v2.0.4"
+                "source": "https://github.com/aherne/unit-testing/tree/v2.0.7"
             },
-            "time": "2026-01-16T16:21:42+00:00"
+            "time": "2026-06-19T07:03:19+00:00"
         }
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.1",
         "ext-simplexml": "*"
     },
-    "platform-dev": [],
-    "plugin-api-version": "2.2.0"
+    "platform-dev": {},
+    "plugin-api-version": "2.9.0"
 }

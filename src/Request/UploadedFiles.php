@@ -6,20 +6,25 @@ use Lucinda\STDOUT\Request\UploadedFiles\File;
 use Lucinda\STDOUT\Request\UploadedFiles\Parser;
 
 /**
- * Encapsulates information of files sent via multipart forms into UploadedFile objects.
+ * Normalizes PHP multipart upload data into a tree of File objects
+ *
+ * PHP stores each upload attribute in a separate parallel array for nested form
+ * fields. This converter restores the original field hierarchy, combines each
+ * leaf's attributes, and replaces uploaded leaves with immutable File values.
+ * UPLOAD_ERR_NO_FILE is represented by an empty array rather than an exception.
  */
 final class UploadedFiles
 {
     /**
-     * @var array<mixed>
+     * @var array<string,mixed> Normalized upload tree preserving form field structure
      */
     protected array $attributes =  array();
 
     /**
-     * Converts information in $_FILES super-global into a tree of UploadedFile objects
+     * Converts a $_FILES snapshot into typed upload values
      *
-     * @param  array<string,mixed> $files
-     * @throws UploadedFiles\Exception
+     * @param array<string,mixed> $files Raw PHP upload structure
+     * @throws Exception If PHP reports an upload error for any file
      */
     public function __construct(array $files)
     {
@@ -31,10 +36,10 @@ final class UploadedFiles
     }
 
     /**
-     * Reads file array at surface level
+     * Converts top-level upload fields into a consistent nested representation
      *
-     * @param  array<string,mixed> $files
-     * @return array<string,mixed>
+     * @param array<string,mixed> $files Raw PHP upload structure
+     * @return array<string,mixed> Upload attributes grouped by form field path
      */
     private function makeArray(array $files): array
     {
@@ -54,11 +59,11 @@ final class UploadedFiles
     }
 
     /**
-     * Reads file array at lower level
+     * Reassembles parallel nested upload attributes for one form field
      *
-     * @param  mixed        $key
-     * @param  array<mixed> $value
-     * @return array<mixed>
+     * @param mixed $key Top-level form field key
+     * @param array<mixed> $value Parallel upload attribute arrays
+     * @return array<mixed> Attributes grouped into individual uploaded files
      */
     private function normalize(mixed $key, array $value): array
     {
@@ -82,11 +87,11 @@ final class UploadedFiles
     }
 
     /**
-     * Performs recursive conversion between array of properties and UploadedFile
+     * Recursively replaces upload attribute leaves with File objects
      *
-     * @param  array<string, mixed> $array
-     * @return array<string, mixed>|File
-     * @throws UploadedFiles\Exception
+     * @param array<string,mixed> $array Normalized upload subtree or attribute leaf
+     * @return array<string,mixed>|File Converted subtree or uploaded file
+     * @throws Exception If PHP reports an upload error
      */
     private function makeObjects(array $array): array|File
     {
@@ -106,9 +111,9 @@ final class UploadedFiles
     }
 
     /**
-     * Gets attributes as array.
+     * Gets the normalized upload tree
      *
-     * @return array<string,mixed>
+     * @return array<string,mixed> File objects and nested arrays keyed by form field
      */
     public function toArray(): array
     {

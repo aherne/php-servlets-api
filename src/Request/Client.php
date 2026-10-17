@@ -3,18 +3,32 @@
 namespace Lucinda\STDOUT\Request;
 
 /**
- * Encapsulates information about client that made the request.
+ * Captures network information about the client that made the request
+ *
+ * Values are read from the REMOTE_HOST, REMOTE_ADDR, and REMOTE_PORT server
+ * entries. No forwarded-header or trusted-proxy interpretation is performed.
  */
 final class Client
 {
+    /**
+     * Remote host name, or an empty string when unavailable
+     */
     private string $name;
+
+    /**
+     * Remote IP address reported by the web server
+     */
     private string $ip;
+
+    /**
+     * Remote source port reported by the web server
+     */
     private int $port;
 
     /**
-     * Detects info based on values in $_SERVER superglobal
+     * Captures client values from a $_SERVER snapshot
      *
-     * @param array<string,string> $server
+     * @param array<string,mixed> $server Server values containing REMOTE_ADDR and REMOTE_PORT
      */
     public function __construct(array $server)
     {
@@ -24,9 +38,9 @@ final class Client
     }
 
     /**
-     * Sets host name.
+     * Captures the optional remote host name
      *
-     * @param array<string,string> $server
+     * @param array<string,mixed> $server Snapshot of $_SERVER
      */
     private function setName(array $server): void
     {
@@ -34,9 +48,9 @@ final class Client
     }
 
     /**
-     * Gets host name.
+     * Gets the remote host name
      *
-     * @return string
+     * @return string Host name, or an empty string when REMOTE_HOST was absent
      */
     public function getName(): string
     {
@@ -44,9 +58,9 @@ final class Client
     }
 
     /**
-     * Sets IP address.
+     * Captures the remote IP address
      *
-     * @param array<string,string> $server
+     * @param array<string,mixed> $server Snapshot of $_SERVER
      */
     private function setIP(array $server): void
     {
@@ -54,9 +68,9 @@ final class Client
     }
 
     /**
-     * Gets IP address
+     * Gets the remote IP address
      *
-     * @return string
+     * @return string Address reported by REMOTE_ADDR
      */
     public function getIP(): string
     {
@@ -64,9 +78,9 @@ final class Client
     }
 
     /**
-     * Sets  port
+     * Captures the remote source port
      *
-     * @param array<string,string> $server
+     * @param array<string,mixed> $server Snapshot of $_SERVER
      */
     private function setPort(array $server): void
     {
@@ -74,9 +88,9 @@ final class Client
     }
 
     /**
-     * Gets  port
+     * Gets the remote source port
      *
-     * @return integer
+     * @return int Port reported by REMOTE_PORT
      */
     public function getPort(): int
     {

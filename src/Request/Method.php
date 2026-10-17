@@ -3,7 +3,7 @@
 namespace Lucinda\STDOUT\Request;
 
 /**
- * Enum containing HTTP request methods
+ * Enumerates HTTP request methods supported by request parsing and dispatch
  */
 enum Method: string
 {

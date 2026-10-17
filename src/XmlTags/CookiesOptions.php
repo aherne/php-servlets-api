@@ -6,19 +6,36 @@ use Lucinda\MVC\XmlReader\Element;
 use Lucinda\MVC\XmlReader\Exception;
 
 /**
- * Detects default cookie options from XML tag <cookie>
+ * Parses default cookie attributes from the XML `cookies` element
+ *
+ * Path and domain values are retained as configured. The `https_only` and
+ * `headers_only` flags accept only 0 or 1 and control the secure and HTTP-only
+ * arguments supplied to setcookie().
  */
 final class CookiesOptions
 {
+    /**
+     * Default cookie path
+     */
     private string $path;
+    /**
+     * Default cookie domain
+     */
     private string $domain;
+    /**
+     * Whether cookies are restricted to HTTPS
+     */
     private bool $isSecuredByHTTPS;
+    /**
+     * Whether cookies are hidden from browser scripting
+     */
     private bool $isSecuredByHTTPheaders;
 
     /**
-     * Saves cookie options based on XML tag "cookie"
+     * Parses cookie defaults from an XML element
      *
-     * @param Element $element
+     * @param Element $element Parsed `cookies` element
+     * @throws Exception If a boolean attribute is neither 0 nor 1
      */
     public function __construct(Element $element)
     {
@@ -28,7 +45,9 @@ final class CookiesOptions
     }
 
     /**
-     * Sets cookie options of string type
+     * Assigns configured path and domain values
+     *
+     * @param array<string,string> $info Attributes of the `cookies` element
      */
     private function setStringOptions(array $info): void
     {
@@ -44,7 +63,10 @@ final class CookiesOptions
     }
 
     /**
-     * Sets cookie options of boolean type
+     * Validates and assigns secure and HTTP-only flags
+     *
+     * @param array<string,string> $info Attributes of the `cookies` element
+     * @throws Exception If a boolean attribute is neither 0 nor 1
      */
     private function setBooleanOptions(array $info): void
     {
@@ -63,9 +85,9 @@ final class CookiesOptions
     }
 
     /**
-     * Gets path on the server in which the cookie will be available on.
+     * Gets the URL path on which created cookies are available
      *
-     * @return string
+     * @return string Configured cookie path
      */
     public function getPath(): string
     {
@@ -73,9 +95,9 @@ final class CookiesOptions
     }
 
     /**
-     * Gets (sub)domain that the cookie is available to.
+     * Gets the domain on which created cookies are available
      *
-     * @return string
+     * @return string Configured cookie domain
      */
     public function getDomain(): string
     {
@@ -83,9 +105,9 @@ final class CookiesOptions
     }
 
     /**
-     * Gets whether cookies are available only if protocol is HTTPS
+     * Checks whether created cookies require HTTPS
      *
-     * @return bool
+     * @return bool Configured secure-cookie flag
      */
     public function isSecuredByHTTPS(): bool
     {
@@ -93,9 +115,9 @@ final class CookiesOptions
     }
 
     /**
-     * Gets whether cookies are not available to client via JavaScript
+     * Checks whether created cookies are hidden from browser scripting
      *
-     * @return bool
+     * @return bool Configured HTTP-only cookie flag
      */
     public function isSecuredByHTTPheaders(): bool
     {

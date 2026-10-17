@@ -3,14 +3,17 @@
 namespace Lucinda\STDOUT\Session;
 
 /**
- * Encapsulates operations to perform on session id cookie
+ * Provides operations for PHP's current session identifier
+ *
+ * The facade reads and changes process-level session state directly. It does
+ * not cache the session name or identifier between calls.
  */
 final class Cookie
 {
     /**
-     * Get name of session id cookie
+     * Gets the configured session cookie name
      *
-     * @return string
+     * @return string Current value returned by session_name()
      */
     public function getName(): string
     {
@@ -18,9 +21,9 @@ final class Cookie
     }
 
     /**
-     * Get value of session id
+     * Gets the current session identifier
      *
-     * @return string
+     * @return string Current value returned by session_id()
      */
     public function getID(): string
     {
@@ -28,9 +31,9 @@ final class Cookie
     }
 
     /**
-     * Regenerate session id, keeping old session info
+     * Regenerates the identifier while retaining existing session data
      *
-     * @return bool
+     * @return bool True when PHP regenerates the identifier successfully
      */
     public function regenerateID(): bool
     {
@@ -38,9 +41,13 @@ final class Cookie
     }
 
     /**
-     * Create new session id disregarding session info
+     * Creates a fresh identifier without retaining existing session data
      *
-     * @return bool
+     * An active session is regenerated with deletion of its old data. When no
+     * session is active, a new identifier is generated and selected for the
+     * next session start.
+     *
+     * @return bool True when a non-empty identifier is created and selected
      */
     public function createNewID(): bool
     {

@@ -3,7 +3,7 @@
 namespace Lucinda\STDOUT;
 
 /**
- * Exception thrown when a route is accessed with unsupported request method
+ * Reports that a route or RESTful controller does not accept the request method
  */
 class MethodNotAllowedException extends \Exception
 {

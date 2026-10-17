@@ -8,26 +8,41 @@ use Lucinda\STDOUT\PathNotFoundException;
 use Lucinda\STDOUT\MethodNotAllowedException;
 
 /**
- * Binds information in 'application', and 'routes' XML tags with request information in order to detect final requested route
+ * Matches an HTTP request to a configured route and validates its parameters
+ *
+ * Exact route identifiers are preferred. When no exact route exists, route
+ * identifiers containing `(name)` placeholders are matched in configuration
+ * order and their path values are extracted. The selected route's optional
+ * request method and parameter rules are then enforced.
+ *
+ * Path parameters override request parameters of the same name before custom
+ * ParameterValidator implementations are executed.
  */
 final class RouteValidator
 {
-    private string $url;
     /**
-     * @var array<string,string>
+     * Matched route identifier, including placeholder syntax when applicable
+     */
+    private string $url;
+
+    /**
+     * @var array<string,string> Raw values extracted from route placeholders
      */
     private array $pathParameters=[];
+
     /**
-     * @var array<string,mixed>
+     * @var array<string,mixed> Successful parameter validation results
      */
     private array $validParameters=[];
 
     /**
-     * Performs detection process
+     * Matches the route and validates its method and parameter constraints
      *
-     * @param  Application $application
-     * @param  Request     $request
-     * @throws PathNotFoundException|MethodNotAllowedException|ValidationFailedException
+     * @param Application $application Parsed route configuration
+     * @param Request $request Current immutable HTTP request
+     * @throws PathNotFoundException If no route matches the request path
+     * @throws MethodNotAllowedException If the matched route rejects the request method
+     * @throws ValidationFailedException If a mandatory parameter is absent or validation returns null
      */
     public function __construct(Application $application, Request $request)
     {
@@ -37,11 +52,14 @@ final class RouteValidator
     }
 
     /**
-     * Matches requested page to a 'route' and detects path parameters, if any
+     * Matches the requested page and extracts route placeholder values
      *
-     * @param  Application $application
-     * @param  Request     $request
-     * @throws PathNotFoundException
+     * An empty page uses the application's default route. Parameterized routes
+     * are evaluated only when no exact route identifier matches.
+     *
+     * @param Application $application Parsed route configuration
+     * @param Request $request Current immutable HTTP request
+     * @throws PathNotFoundException If no exact or parameterized route matches
      */
     private function validateUrl(Application $application, Request $request): void
     {
@@ -82,11 +100,11 @@ final class RouteValidator
     }
 
     /**
-     * Matches request method supported by detected route, if any, to that used in request
+     * Enforces the optional HTTP method constraint of the matched route
      *
-     * @param  Application $application
-     * @param  Request     $request
-     * @throws MethodNotAllowedException
+     * @param Application $application Parsed route configuration
+     * @param Request $request Current immutable HTTP request
+     * @throws MethodNotAllowedException If the configured method differs from the request method
      */
     private function validateRequestMethod(Application $application, Request $request): void
     {
@@ -97,11 +115,12 @@ final class RouteValidator
     }
 
     /**
-     * Validates request and path parameters based on matching 'parameter' subtags of found 'route'
+     * Validates configured parameters for the matched route
      *
-     * @param  Application $application
-     * @param  Request     $request
-     * @throws ValidationFailedException
+     * @param Application $application Parsed route configuration
+     * @param Request $request Current immutable HTTP request
+     * @throws ValidationFailedException If a mandatory value is absent or a validator returns null
+     * @throws \Throwable If a configured validator cannot be constructed or executed
      */
     private function validateParameters(Application $application, Request $request): void
     {
@@ -132,9 +151,9 @@ final class RouteValidator
     }
 
     /**
-     * Gets route requested (value of 'url' of matching 'route' XML tag)
+     * Gets the matched route identifier
      *
-     * @return string
+     * @return string Exact configured route ID, including any placeholder syntax
      */
     public function getUrl(): string
     {
@@ -142,9 +161,9 @@ final class RouteValidator
     }
 
     /**
-     * Gets path parameters detected from requested page
+     * Gets raw values extracted from route placeholders
      *
-     * @return array<string,string>
+     * @return array<string,string> Values keyed by placeholder name
      */
     public function getPathParameters(): array
     {
@@ -152,9 +171,9 @@ final class RouteValidator
     }
 
     /**
-     * Gets route/request parameter validation results for requested page
+     * Gets successful parameter validation results
      *
-     * @return array<string,mixed>
+     * @return array<string,mixed> Validator results keyed by parameter name
      */
     public function getValidParameters(): array
     {

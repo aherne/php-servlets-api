@@ -3,7 +3,7 @@
 namespace Lucinda\STDOUT;
 
 /**
- * Exception thrown when API fails to locate a route that matches requested path.
+ * Reports that no configured route matches the requested application path
  */
 class PathNotFoundException extends \Exception
 {

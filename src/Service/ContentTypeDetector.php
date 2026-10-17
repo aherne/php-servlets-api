@@ -5,16 +5,22 @@ namespace Lucinda\STDOUT\Service;
 use Lucinda\STDOUT\XmlTags\ResolverInfo;
 
 /**
- * Detects default response content type based on information in ResolverInfo object
+ * Builds the HTTP Content-Type header value for a configured resolver
+ *
+ * The resolver's media type is used verbatim. When a character encoding is
+ * configured, it is appended as a `charset` parameter.
  */
 final class ContentTypeDetector
 {
+    /**
+     * Complete Content-Type header value
+     */
     private string $contentType;
 
     /**
-     * Bootstraps detection process.
-     * 
-     * @param ResolverInfo $resolverInfo
+     * Builds a content type from resolver metadata
+     *
+     * @param ResolverInfo $resolverInfo Resolver selected for the response format
      */
     public function __construct(ResolverInfo $resolverInfo)
     {
@@ -22,9 +28,9 @@ final class ContentTypeDetector
     }
 
     /**
-     * Sets default content type
-     * 
-     * @param ResolverInfo $resolverInfo
+     * Combines the configured media type and optional character encoding
+     *
+     * @param ResolverInfo $resolverInfo Resolver selected for the response format
      */
     private function setContentType(ResolverInfo $resolverInfo): void
     {
@@ -33,9 +39,9 @@ final class ContentTypeDetector
     }
 
     /**
-     * Gets detected content type
-     * 
-     * @return string
+     * Gets the complete response Content-Type value
+     *
+     * @return string Media type with an optional charset parameter
      */
     public function getContentType(): string
     {

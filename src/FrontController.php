@@ -23,20 +23,48 @@ use Lucinda\STDOUT\Validators\ValidatedRequest;
 use Lucinda\STDOUT\Service\ContentTypeDetector;
 
 /**
- * Implements STDOUT front controller MVC functionality, integrating all API components as a whole.
+ * Coordinates the complete HTTP request-to-response MVC lifecycle
+ *
+ * A run loads XML configuration, creates injectable request, session, cookie,
+ * and validated-request facets, executes scheduled lifecycle listeners, invokes
+ * the selected controller, resolves its view, applies response transformers,
+ * and emits the resulting HTTP response.
+ *
+ * RESTful controllers are dispatched by HTTP method through RestfulWrapper;
+ * conventional ViewAware controllers continue to run through their run()
+ * method. A TerminationException short-circuits the normal lifecycle and emits
+ * its embedded response immediately.
+ *
+ * @see RestfulWrapper
+ * @see EventScheduler
  */
 final class FrontController implements Runnable
 {
+    /**
+     * Path to the root XML application document
+     */
     protected string $documentDescriptor;
+
+    /**
+     * Facets available for listener and controller constructor injection
+     */
     protected FacetRegistry $facetRegistry;
+
+    /**
+     * Constructor injector backed by the current facet registry
+     */
     protected ReflectionInjector $reflectionInjector;
+
+    /**
+     * Listener classes grouped by MVC lifecycle event
+     */
     protected EventScheduler $eventScheduler;
 
     /**
-     * Starts API front controller, setting up necessary variables
+     * Creates a front controller for one application configuration
      *
-     * @param string     $documentDescriptor
-     * @param EventScheduler $eventScheduler
+     * @param string $documentDescriptor Path to the root XML application document
+     * @param EventScheduler $eventScheduler Lifecycle listeners to execute for each request
      */
     public function __construct(
         string $documentDescriptor,
@@ -51,10 +79,9 @@ final class FrontController implements Runnable
     }
 
     /**
-     * Performs all steps required to convert request to response in procedural mode, while delegating to
-     * subcomponents, to maximize performance
+     * Converts the current PHP request globals into an emitted HTTP response
      *
-     * @throws Exception If a bug is occurring (needs to be captured by developer)
+     * @throws \Throwable If configuration, validation, injection, controller execution, or response processing fails
      */
     public function run(): void
     {
@@ -91,7 +118,7 @@ final class FrontController implements Runnable
             $response->setHeader("Content-Type", $contentTypeDetector->getContentType());
 
             // locates and runs page controller and sets up view
-            $filledView = $this->runController($application, $requestValidator);
+            $filledView = $this->runController($application, $requestValidator, $request);
             $viewDetector = new ViewDetector($application, $requestValidator, $filledView);
             $view = $viewDetector->getView();
 
@@ -114,9 +141,13 @@ final class FrontController implements Runnable
     }
 
     /**
-     * Executes all event listeners set to be run before any handling of request
+     * Executes listeners registered for one lifecycle event
      *
-     * @return void
+     * Faceted listeners publish their returned facet by type. Multi-faceted
+     * listeners publish each returned value under its explicit identifier.
+     *
+     * @param EventType $eventType Lifecycle phase to execute
+     * @throws \Throwable If listener construction or execution fails
      */
     protected function runEvents(EventType $eventType): void
     {
@@ -137,9 +168,13 @@ final class FrontController implements Runnable
     }
 
     /**
-     * Executes all response listeners that in turn transform the response
-     * 
-     * @param HttpResponse $response
+     * Applies body, status, and header transformations from RESPONSE listeners
+     *
+     * A listener may implement more than one transformer contract; every
+     * matching transformation is applied in scheduler order.
+     *
+     * @param HttpResponse $response Mutable response being prepared for emission
+     * @throws \Throwable If listener construction or response transformation fails
      */
     protected function runResponseTransformers(HttpResponse $response): void
     {
@@ -162,20 +197,30 @@ final class FrontController implements Runnable
     }
 
     /**
-     * Detects and executes page controller, if any
+     * Instantiates and executes the controller configured for the validated route
      *
-     * @param Application $application
-     * @param ValidatedRequest $validatedRequest
-     * @return ?View
+     * RESTful controllers take precedence over conventional ViewAware handling.
+     * Controllers without a view contract are executed for side effects and
+     * produce no explicit view.
+     *
+     * @param Application $application Parsed application configuration
+     * @param ValidatedRequest $validatedRequest Route and response format selected for the request
+     * @param Request $request Current immutable HTTP request
+     * @return View|null Controller-provided view, or null when none is produced
+     * @throws \Throwable If controller injection, dispatch, or execution fails
      */
     protected function runController(
         Application $application,
-        ValidatedRequest $validatedRequest
+        ValidatedRequest $validatedRequest,
+        Request $request
     ): ?View
     {
         if ($className  = $application->getRoutes($validatedRequest->getRoute())->getController()) {
             $object = $this->reflectionInjector->create($className);
-            if ($object instanceof ViewAware) {
+            if ($object instanceof Restful) {
+                $restWrapper = new RestfulWrapper($object, $request);
+                return $restWrapper->getResult();
+            } elseif ($object instanceof ViewAware) {
                 return $object->run();
             } else {
                 $object->run();
@@ -185,12 +230,12 @@ final class FrontController implements Runnable
     }
 
     /**
-     * Detects resolver to compile view into response body, if not already written
+     * Resolves a controller or route view into the response body
      *
-     * @param ResolverInfo $resolverInfo
-     * @param HttpResponse $response
-     * @param View $view
-     * @return void
+     * @param ResolverInfo $resolverInfo Resolver configuration selected for the response format
+     * @param HttpResponse $response Mutable response receiving the resolved body
+     * @param View $view View data and optional template selected for rendering
+     * @throws \Throwable If resolver injection or rendering fails
      */
     protected function runViewResolver(
         ResolverInfo $resolverInfo,

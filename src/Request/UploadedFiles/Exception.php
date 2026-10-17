@@ -3,8 +3,10 @@
 namespace Lucinda\STDOUT\Request\UploadedFiles;
 
 /**
- * Exception thrown when uploaded file fails validation. This should be an error that should be handled manually and
- * not cause application to terminate.
+ * Reports an upload failure supplied by PHP's multipart processing
+ *
+ * Callers may present this as a request validation error instead of treating it
+ * as an internal application failure.
  */
 class Exception extends \Exception
 {

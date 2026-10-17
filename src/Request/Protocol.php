@@ -3,7 +3,7 @@
 namespace Lucinda\STDOUT\Request;
 
 /**
- * Enum containing supported HTTP request protocols
+ * Enumerates the HTTP transport protocols detected for a request
  */
 enum Protocol: string
 {

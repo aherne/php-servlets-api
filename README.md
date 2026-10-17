@@ -1,213 +1,200 @@
 # STDOUT MVC API
 
-`lucinda/mvc` is a PHP 8.1+ library that turns an HTTP request into an MVC response using XML configuration plus Lucinda MVC contracts.
+STDOUT MVC API is a **front-controller runtime** for PHP applications. It captures the current HTTP request, matches it to XML-defined routes, validates its method and parameters, executes lifecycle listeners and a controller, resolves a view, and emits an HTTP response.
 
-The current package is centered around one runtime entry point, [`FrontController`](src/FrontController.php), and a small set of HTTP-specific services:
+Its goals are to:
 
-- XML-backed application metadata via [`Application`](src/Application.php)
-- immutable request inspection via [`Request`](src/Request.php)
-- writable session and cookie wrappers via [`Session`](src/Session.php) and [`Cookies`](src/Cookies.php)
-- route, method, format, and parameter validation via [`ValidatedRequest`](src/Validators/ValidatedRequest.php)
+- keep routing, controller selection, rendering, and response transformation in one predictable lifecycle;
+- expose request, session, cookies, application metadata, and validated routing state as injectable facets;
+- support conventional controllers and HTTP-method-driven RESTful controllers;
+- select application-specific controllers, resolvers, listeners, and validators through XML;
+- build on `lucinda/abstract_mvc` while supplying the HTTP-specific request and response boundary.
 
-The old README described a much larger API surface. This version documents only what exists in `src/` today and how it is actually exercised in `tests/`.
-
-## Installation
+Install it with Composer:
 
 ```bash
 composer require lucinda/mvc
 ```
 
-Requirements:
+It requires PHP 8.1 or newer and SimpleXML.
 
-- PHP `^8.1`
-- `ext-simplexml`
-- [`lucinda/abstract_mvc`](https://packagist.org/packages/lucinda/abstract_mvc)
+## Basic input and output
 
-For local verification in this repository:
+The application supplies:
 
-```bash
-composer install
-php test.php
-```
+- a root XML document containing or referencing `application`, `resolvers`, and `routes` elements;
+- optional `session` and `cookies` elements;
+- an `EventScheduler` containing any lifecycle listeners;
+- the standard PHP request superglobals.
 
-## Runtime Flow
-
-[`FrontController`](src/FrontController.php) coordinates the whole request lifecycle:
-
-1. runs `START` event listeners from the provided `EventScheduler`
-2. loads XML into [`Application`](src/Application.php)
-3. builds [`Request`](src/Request.php), [`Session`](src/Session.php), and [`Cookies`](src/Cookies.php)
-4. validates route, method, format, path parameters, and request parameters into [`ValidatedRequest`](src/Validators/ValidatedRequest.php)
-5. runs `REQUEST` event listeners
-6. resolves the response content type from the selected resolver
-7. runs the route controller, if one is configured
-8. resolves the returned `View`, if any, through the configured view resolver
-9. applies `RESPONSE` transformers for body, status, and headers
-10. sends the HTTP response
-11. runs `END` event listeners
-
-If a `Lucinda\MVC\TerminationException` is thrown, the embedded response is sent immediately.
-
-## Minimal Integration
-
-The constructor signature is:
+`FrontController` owns the request lifecycle. Construct it with the root XML path and scheduler, then call `run()`:
 
 ```php
-public function __construct(string $documentDescriptor, EventScheduler $eventScheduler)
-```
+<?php
 
-Example:
+require __DIR__."/vendor/autoload.php";
 
-```php
 use Lucinda\MVC\EventScheduler;
 use Lucinda\MVC\EventType;
 use Lucinda\STDOUT\FrontController;
 
-$scheduler = new EventScheduler();
-$scheduler->add(EventType::START, App\EventListeners\BootListener::class);
-$scheduler->add(EventType::RESPONSE, App\Response\CacheHeaders::class);
+$events = new EventScheduler();
+$events->add(EventType::START, App\EventListeners\Bootstrap::class);
+$events->add(EventType::RESPONSE, App\Response\SecurityHeaders::class);
 
-$frontController = new FrontController(__DIR__ . "/stdout.xml", $scheduler);
+$frontController = new FrontController(__DIR__."/application.xml", $events);
 $frontController->run();
 ```
 
-## XML Configuration
+For each call, `run()` performs these stages in order:
 
-[`Application`](src/Application.php) extends the base Lucinda MVC application and reads:
+1. executes `START` listeners;
+2. parses the application XML and executes `APPLICATION` listeners;
+3. captures `Request`, creates `Session` and `Cookies`, and validates the route into `ValidatedRequest`;
+4. executes `REQUEST` listeners;
+5. selects the response resolver and Content-Type;
+6. runs the configured controller and resolves its view;
+7. applies `RESPONSE` body, status, and header transformers;
+8. emits the response and executes `END` listeners.
 
-- `application`
-- `resolvers`
-- `routes`
-- optional `session`
-- optional `cookies`
+If a `Lucinda\MVC\TerminationException` is thrown, its embedded response is emitted immediately and the remaining normal stages are skipped.
 
-The test fixtures show the expected split-file setup:
+## XML configuration
+
+The root document can hold each section directly or reference separate XML files. The fixture-backed split form is:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
 <xml>
-  <application ref="config/application"/>
-  <resolvers ref="config/resolvers"/>
-  <routes ref="config/routes"/>
-  <session ref="config/session"/>
-  <cookies ref="config/cookies"/>
+    <application ref="config/application" />
+    <resolvers ref="config/resolvers" />
+    <routes ref="config/routes" />
+    <session ref="config/session" />
+    <cookies ref="config/cookies" />
 </xml>
 ```
 
-### Application
+Paths in `ref` are resolved by the XML reader supplied by `lucinda/abstract_mvc`.
 
-The `application` tag comes from `lucinda/abstract_mvc`. In this package it is used directly by routing and view detection. The fixture-backed example is:
+### Application and resolvers
+
+The `application` element defines the default route and format, view directory, template extension, and application version:
 
 ```xml
 <application
-  default_format="html"
-  default_route="users"
-  views_folder="app/views"
-  views_extension="phtml"
-  version="1.0.0"/>
+    default_format="html"
+    default_route="users"
+    views_folder="app/views"
+    views_extension="phtml"
+    version="1.0.0"
+/>
 ```
 
-Important constraints enforced by runtime code:
+An empty request path selects `default_route`. A route without its own `format` uses `default_format`.
 
-- an empty request path falls back to `default_route`
-- the selected format falls back to `default_format` unless the route overrides it
-
-### Resolvers
-
-Each resolver format must map to a view resolver class and a content type. [`ContentTypeDetector`](src/Service/ContentTypeDetector.php) builds the final `Content-Type` header from this data and appends `charset` when present.
+Every selected format must have a resolver. HTTP resolvers add required `content_type` and optional `charset` attributes to the base resolver definition:
 
 ```xml
 <resolvers>
-  <resolver
-    format="html"
-    content_type="text/html"
-    class="App\Resolvers\PhtmlResolver"
-    charset="UTF-8"/>
-  <resolver
-    format="json"
-    content_type="application/json"
-    class="App\Resolvers\JsonResolver"
-    charset="UTF-8"/>
+    <resolver
+        format="html"
+        class="App\Resolvers\PhtmlResolver"
+        content_type="text/html"
+        charset="UTF-8"
+    />
+    <resolver
+        format="json"
+        class="App\Resolvers\JsonResolver"
+        content_type="application/json"
+        charset="UTF-8"
+    />
 </resolvers>
 ```
 
-If a route resolves to a format that has no matching resolver, [`FormatValidator`](src/Validators/FormatValidator.php) throws.
+Resolver classes implement `Lucinda\MVC\Response\ViewResolver`. The media type and optional charset become the response `Content-Type` header.
 
-### Routes
+### Routes and parameters
 
-Routes connect request paths to controllers, optional views, formats, and parameter validators:
+Routes select controllers, optional views and formats, an optional HTTP method, and optional parameter validators:
 
 ```xml
 <routes>
-  <route
-    id="users"
-    controller="App\Controllers\UsersController"
-    view="hello"
-    format="html"
-    method="GET"/>
+    <route
+        id="users"
+        controller="App\Controllers\UsersController"
+        view="users"
+        format="html"
+        method="GET"
+    />
 
-  <route
-    id="user/(name)"
-    controller="App\Controllers\UserJsonController"
-    format="json"
-    method="GET">
-    <parameter
-      name="name"
-      validator="App\RouteValidators\NameLengthValidator"/>
-    <parameter
-      name="page"
-      validator="App\RouteValidators\PositiveIntegerValidator"
-      mandatory="0"/>
-  </route>
+    <route
+        id="user/(name)"
+        controller="App\Controllers\UserController"
+        format="json"
+        method="GET"
+    >
+        <parameter
+            name="name"
+            validator="App\Validators\UserName"
+        />
+        <parameter
+            name="page"
+            validator="App\Validators\PositiveInteger"
+            mandatory="0"
+        />
+    </route>
 </routes>
 ```
 
-Behavior enforced by [`RouteValidator`](src/Validators/RouteValidator.php):
+Exact route IDs are matched first. Placeholders such as `(name)` match one path segment and expose the captured value through `ValidatedRequest::getPathParameters()`. Path values override request parameters with the same name before validation.
 
-- exact route matches are tried first
-- placeholders like `user/(name)` are matched with regex extraction
-- path parameters override request parameters with the same name
-- unsupported HTTP methods raise [`MethodNotAllowedException`](src/MethodNotAllowedException.php)
-- unmatched routes raise [`PathNotFoundException`](src/PathNotFoundException.php)
-- missing or failed validated parameters raise [`ValidationFailedException`](src/Validators/ValidationFailedException.php)
+Parameter validator classes implement `Lucinda\STDOUT\Validators\ParameterValidator`. They return the validated or transformed value, and return `null` to reject it. Parameters are mandatory unless `mandatory="0"` is configured.
 
-### Session
+### Sessions and cookies
 
-[`Session`](src/Session.php) optionally applies PHP session ini settings from XML and can register a custom `SessionHandlerInterface`.
+The optional `session` element maps to PHP session configuration:
 
 ```xml
 <session
-  save_path="/tmp"
-  name="TESTSESSID"
-  expired_time="60"
-  expired_on_close="120"
-  https_only="1"
-  headers_only="1"
-  auto_start="0"/>
+    save_path="/tmp"
+    name="APPSESSID"
+    expired_time="1800"
+    expired_on_close="120"
+    https_only="1"
+    headers_only="1"
+    referrer_check="example.com"
+    auto_start="0"
+    handler="App\Session\Handler"
+/>
 ```
 
-Supported attributes are parsed by [`SessionOptions`](src/XmlTags/SessionOptions.php), including `referrer_check` and `handler`.
+`expired_time` and `expired_on_close` must be positive when present. Boolean values are `0` or `1`. A custom handler is constructed without arguments and registered through `session_set_save_handler()`.
 
-### Cookies
-
-[`Cookies`](src/Cookies.php) uses XML defaults when creating cookies:
+The optional `cookies` element supplies defaults used by `Cookies::set()`:
 
 ```xml
-<cookies path="/" domain="example.com" https_only="1" headers_only="1"/>
+<cookies
+    path="/"
+    domain="example.com"
+    https_only="1"
+    headers_only="1"
+/>
 ```
 
-If no cookie options are configured, `Cookies::set()` falls back to path `/`.
+Without cookie configuration, created cookies use path `/` and PHP's remaining defaults.
 
-## Extension Points
+## Controllers and views
 
-### Controllers
+Controller classes are constructed through facet-aware dependency injection. They may request application information, `Request`, `ValidatedRequest`, `Session`, `Cookies`, or facets published by earlier listeners.
 
-Controllers are configured per route. If the instantiated controller implements `Lucinda\MVC\Controller\ViewAware`, its `run()` result is used as the view for resolver execution.
-
-Fixture-backed example:
+A conventional view-aware controller implements `Lucinda\MVC\Controller\ViewAware`:
 
 ```php
+<?php
+
+namespace App\Controllers;
+
 use Lucinda\MVC\Controller\ViewAware;
 use Lucinda\MVC\Response\View;
 
@@ -215,111 +202,108 @@ final class UsersController implements ViewAware
 {
     public function run(): View
     {
-        return new View(["message" => "Hello from controller"], "hello");
+        return new View(["message" => "Users"], "users");
     }
 }
 ```
 
-Controllers can also receive resolved facets through constructor injection. The tests include a controller that consumes [`ValidatedRequest`](src/Validators/ValidatedRequest.php) directly.
-
-### View Resolvers
-
-Resolvers implement `Lucinda\MVC\Response\ViewResolver`.
+A RESTful controller implements `Lucinda\STDOUT\Restful`. `RestfulWrapper` calls the public method named after the request method; PHP method names are case-insensitive, so conventional lowercase handler names work:
 
 ```php
+<?php
+
+namespace App\Controllers;
+
 use Lucinda\MVC\Response\View;
-use Lucinda\MVC\Response\ViewResolver;
+use Lucinda\STDOUT\Restful;
+use Lucinda\STDOUT\Validators\ValidatedRequest;
 
-final class JsonResolver implements ViewResolver
+final class UserController implements Restful
 {
-    public function resolve(View $view): string
+    public function __construct(private ValidatedRequest $request)
     {
-        return json_encode($view->getData(), JSON_THROW_ON_ERROR);
+    }
+
+    public function get(): View
+    {
+        return new View([
+            "name" => $this->request->getPathParameters()["name"],
+        ]);
+    }
+
+    public function delete(): ?View
+    {
+        return null;
     }
 }
 ```
 
-### Event Listeners and Response Transformers
+The selected RESTful handler must be public, require no arguments, and return `Lucinda\MVC\Response\View` or `null`. Constructor injection remains available for dependencies.
 
-`FrontController` delegates lifecycle hooks to `EventScheduler`.
+Controllers without a view contract are run for side effects. When no controller-provided view exists, the base MVC view detector may use the route's configured `view`.
 
-- standard events are loaded via `EventType::START`, `APPLICATION`, `REQUEST`, `RESPONSE`, and `END`
-- listeners are instantiated through Lucinda MVC reflection injection
-- listeners implementing `Faceted` or `MultiFaceted` can publish additional injectable facets
-- `RESPONSE` listeners may also implement body, status, or headers transformer contracts
+## Request and validated state
 
-The tests include a response body transformer that appends `!` to the generated output.
+`Request` captures the current superglobals once during construction. It exposes:
 
-### Parameter Validators
+- client and receiving-server network information;
+- application-relative URI, raw query string, and parsed query parameters;
+- normalized `HTTP_*` request headers;
+- request method and HTTP/HTTPS protocol enums;
+- method-specific parameters from GET, POST, or parsed PUT/DELETE input;
+- multipart uploads as `Request\UploadedFiles\File` objects.
 
-Route parameter validators must implement [`Lucinda\STDOUT\Validators\ParameterValidator`](src/Validators/ParameterValidator.php):
+`ValidatedRequest` is the post-routing view of the request. It exposes the matched route ID, selected response format, raw path parameters, and successful custom validation results.
 
-```php
-interface ParameterValidator
-{
-    public function validate(mixed $value): mixed;
-}
-```
+`Session` and `Cookies` are mutable facades over PHP's `$_SESSION` and `$_COOKIE` state. Cookie writes are mirrored into `$_COOKIE` so later code in the same request observes them.
 
-Return `null` to fail validation. Any non-null value is stored in [`ValidatedRequest`](src/Validators/ValidatedRequest.php) and made available to downstream code.
+## Lifecycle extensions
 
-## Runtime Objects
+The supplied `EventScheduler` controls listener order for `START`, `APPLICATION`, `REQUEST`, `RESPONSE`, and `END`.
 
-### Request
+Listeners implementing `Lucinda\MVC\EventListener\Faceted` publish one injectable facet. `MultiFaceted` listeners publish several named facets. Other listeners run only for side effects.
 
-[`Request`](src/Request.php) captures:
+During `RESPONSE`, listeners can implement one or more response transformer contracts:
 
-- client information via [`Request\Client`](src/Request/Client.php)
-- server information via [`Request\Server`](src/Request/Server.php)
-- parsed URI information via [`Request\URI`](src/Request/URI.php)
-- request method via [`Request\Method`](src/Request/Method.php)
-- protocol via [`Request\Protocol`](src/Request/Protocol.php)
-- normalized request headers
-- parameters from `$_GET`, `$_POST`, or `php://input` for `PUT` and `DELETE`
-- uploaded files wrapped through [`Request\UploadedFiles`](src/Request/UploadedFiles.php)
+| Contract | Effect |
+| --- | --- |
+| `Response\Transformer\Body` | Transforms the response body. |
+| `Response\Transformer\Status` | Replaces the HTTP status. |
+| `Response\Transformer\Headers` | Adds or replaces response headers. |
 
-If `$_SERVER["REQUEST_URI"]` is missing, construction fails with a configuration exception.
+Transformations are applied in scheduler order.
 
-### ValidatedRequest
+## Exceptions
 
-[`ValidatedRequest`](src/Validators/ValidatedRequest.php) is the post-routing view of the request. It exposes:
+Configuration, route matching, parameter validation, RESTful dispatch, controller execution, and rendering can fail before a response is emitted:
 
-- `getRoute()`
-- `getFormat()`
-- `getPathParameters()`
-- `getValidationResults()`
+| Exception | Meaning |
+| --- | --- |
+| `Lucinda\MVC\ConfigurationException` | Required root application or request configuration is unavailable or invalid. |
+| `Lucinda\MVC\XmlReader\Exception` | An XML value, route method, resolver, session option, cookie option, or validator declaration is invalid. |
+| `PathNotFoundException` | No exact or parameterized route matches the requested path. |
+| `MethodNotAllowedException` | A route rejects the request method, or a RESTful controller has no callable handler for it. |
+| `Validators\ValidationFailedException` | A mandatory parameter is absent or its validator returns `null`. |
+| `Request\UploadedFiles\Exception` | PHP reports a multipart upload failure. |
+| `LogicException` | A RESTful handler requires arguments or returns a value other than `View` or `null`. |
 
-This is the object to inject when controllers need route-derived state rather than raw HTTP input.
+Applications should map these exceptions at their HTTP boundary according to their own error response policy. A `TerminationException` is different: `FrontController` catches it and emits its attached response.
 
-### Session and Cookies
+## Development
 
-[`Session`](src/Session.php) wraps common session operations:
-
-- `start()`, `isStarted()`
-- `set()`, `get()`, `contains()`, `remove()`
-- `destroy()`, `abort()`, `commit()`
-- `cookie()` for access to [`Session\Cookie`](src/Session/Cookie.php)
-
-[`Cookies`](src/Cookies.php) wraps `set()`, `get()`, `contains()`, and `remove()` around `$_COOKIE` and `setcookie()`.
-
-## Testing
-
-This repository uses `lucinda/unit-testing`. The main test entry point is [`test.php`](test.php).
+Install dependencies and run the test suite:
 
 ```bash
+composer install
 php test.php
 ```
 
-Coverage in `tests/` currently exercises:
+From Windows, run PHP through WSL:
 
-- request parsing, uploaded files, session, and cookies
-- XML tag parsing and route/resolver metadata
-- route, method, format, and parameter validation
-- full front controller flow with events, controller execution, resolver execution, and response transformation
+```powershell
+wsl -d Ubuntu --cd /home/aherne/framework/mvc_http php test.php
+```
 
-## Repository References
+## License
 
-- source: [`src`](src)
-- tests: [`tests`](tests)
-- runnable test bootstrap: [`test.php`](test.php)
-- fixture-based example app config: [`tests/fixtures/root.xml`](tests/fixtures/root.xml)
+MIT.

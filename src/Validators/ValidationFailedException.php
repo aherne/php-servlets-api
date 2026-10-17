@@ -3,7 +3,7 @@
 namespace Lucinda\STDOUT\Validators;
 
 /**
- * Exception thrown when a route/request parameter value fails validation.
+ * Reports a missing mandatory parameter or a rejected parameter value
  */
 class ValidationFailedException extends \Exception
 {

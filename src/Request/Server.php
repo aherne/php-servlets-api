@@ -3,20 +3,38 @@
 namespace Lucinda\STDOUT\Request;
 
 /**
- * Encapsulates information about server that received the request.
+ * Captures information about the server that received the request
+ *
+ * Values come directly from the corresponding SERVER_* entries in the supplied
+ * $_SERVER snapshot and are not subsequently refreshed.
  */
 final class Server
 {
+    /**
+     * Server host name
+     */
     private string $name;
+    /**
+     * Server IP address
+     */
     private string $ip;
+    /**
+     * Listening server port
+     */
     private int $port;
+    /**
+     * Configured server administrator email
+     */
     private string $email;
+    /**
+     * Web server software identification string
+     */
     private string $software;
 
     /**
-     * Detects info based on values in $_SERVER superglobal
+     * Captures server values from a $_SERVER snapshot
      *
-     * @param array<string,string> $server
+     * @param array<string,mixed> $server Server values containing required SERVER_* entries
      */
     public function __construct(array $server)
     {
@@ -28,9 +46,9 @@ final class Server
     }
 
     /**
-     * Sets server host name.
+     * Captures the server host name
      *
-     * @param array<string,string> $server
+     * @param array<string,mixed> $server Snapshot of $_SERVER
      */
     private function setName(array $server): void
     {
@@ -38,9 +56,9 @@ final class Server
     }
 
     /**
-     * Gets server host name.
+     * Gets the server host name
      *
-     * @return string
+     * @return string Value reported by SERVER_NAME
      */
     public function getName(): string
     {
@@ -48,9 +66,9 @@ final class Server
     }
 
     /**
-     * Sets server IP address.
+     * Captures the server IP address
      *
-     * @param array<string,string> $server
+     * @param array<string,mixed> $server Snapshot of $_SERVER
      */
     private function setIP(array $server): void
     {
@@ -58,9 +76,9 @@ final class Server
     }
 
     /**
-     * Gets server IP address
+     * Gets the server IP address
      *
-     * @return string
+     * @return string Value reported by SERVER_ADDR
      */
     public function getIP(): string
     {
@@ -69,9 +87,9 @@ final class Server
 
 
     /**
-     * Sets server port
+     * Captures the listening server port
      *
-     * @param array<string,string> $server
+     * @param array<string,mixed> $server Snapshot of $_SERVER
      */
     private function setPort(array $server): void
     {
@@ -79,9 +97,9 @@ final class Server
     }
 
     /**
-     * Gets server port
+     * Gets the listening server port
      *
-     * @return integer
+     * @return int Value reported by SERVER_PORT
      */
     public function getPort(): int
     {
@@ -89,9 +107,9 @@ final class Server
     }
 
     /**
-     * Sets server admin email.
+     * Captures the configured server administrator email
      *
-     * @param array<string,string> $server
+     * @param array<string,mixed> $server Snapshot of $_SERVER
      */
     private function setEmail(array $server): void
     {
@@ -99,9 +117,9 @@ final class Server
     }
 
     /**
-     * Gets server admin email.
+     * Gets the configured server administrator email
      *
-     * @return string
+     * @return string Value reported by SERVER_ADMIN
      */
     public function getEmail(): string
     {
@@ -109,9 +127,9 @@ final class Server
     }
 
     /**
-     * Sets software web server is using.
+     * Captures the web server software description
      *
-     * @param array<string,string> $server
+     * @param array<string,mixed> $server Snapshot of $_SERVER
      */
     private function setSoftware(array $server): void
     {
@@ -119,9 +137,9 @@ final class Server
     }
 
     /**
-     * Gets software web server is using.
+     * Gets the web server software description
      *
-     * @return string
+     * @return string Value reported by SERVER_SOFTWARE
      */
     public function getSoftware(): string
     {

@@ -7,17 +7,27 @@ use Lucinda\MVC\XmlReader\Element;
 use Lucinda\MVC\XmlReader\Exception;
 
 /**
- * Overrides default ResolverInfo by also covering "content_type" & "charset" XML attributes by default
+ * Extends MVC resolver metadata with HTTP representation information
+ *
+ * Every resolver must declare a `content_type`. The optional `charset` is used
+ * by ContentTypeDetector when building the response Content-Type header.
  */
 final class ResolverInfo extends AbstractResolverInfo
 {
+    /**
+     * Required response media type
+     */
     private string $contentType;
+    /**
+     * Optional response character encoding
+     */
     private string $characterEncoding;
 
     /**
-     * Bootstraps detection process
-     * 
-     * @param Element $element
+     * Parses base resolver metadata and HTTP-specific attributes
+     *
+     * @param Element $element Parsed `resolver` element
+     * @throws Exception If `content_type` is absent or empty
      */
     public function __construct(Element $element)
     {
@@ -27,12 +37,12 @@ final class ResolverInfo extends AbstractResolverInfo
         $this->setContentType($attributes);
         $this->setCharacterEncoding($attributes);
     }
-    
+
     /**
-     * Sets content type
-     * 
-     * @param array<string,string> $attributes
-     * @throws Exception If XML is misconfigured.
+     * Validates and stores the required response media type
+     *
+     * @param array<string,string> $attributes Resolver attributes
+     * @throws Exception If `content_type` is absent or empty
      */
     private function setContentType(array $attributes): void
     {
@@ -43,21 +53,19 @@ final class ResolverInfo extends AbstractResolverInfo
     }
 
     /**
-     * Gets content type
+     * Gets the configured response media type
      *
-     * @return  string
-     * @example application/json
+     * @return string Media type such as `application/json`
      */
     public function getContentType(): string
     {
         return $this->contentType;
     }
-    
+
     /**
-     * Sets character encoding (if present)
-     * 
-     * @param array<string,string> $attributes
-     * @throws Exception If XML is misconfigured.
+     * Stores the optional response character encoding
+     *
+     * @param array<string,string> $attributes Resolver attributes
      */
     private function setCharacterEncoding(array $attributes): void
     {
@@ -65,9 +73,9 @@ final class ResolverInfo extends AbstractResolverInfo
     }
 
     /**
-     * Gets character encoding (charset)
+     * Gets the configured response character encoding
      *
-     * @return string
+     * @return string Charset value, or an empty string when not configured
      */
     public function getCharacterEncoding(): string
     {

@@ -6,16 +6,23 @@ use Lucinda\MVC\Facet;
 use Lucinda\STDOUT\XmlTags\CookiesOptions;
 
 /**
- * Encapsulates COOKIE operations and parameters
+ * Provides mutable access to HTTP cookies as an injectable MVC facet
+ *
+ * Writes are sent through setcookie() and mirrored into $_COOKIE so later code
+ * in the same request observes the new value. Optional XML settings supply the
+ * default path, domain, secure, and HTTP-only flags for created cookies.
  */
 final class Cookies implements Facet
 {
+    /**
+     * Configured cookie defaults, or null to use path `/` and PHP defaults
+     */
     private ?CookiesOptions $options = null;
 
     /**
-     * Sets up cookies based on options.
+     * Creates a cookie facade with optional XML defaults
      *
-     * @param CookiesOptions|null $options
+     * @param CookiesOptions|null $options Defaults used for subsequent cookie writes
      */
     public function __construct(?CookiesOptions $options = null)
     {
@@ -23,11 +30,11 @@ final class Cookies implements Facet
     }
 
     /**
-     * Adds/updates a cookie param.
+     * Creates or replaces a cookie
      *
-     * @param string $key
-     * @param mixed  $value
-     * @param int    $expirationTime
+     * @param string $key Cookie name
+     * @param mixed $value Value passed to setcookie() and stored in $_COOKIE
+     * @param int $expirationTime Lifetime in seconds from the current time
      */
     public function set(string $key, mixed $value, int $expirationTime): void
     {
@@ -49,10 +56,10 @@ final class Cookies implements Facet
     }
 
     /**
-     * Gets value of cookie param.
+     * Gets a cookie value
      *
-     * @param  string $key
-     * @return mixed
+     * @param string $key Cookie name expected to exist
+     * @return mixed Current value from $_COOKIE
      */
     public function get(string $key): mixed
     {
@@ -60,10 +67,10 @@ final class Cookies implements Facet
     }
 
     /**
-     * Checks if cookie param exists.
+     * Checks whether a cookie has a non-null value
      *
-     * @param  string $key
-     * @return boolean
+     * @param string $key Cookie name
+     * @return bool True when the cookie exists in $_COOKIE
      */
     public function contains(string $key): bool
     {
@@ -71,9 +78,9 @@ final class Cookies implements Facet
     }
 
     /**
-     * Deletes cookie param.
+     * Expires a cookie and removes it from the current request state
      *
-     * @param string $key
+     * @param string $key Cookie name
      */
     public function remove(string $key): void
     {

@@ -9,21 +9,28 @@ use Lucinda\STDOUT\XmlTags\RouteInfo\Parameter;
 use Lucinda\STDOUT\Request\Method;
 
 /**
- * Overrides default RouteInfo class in order to add support for "method" attribute and <parameter> sub-tags
+ * Extends MVC route metadata with HTTP method and parameter validation rules
+ *
+ * The optional `method` attribute is normalized to a Request\Method case. Each
+ * child `parameter` element becomes a Parameter keyed by its configured name.
  */
 final class RouteInfo extends AbstractRouteInfo
 {
-    private ?Method $requestMethod = null;
     /**
-     * @var array<string,string>
+     * Required request method, or null when the route accepts every method
+     */
+    private ?Method $requestMethod = null;
+
+    /**
+     * @var array<string,Parameter> Parameter validation rules keyed by parameter name
      */
     private array $parameters = [];
 
     /**
-     * Saves response format data detected from XML tag "route".
+     * Parses base route metadata and HTTP-specific validation rules
      *
-     * @param  Element $element
-     * @throws Exception
+     * @param Element $element Parsed `route` element
+     * @throws Exception If the method or a parameter definition is invalid
      */
     public function __construct(Element $element)
     {
@@ -33,10 +40,10 @@ final class RouteInfo extends AbstractRouteInfo
     }
 
     /**
-     * Sets valid request method for route
+     * Parses the optional request method constraint
      *
-     * @param  Element $element
-     * @throws Exception
+     * @param Element $element Parsed `route` element
+     * @throws Exception If `method` is not a supported Request\Method value
      */
     private function setValidRequestMethod(Element $element): void
     {
@@ -52,9 +59,9 @@ final class RouteInfo extends AbstractRouteInfo
     }
 
     /**
-     * Gets valid request method for current route
+     * Gets the request method accepted by this route
      *
-     * @return ?Method
+     * @return Method|null Required method, or null when every method is accepted
      */
     public function getValidRequestMethod(): ?Method
     {
@@ -62,10 +69,10 @@ final class RouteInfo extends AbstractRouteInfo
     }
 
     /**
-     * Sets valid route/request parameters for route by name
+     * Parses child parameter validation rules
      *
-     * @param  Element $element
-     * @throws ConfigurationException
+     * @param Element $element Parsed `route` element
+     * @throws Exception If any parameter definition is invalid
      */
     private function setValidParameters(Element $element): void
     {
@@ -80,9 +87,9 @@ final class RouteInfo extends AbstractRouteInfo
     }
 
     /**
-     * Gets validator for route/request parameter by its name for current route
+     * Gets all parameter validation rules for this route
      *
-     * @return array<string,string>
+     * @return array<string,Parameter> Rules keyed by parameter name
      */
     public function getValidParameters(): array
     {

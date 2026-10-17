@@ -7,20 +7,34 @@ use Lucinda\MVC\XmlReader\Exception;
 use Lucinda\STDOUT\Validators\ParameterValidator;
 
 /**
- * Encapsulates information necessary to validate a route/request parameter
+ * Parses one route or request parameter validation rule
+ *
+ * A parameter requires a name and an autoloadable validator implementing
+ * ParameterValidator. Parameters are mandatory unless `mandatory="0"` is
+ * configured explicitly.
  */
 final class Parameter
 {
+    /**
+     * Parameter name used for lookup and result indexing
+     */
     private string $name;
-    /** @var class-string<ParameterValidator> */
+
+    /**
+     * @var class-string<ParameterValidator> Validator instantiated for matching requests
+     */
     private string $validator;
+
+    /**
+     * Whether absence of the parameter causes validation failure
+     */
     private bool $isMandatory = true;
 
     /**
-     * Saves validation settings from XML tag 'parameter'
+     * Parses and validates a `parameter` element
      *
-     * @param Element $element
-     * @throws Exception
+     * @param Element $element Parsed `parameter` element
+     * @throws Exception If the name or validator is missing or invalid
      */
     public function __construct(Element $element)
     {
@@ -31,10 +45,10 @@ final class Parameter
     }
 
     /**
-     * Sets parameter name
-     * 
-     * @param array<string,string> $attributes
-     * @throws Exception If parameter is missing
+     * Validates and stores the parameter name
+     *
+     * @param array<string,string> $attributes Parameter attributes
+     * @throws Exception If `name` is absent or empty
      */
     private function setName(array $attributes): void
     {
@@ -45,9 +59,9 @@ final class Parameter
     }
 
     /**
-     * Gets parameter name
+     * Gets the parameter name
      *
-     * @return string
+     * @return string Name used for request lookup and validation results
      */
     public function getName(): string
     {
@@ -55,10 +69,10 @@ final class Parameter
     }
 
     /**
-     * Sets parameter validator
-     * 
-     * @param array<string,string> $attributes
-     * @throws Exception If parameter is missing or class is not instanceof ParameterValidator
+     * Validates and stores the parameter validator class
+     *
+     * @param array<string,string> $attributes Parameter attributes
+     * @throws Exception If `validator` is absent or does not implement ParameterValidator
      */
     private function setValidator(array $attributes): void
     {
@@ -72,9 +86,9 @@ final class Parameter
     }
 
     /**
-     * Gets class that will be used for validating parameter value
+     * Gets the configured validator class
      *
-     * @return string
+     * @return class-string<ParameterValidator> Autoloadable validator class name
      */
     public function getValidator(): string
     {
@@ -82,10 +96,9 @@ final class Parameter
     }
 
     /**
-     * Sets parameter validator
-     * 
-     * @param array<string,string> $attributes
-     * @throws Exception If parameter is missing or class is not instanceof ParameterValidator
+     * Applies the optional mandatory flag
+     *
+     * @param array<string,string> $attributes Parameter attributes
      */
     private function setMandatory(array $attributes): void
     {
@@ -95,9 +108,9 @@ final class Parameter
     }
 
     /**
-     * Checks whether parameter is mandatory
+     * Checks whether the parameter must be present
      *
-     * @return boolean
+     * @return bool True unless `mandatory="0"` was configured
      */
     public function isMandatory(): bool
     {

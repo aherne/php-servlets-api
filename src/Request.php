@@ -12,32 +12,68 @@ use Lucinda\MVC\ConfigurationException;
 use Lucinda\MVC\Facet;
 
 /**
- * Detects information about request from $_SERVER, $_GET, $_POST, $_FILES. Once detected, parameters are immutable.
+ * Captures an immutable snapshot of the current PHP HTTP request
+ *
+ * Construction reads $_SERVER, $_GET, $_POST, and $_FILES into typed client,
+ * server, URI, method, protocol, header, parameter, and upload representations.
+ * GET parameters are used for GET requests, POST parameters for POST requests,
+ * and the parsed input stream for PUT and DELETE requests.
+ *
+ * The object does not mutate the superglobals after capturing them.
+ *
+ * @see Client
+ * @see Server
+ * @see URI
+ * @see UploadedFiles
  */
 final class Request implements Facet
 {
-    private Client $client;
-    private Server $server;
-    private URI $uRI;
-    private Method $method;
-    private Protocol $protocol;
     /**
-     * @var array<string, string>
+     * Client endpoint information captured from $_SERVER
+     */
+    private Client $client;
+
+    /**
+     * Receiving server information captured from $_SERVER
+     */
+    private Server $server;
+
+    /**
+     * Parsed application-relative URI information
+     */
+    private URI $uRI;
+
+    /**
+     * Validated HTTP request method
+     */
+    private Method $method;
+
+    /**
+     * HTTP or HTTPS transport detected for the request
+     */
+    private Protocol $protocol;
+
+    /**
+     * @var array<string,string> Normalized request headers keyed by canonicalized name
      */
     private array $headers = array();
+
     /**
-     * @var array<string, mixed>
+     * @var array<string,mixed> Parameters selected according to the request method
      */
     private array $parameters = array();
+
     /**
-     * @var array<string, mixed>
+     * @var array<string,mixed> Uploaded File objects preserving the form field hierarchy
      */
     private array $uploadedFiles = array();
 
     /**
-     * Detects all aspects of a request.
+     * Captures and validates all supported request information
      *
-     * @throws ConfigurationException|UploadedFiles\Exception
+     * @throws ConfigurationException If REQUEST_URI is unavailable
+     * @throws UploadedFiles\Exception If PHP reports an upload error
+     * @throws \TypeError If REQUEST_METHOD is not represented by Request\Method
      */
     public function __construct()
     {
@@ -61,9 +97,9 @@ final class Request implements Facet
     }
 
     /**
-     * Sets information about client that made the request.
+     * Captures client endpoint information
      *
-     * @param array<string,string> $server
+     * @param array<string,mixed> $server Snapshot of $_SERVER
      */
     private function setClient(array $server): void
     {
@@ -71,9 +107,9 @@ final class Request implements Facet
     }
 
     /**
-     * Gets information about client that made the request.
+     * Gets the client endpoint that made the request
      *
-     * @return Client
+     * @return Client Captured host name, address, and source port
      */
     public function getClient(): Client
     {
@@ -81,9 +117,9 @@ final class Request implements Facet
     }
 
     /**
-     * Sets information about server that received the request.
+     * Captures receiving server information
      *
-     * @param array<string,string> $server
+     * @param array<string,mixed> $server Snapshot of $_SERVER
      */
     private function setServer(array $server): void
     {
@@ -91,9 +127,9 @@ final class Request implements Facet
     }
 
     /**
-     * Gets information about server that received the request.
+     * Gets the server endpoint that received the request
      *
-     * @return Server
+     * @return Server Captured host, address, port, administrator, and software values
      */
     public function getServer(): Server
     {
@@ -101,9 +137,9 @@ final class Request implements Facet
     }
 
     /**
-     * Sets information about URI client requested (host, page, url, etc).
+     * Parses the requested application-relative URI
      *
-     * @param array<string,string> $server
+     * @param array<string,mixed> $server Snapshot of $_SERVER
      */
     private function setURI(array $server): void
     {
@@ -111,9 +147,9 @@ final class Request implements Facet
     }
 
     /**
-     * Gets information about URI client requested (host, page, url, etc).
+     * Gets parsed request URI information
      *
-     * @return URI
+     * @return URI Context path, page, query string, and query parameters
      */
     public function getURI(): URI
     {
@@ -121,9 +157,11 @@ final class Request implements Facet
     }
 
     /**
-     * Sets headers sent by client.
+     * Extracts and canonicalizes HTTP request headers
      *
-     * @param array<string,string> $server
+     * Only $_SERVER keys beginning with `HTTP_` are included.
+     *
+     * @param array<string,mixed> $server Snapshot of $_SERVER
      */
     private function setHeaders(array $server): void
     {
@@ -140,10 +178,12 @@ final class Request implements Facet
     }
 
     /**
-     * Gets request headers detected by optional name
+     * Gets all request headers or one named header
      *
-     * @param  string $name
-     * @return string|array<string,string>|null
+     * Header lookup is case-sensitive against the canonicalized stored names.
+     *
+     * @param string $name Canonicalized header name, or an empty string for all headers
+     * @return string|array<string,string>|null All headers, the selected value, or null when absent
      */
     public function headers(string $name=""): string|array|null
     {
@@ -155,10 +195,10 @@ final class Request implements Facet
     }
 
     /**
-     * Sets parameters sent by client in accordance to HTTP request method.
+     * Selects request parameters according to the HTTP method
      *
-     * @param array<string,mixed> $get
-     * @param array<string,mixed> $post
+     * @param array<string,mixed> $get Snapshot of $_GET
+     * @param array<string,mixed> $post Snapshot of $_POST
      */
     private function setParameters(array $get, array $post): void
     {
@@ -182,10 +222,10 @@ final class Request implements Facet
     }
 
     /**
-     * Gets request parameters detected by optional name
+     * Gets all request parameters or one named parameter
      *
-     * @param  string $name
-     * @return mixed
+     * @param string $name Parameter name, or an empty string for the complete map
+     * @return mixed Complete parameter map, selected value, or null when absent
      */
     public function parameters(string $name=""): mixed
     {
@@ -197,12 +237,13 @@ final class Request implements Facet
     }
 
     /**
-     * Sets files uploaded by client via form based on PHP superglobal $_FILES with two structural changes:
-     * - uploaded file attributes (name, type, tmp_name, etc) are encapsulated into an UploadedFile instance
-     * - array structure information is saved to follows exactly structure set in file input @ form.
+     * Converts the $_FILES snapshot into typed uploaded-file values
      *
-     * @param  array<string,mixed> $files
-     * @throws UploadedFiles\Exception
+     * Each uploaded leaf becomes a File while nested form field structure is
+     * retained in the resulting array.
+     *
+     * @param array<string,mixed> $files Snapshot of $_FILES
+     * @throws UploadedFiles\Exception If PHP reports an upload error
      */
     private function setUploadedFiles(array $files): void
     {
@@ -211,10 +252,10 @@ final class Request implements Facet
     }
 
     /**
-     * Gets uploaded files detected by optional request parameter name
+     * Gets all uploaded files or one named upload field
      *
-     * @param  string $name
-     * @return mixed
+     * @param string $name Upload field name, or an empty string for the complete tree
+     * @return mixed Complete upload tree, selected File or subtree, or null when absent
      */
     public function uploadedFiles(string $name=""): mixed
     {
@@ -226,9 +267,10 @@ final class Request implements Facet
     }
 
     /**
-     * Sets HTTP request method in which URI was requested.
+     * Parses the HTTP request method
      *
-     * @param array<string,string> $server
+     * @param array<string,mixed> $server Snapshot of $_SERVER
+     * @throws \TypeError If REQUEST_METHOD is not represented by Request\Method
      */
     private function setMethod(array $server): void
     {
@@ -236,10 +278,9 @@ final class Request implements Facet
     }
 
     /**
-     * Gets HTTP request method in which URI was requested.
+     * Gets the HTTP request method
      *
-     * @example GET
-     * @return  Method
+     * @return Method Parsed request method
      */
     public function getMethod(): Method
     {
@@ -247,9 +288,9 @@ final class Request implements Facet
     }
 
     /**
-     * Sets protocol for which URI was requested.
+     * Detects whether the request used HTTP or HTTPS
      *
-     * @param array<string,string> $server
+     * @param array<string,mixed> $server Snapshot of $_SERVER
      */
     private function setProtocol(array $server): void
     {
@@ -257,10 +298,9 @@ final class Request implements Facet
     }
 
     /**
-     * Gets protocol for which URI was requested.
+     * Gets the request protocol
      *
-     * @example https
-     * @return  Protocol
+     * @return Protocol HTTP or HTTPS transport
      */
     public function getProtocol(): Protocol
     {
@@ -268,9 +308,9 @@ final class Request implements Facet
     }
 
     /**
-     * Gets input stream contents.
+     * Reads the remaining raw request body
      *
-     * @return string
+     * @return string Current contents of php://input
      */
     public function getInputStream(): string
     {

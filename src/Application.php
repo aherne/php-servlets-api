@@ -11,18 +11,37 @@ use Lucinda\MVC\XmlTagsLists\ResolversList;
 use Lucinda\MVC\XmlTagsLists\RoutesList;
 
 /**
- * Compiles information about application.
+ * Parses and exposes the XML configuration used by the HTTP MVC runtime
+ *
+ * In addition to the application, resolver, and route information supplied by
+ * the base MVC package, this specialization parses optional session and cookie
+ * settings and uses HTTP-aware route and resolver value objects.
+ *
+ * Configuration is loaded eagerly during construction and remains immutable
+ * for the lifetime of the application object.
+ *
+ * @see RouteInfo
+ * @see ResolverInfo
+ * @see SessionOptions
+ * @see CookiesOptions
  */
 final class Application extends \Lucinda\MVC\Application
 {
+    /**
+     * Parsed session settings, or null when no `session` tag is configured
+     */
     private ?SessionOptions $sessionOptions = null;
+
+    /**
+     * Parsed cookie defaults, or null when no `cookies` tag is configured
+     */
     private ?CookiesOptions $cookiesOptions = null;
 
     /**
-     * Populates attributes based on an XML file
+     * Loads the application document and parses HTTP-specific options
      *
-     * @param  string $xmlFilePath XML file url
-     * @throws ConfigurationException If xml content has failed validation.
+     * @param string $xmlFilePath Path to the root XML configuration document
+     * @throws ConfigurationException If the document or required application configuration is invalid
      */
     public function __construct(string $xmlFilePath)
     {
@@ -32,7 +51,7 @@ final class Application extends \Lucinda\MVC\Application
     }
 
     /**
-     * Sets customized routes lists
+     * Parses routes into HTTP-aware RouteInfo objects
      */
     protected function setRoutes(): void
     {
@@ -40,10 +59,8 @@ final class Application extends \Lucinda\MVC\Application
         $this->routes = $list->convert($this->reader->getTag("routes"));
     }
 
-        /**
-     * Sets view resolvers info based on contents of "resolvers" XML tag
-     *
-     * @throws XmlException If xml content has failed validation.
+    /**
+     * Parses resolvers into HTTP-aware ResolverInfo objects
      */
     protected function setResolvers(): void
     {
@@ -52,7 +69,7 @@ final class Application extends \Lucinda\MVC\Application
     }
 
     /**
-     * Sets options to start session with based on "session" XML tag
+     * Parses optional session settings
      */
     private function setSessionOptions(): void
     {
@@ -63,7 +80,7 @@ final class Application extends \Lucinda\MVC\Application
     }
 
     /**
-     * Sets options to create cookies with based on "cookies" XML tag
+     * Parses optional default cookie settings
      */
     private function setCookieOptions(): void
     {
@@ -74,9 +91,9 @@ final class Application extends \Lucinda\MVC\Application
     }
 
     /**
-     * Gets  options to start session with based on "session" XML tag
+     * Gets configured PHP session settings
      *
-     * @return SessionOptions|NULL
+     * @return SessionOptions|null Parsed settings, or null when `session` is absent
      */
     public function getSessionOptions(): ?SessionOptions
     {
@@ -84,9 +101,9 @@ final class Application extends \Lucinda\MVC\Application
     }
 
     /**
-     * Gets options to create cookies with based on "cookies" XML tag
+     * Gets defaults applied when response cookies are created
      *
-     * @return CookiesOptions|NULL
+     * @return CookiesOptions|null Parsed defaults, or null when `cookies` is absent
      */
     public function getCookieOptions(): ?CookiesOptions
     {
@@ -94,7 +111,9 @@ final class Application extends \Lucinda\MVC\Application
     }
 
     /**
-     * Gets all routes for later request validation
+     * Gets every configured route for exact and parameterized matching
+     *
+     * @return array<string,RouteInfo> Routes keyed by their configured identifiers
      */
     public function getAllRoutes(): array
     {

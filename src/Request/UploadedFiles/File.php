@@ -3,19 +3,36 @@
 namespace Lucinda\STDOUT\Request\UploadedFiles;
 
 /**
- * Bean holding information about an uploaded file
+ * Represents one successfully received multipart upload
+ *
+ * The object retains PHP's client-supplied file name and content type together
+ * with the temporary server location and byte size. Moving or deleting the
+ * temporary file is explicit and updates no stored metadata.
  */
 final class File
 {
+    /**
+     * Client-supplied file name
+     */
     private string $name;
+    /**
+     * Temporary server-side upload path
+     */
     private string $location;
+    /**
+     * Client-supplied media type
+     */
     private string $contentType;
+    /**
+     * Uploaded byte count reported by PHP
+     */
     private int $size;
 
     /**
-     * Detects info based on values in $_SERVER superglobal
+     * Validates and captures one PHP upload entry
      *
-     * @param array<string,mixed> $values
+     * @param array<string,mixed> $values Upload attributes from $_FILES
+     * @throws Exception If the upload error code is not UPLOAD_ERR_OK
      */
     public function __construct(array $values)
     {
@@ -30,11 +47,11 @@ final class File
     }
 
     /**
-     * Checks if file uploaded with error
+     * Translates a PHP upload error code into a caller-facing message
      *
-     * @param  integer $errorCode
-     * @param  string  $fileName
-     * @return string
+     * @param int $errorCode UPLOAD_ERR_* value reported by PHP
+     * @param string $fileName Client-supplied file name
+     * @return string Human-readable upload failure
      */
     private function getErrorMessage(int $errorCode, string $fileName): string
     {
@@ -51,9 +68,9 @@ final class File
     }
 
     /**
-     * Sets uploaded file name.
+     * Stores the client-supplied file name
      *
-     * @param string $name
+     * @param string $name File name reported by PHP
      */
     private function setName(string $name): void
     {
@@ -61,9 +78,9 @@ final class File
     }
 
     /**
-     * Gets uploaded file name.
+     * Gets the client-supplied file name
      *
-     * @return string
+     * @return string File name reported by PHP
      */
     public function getName(): string
     {
@@ -71,9 +88,9 @@ final class File
     }
 
     /**
-     * Sets location for the file uploaded.
+     * Stores the temporary upload path
      *
-     * @param string $location
+     * @param string $location Temporary server-side file path
      */
     private function setLocation(string $location): void
     {
@@ -81,9 +98,9 @@ final class File
     }
 
     /**
-     * Gets location for the file uploaded
+     * Gets the temporary upload path
      *
-     * @return string
+     * @return string Server-side path reported by PHP
      */
     public function getLocation(): string
     {
@@ -91,9 +108,9 @@ final class File
     }
 
     /**
-     * Sets file mime type.
+     * Stores the client-supplied media type
      *
-     * @param string $contentType
+     * @param string $contentType Media type reported by PHP
      */
     private function setContentType(string $contentType): void
     {
@@ -101,9 +118,9 @@ final class File
     }
 
     /**
-     * Gets file mime type.
+     * Gets the client-supplied media type
      *
-     * @return string
+     * @return string Media type reported by PHP
      */
     public function getContentType(): string
     {
@@ -111,9 +128,9 @@ final class File
     }
 
     /**
-     * Sets file size.
+     * Stores the reported upload size
      *
-     * @param integer $size
+     * @param int $size Uploaded byte count
      */
     private function setSize(int $size): void
     {
@@ -121,9 +138,9 @@ final class File
     }
 
     /**
-     * Gets file size.
+     * Gets the reported upload size
      *
-     * @return integer
+     * @return int Uploaded byte count
      */
     public function getSize(): int
     {
@@ -131,10 +148,10 @@ final class File
     }
 
     /**
-     * Moves uploaded file to destination.
+     * Moves the PHP upload to a permanent destination
      *
-     * @param  string $destination
-     * @return boolean
+     * @param string $destination Destination filesystem path
+     * @return bool True when PHP moved the uploaded file successfully
      */
     public function move(string $destination): bool
     {
@@ -142,9 +159,9 @@ final class File
     }
 
     /**
-     * Deletes uploaded file.
+     * Deletes the file at its current temporary location
      *
-     * @return boolean
+     * @return bool True when the file was removed successfully
      */
     public function delete(): bool
     {

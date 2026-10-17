@@ -6,18 +6,24 @@ use Lucinda\STDOUT\Application;
 use Lucinda\MVC\XmlReader\Exception;
 
 /**
- * Binds information in 'application', 'formats' and 'routes' XML tags based on route requested to detect final response format
+ * Selects and validates the response format for a matched route
+ *
+ * The application default format is used unless the route overrides it. The
+ * selected format must identify a configured resolver before it is exposed.
  */
 final class FormatValidator
 {
+    /**
+     * Selected resolver format identifier
+     */
     private string $format;
 
     /**
-     * Performs detection process
+     * Selects the route format and confirms that it has a resolver
      *
-     * @param  Application $application
-     * @param  string      $url
-     * @throws Exception
+     * @param Application $application Parsed application and resolver configuration
+     * @param string $url Previously validated route identifier
+     * @throws Exception If the selected format has no configured resolver
      */
     public function __construct(Application $application, string $url)
     {
@@ -35,9 +41,9 @@ final class FormatValidator
     }
 
     /**
-     * Gets final response format
+     * Gets the validated response format
      *
-     * @return string
+     * @return string Resolver format identifier selected for the route
      */
     public function getFormat(): string
     {
