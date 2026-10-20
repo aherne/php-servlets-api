@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE xml>
 <xml>
-  <application ref="tests/fixtures/application"/>
-  <resolvers ref="tests/fixtures/resolvers"/>
-  <routes ref="tests/fixtures/routes"/>
-  <session ref="tests/fixtures/session"/>
-  <cookies ref="tests/fixtures/cookies"/>
+  <application ref="application"/>
+  <resolvers ref="resolvers"/>
+  <routes ref="routes"/>
+  <session ref="session"/>
+  <cookies ref="cookies"/>
 </xml>
