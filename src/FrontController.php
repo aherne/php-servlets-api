@@ -157,7 +157,7 @@ final class FrontController implements Runnable
             if ($object instanceof Faceted) {
                 $this->facetRegistry->put($object->run());
             } else if ($object instanceof MultiFaceted) {
-                $facets = $object->run();
+                $facets = $object->run()->getAll();
                 foreach ($facets as $id=>$facet) {
                     $this->facetRegistry->putAs($id, $facet);
                 }
