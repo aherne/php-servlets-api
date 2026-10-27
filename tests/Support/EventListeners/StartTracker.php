@@ -3,9 +3,10 @@
 namespace Test\Lucinda\STDOUT\Support\EventListeners;
 
 use Lucinda\MVC\EventListener;
+use Lucinda\MVC\EventListener\UnFaceted;
 use Test\Lucinda\STDOUT\Support\TestHelper;
 
-final class StartTracker implements EventListener
+final class StartTracker implements UnFaceted
 {
     public function run(): void
     {

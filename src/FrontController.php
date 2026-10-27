@@ -2,10 +2,12 @@
 
 namespace Lucinda\STDOUT;
 
+use Lucinda\MVC\ConfigurationException;
 use Lucinda\MVC\Runnable;
 use Lucinda\MVC\Controller\ViewAware;
 use Lucinda\MVC\EventListener\Faceted;
 use Lucinda\MVC\EventListener\MultiFaceted;
+use Lucinda\MVC\EventListener\UnFaceted;
 use Lucinda\MVC\EventScheduler;
 use Lucinda\MVC\EventType;
 use Lucinda\MVC\FacetRegistry;
@@ -161,8 +163,10 @@ final class FrontController implements Runnable
                 foreach ($facets as $id=>$facet) {
                     $this->facetRegistry->putAs($id, $facet);
                 }
-            } else {
+            } else if ($object instanceof UnFaceted) {
                 $object->run();
+            } else {
+                throw new ConfigurationException("Unsupported listener contract: ".$className);
             }
         }
     }
