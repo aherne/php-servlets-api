@@ -41,7 +41,8 @@ final class Session implements Facet
     /**
      * Converts parsed options into session ini keys and values
      *
-     * Only explicitly configured truthy values are returned, except auto_start,
+     * Cookie security flags preserve explicit false values. Other settings use
+     * explicitly configured truthy values, except auto_start,
      * which is emitted as integer 1 when enabled.
      *
      * @param SessionOptions $options Parsed session configuration
@@ -59,14 +60,17 @@ final class Session implements Facet
         if ($value = $options->getExpiredTime()) {
             $output["gc_maxlifetime"] = $value;
         }
-        if ($value = $options->getExpiredOnBrowserClose()) {
+        if (($value = $options->getExpiredOnBrowserClose()) !== null) {
             $output["cookie_lifetime"] = $value;
         }
-        if ($value = $options->isSecuredByHTTPS()) {
-            $output["cookie_secure"] = $value;
+        if (($value = $options->isSecuredByHTTPS()) !== null) {
+            $output["cookie_secure"] = (int) $value;
         }
-        if ($value = $options->isSecuredByHTTPheaders()) {
-            $output["cookie_httponly"] = $value;
+        if (($value = $options->isSecuredByHTTPheaders()) !== null) {
+            $output["cookie_httponly"] = (int) $value;
+        }
+        if (($value = $options->getSameSite()) !== null) {
+            $output["cookie_samesite"] = $value;
         }
         if ($value = $options->getReferrerCheck()) {
             $output["referer_check"] = $value;
@@ -148,7 +152,13 @@ final class Session implements Facet
     public function destroy(): bool
     {
         $_SESSION = [];
-        setcookie(session_name(), "", time()-60);
+        if (ini_get("session.use_cookies")) {
+            $parameters = session_get_cookie_params();
+            unset($parameters["lifetime"]);
+            $parameters["expires"] = time()-60;
+            setcookie(session_name(), "", $parameters);
+            unset($_COOKIE[session_name()]);
+        }
         return session_destroy();
     }
 

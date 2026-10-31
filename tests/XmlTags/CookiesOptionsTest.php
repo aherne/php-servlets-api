@@ -14,7 +14,7 @@ class CookiesOptionsTest
     public function __construct()
     {
         $this->object = new CookiesOptions(
-            TestHelper::element('<cookies path="/" domain="example.com" https_only="1" headers_only="1"/>')
+            TestHelper::element('<cookies path="/" domain="example.com" https_only="1" headers_only="1" same_site="Lax"/>')
         );
     }
 
@@ -37,4 +37,10 @@ class CookiesOptionsTest
     {
         return new Booleans($this->object->isSecuredByHTTPheaders())->assertTrue();
     }
+    public function getSameSite()
+    {
+        return new Strings($this->object->getSameSite())->assertEquals("Lax");
+    }
+        
+
 }

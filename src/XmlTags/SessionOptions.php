@@ -8,12 +8,14 @@ use Lucinda\MVC\XmlReader\Exception;
 /**
  * Parses PHP session settings from the XML `session` element
  *
- * String settings are retained verbatim, durations must be positive integers,
+ * String settings are retained verbatim, server lifetimes must be positive integers and cookie lifetimes non-negative,
  * and boolean settings accept only 0 or 1. Every option is nullable so omitted
  * attributes leave the corresponding PHP session setting unchanged.
  */
 final class SessionOptions
 {
+    private ?string $sameSite = null;
+
     /**
      * Optional session storage path
      */
@@ -63,6 +65,7 @@ final class SessionOptions
         $this->setStringOptions($info);
         $this->setIntOptions($info);
         $this->setBooleanOptions($info);
+        $this->setSameSite($info);
     }
 
     /**
@@ -86,7 +89,7 @@ final class SessionOptions
     }
 
     /**
-     * Validates and assigns positive duration options
+     * Validates server and cookie duration options
      *
      * @param array<string,string> $info Session element attributes
      * @throws Exception If a configured duration is not a positive number
@@ -99,8 +102,8 @@ final class SessionOptions
         ];
         foreach ($options as $field=>$column) {
             if (isset($info[$column])) {
-                if (!is_numeric($info[$column]) || $info[$column]<=0) {
-                    throw new Exception("Field ".$column." must hold a positive numeric value");
+                if (!preg_match("/^[0-9]+$/D", $info[$column]) || ($column === "expired_time" && (int) $info[$column] === 0)) {
+                    throw new Exception("Field ".$column." must hold a positive integer (expired_on_close also accepts zero)");
                 }
                 $this->$field = (int) $info[$column];
             }
@@ -219,4 +222,29 @@ final class SessionOptions
     {
         return $this->autoStart;
     }
+    /**
+     * Parses the optional SameSite policy without depending on the security API.
+     *
+     * @param array<string,string> $info XML attributes
+     * @throws Exception If the policy is unsupported
+     */
+    private function setSameSite(array $info): void
+    {
+        if (!isset($info["same_site"])) {
+            return;
+        }
+        if (!in_array($info["same_site"], ["Lax", "Strict", "None"], true)) {
+            throw new Exception("Field same_site must be Lax, Strict or None");
+        }
+        $this->sameSite = $info["same_site"];
+    }
+
+    /**
+     * Gets the configured SameSite policy, or null when omitted.
+     */
+    public function getSameSite(): ?string
+    {
+        return $this->sameSite;
+    }
+
 }

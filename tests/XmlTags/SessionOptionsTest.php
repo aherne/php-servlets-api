@@ -16,7 +16,7 @@ class SessionOptionsTest
     {
         $this->object = new SessionOptions(
             TestHelper::element(
-                '<session save_path="/tmp" name="TESTSESSID" expired_time="60" expired_on_close="120" https_only="1" headers_only="1" referrer_check="Chrome" handler="SessionHandler" auto_start="1"/>'
+                '<session save_path="/tmp" name="TESTSESSID" expired_time="60" expired_on_close="120" https_only="1" headers_only="1" referrer_check="Chrome" handler="SessionHandler" auto_start="1" same_site="Lax"/>'
             )
         );
     }
@@ -65,4 +65,10 @@ class SessionOptionsTest
     {
         return new Booleans($this->object->isAutoStart())->assertTrue();
     }
+    public function getSameSite()
+    {
+        return new Strings($this->object->getSameSite())->assertEquals("Lax");
+    }
+        
+
 }

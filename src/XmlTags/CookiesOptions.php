@@ -14,22 +14,24 @@ use Lucinda\MVC\XmlReader\Exception;
  */
 final class CookiesOptions
 {
+    private ?string $sameSite = null;
+
     /**
      * Default cookie path
      */
-    private string $path;
+    private ?string $path = null;
     /**
      * Default cookie domain
      */
-    private string $domain;
+    private ?string $domain = null;
     /**
      * Whether cookies are restricted to HTTPS
      */
-    private bool $isSecuredByHTTPS;
+    private ?bool $isSecuredByHTTPS = null;
     /**
      * Whether cookies are hidden from browser scripting
      */
-    private bool $isSecuredByHTTPheaders;
+    private ?bool $isSecuredByHTTPheaders = null;
 
     /**
      * Parses cookie defaults from an XML element
@@ -42,6 +44,7 @@ final class CookiesOptions
         $info = $element->getAttributes();
         $this->setStringOptions($info);
         $this->setBooleanOptions($info);
+        $this->setSameSite($info);
     }
 
     /**
@@ -87,9 +90,9 @@ final class CookiesOptions
     /**
      * Gets the URL path on which created cookies are available
      *
-     * @return string Configured cookie path
+     * @return string|null Configured cookie path
      */
-    public function getPath(): string
+    public function getPath(): ?string
     {
         return $this->path;
     }
@@ -97,9 +100,9 @@ final class CookiesOptions
     /**
      * Gets the domain on which created cookies are available
      *
-     * @return string Configured cookie domain
+     * @return string|null Configured cookie domain
      */
-    public function getDomain(): string
+    public function getDomain(): ?string
     {
         return $this->domain;
     }
@@ -107,9 +110,9 @@ final class CookiesOptions
     /**
      * Checks whether created cookies require HTTPS
      *
-     * @return bool Configured secure-cookie flag
+     * @return bool|null Configured secure-cookie flag
      */
-    public function isSecuredByHTTPS(): bool
+    public function isSecuredByHTTPS(): ?bool
     {
         return $this->isSecuredByHTTPS;
     }
@@ -117,10 +120,35 @@ final class CookiesOptions
     /**
      * Checks whether created cookies are hidden from browser scripting
      *
-     * @return bool Configured HTTP-only cookie flag
+     * @return bool|null Configured HTTP-only cookie flag
      */
-    public function isSecuredByHTTPheaders(): bool
+    public function isSecuredByHTTPheaders(): ?bool
     {
         return $this->isSecuredByHTTPheaders;
     }
+    /**
+     * Parses the optional SameSite policy without depending on the security API.
+     *
+     * @param array<string,string> $info XML attributes
+     * @throws Exception If the policy is unsupported
+     */
+    private function setSameSite(array $info): void
+    {
+        if (!isset($info["same_site"])) {
+            return;
+        }
+        if (!in_array($info["same_site"], ["Lax", "Strict", "None"], true)) {
+            throw new Exception("Field same_site must be Lax, Strict or None");
+        }
+        $this->sameSite = $info["same_site"];
+    }
+
+    /**
+     * Gets the configured SameSite policy, or null when omitted.
+     */
+    public function getSameSite(): ?string
+    {
+        return $this->sameSite;
+    }
+
 }

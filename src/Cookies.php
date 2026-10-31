@@ -38,21 +38,8 @@ final class Cookies implements Facet
      */
     public function set(string $key, mixed $value, int $expirationTime): void
     {
-        if ($this->options) {
-            setcookie(
-                $key,
-                $value,
-                time()+$expirationTime,
-                $this->options->getPath(),
-                $this->options->getDomain(),
-                $this->options->isSecuredByHTTPS(),
-                $this->options->isSecuredByHTTPheaders()
-            );
-            $_COOKIE[$key] = $value;
-        } else {
-            setcookie($key, $value, time()+$expirationTime, "/");
-            $_COOKIE[$key] = $value;
-        }
+        setcookie($key, $value, $this->getCookieParameters(time()+$expirationTime));
+        $_COOKIE[$key] = $value;
     }
 
     /**
@@ -84,7 +71,27 @@ final class Cookies implements Facet
      */
     public function remove(string $key): void
     {
-        setcookie($key, "", time()-3600);
+        setcookie($key, "", $this->getCookieParameters(time()-3600));
         unset($_COOKIE[$key]);
     }
+    /**
+     * Shares cookie scope and attributes between creation and deletion.
+     *
+     * @return array<string,int|string|bool>
+     */
+    private function getCookieParameters(int $expires): array
+    {
+        $parameters = [
+            "expires" => $expires,
+            "path" => $this->options?->getPath() ?? "/",
+            "domain" => $this->options?->getDomain() ?? "",
+            "secure" => $this->options?->isSecuredByHTTPS() ?? false,
+            "httponly" => $this->options?->isSecuredByHTTPheaders() ?? false
+        ];
+        if (($sameSite = $this->options?->getSameSite()) !== null) {
+            $parameters["samesite"] = $sameSite;
+        }
+        return $parameters;
+    }
+
 }
