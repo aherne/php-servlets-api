@@ -3,6 +3,7 @@
 namespace Lucinda\STDOUT;
 
 use Lucinda\MVC\Facet;
+use Lucinda\MVC\FacetException;
 use Lucinda\STDOUT\XmlTags\SessionOptions;
 use Lucinda\STDOUT\Session\Cookie;
 
@@ -35,6 +36,10 @@ final class Session implements Facet
 
         if ($className = $options->getHandler()) {
             session_set_save_handler(new $className(), true);
+        }
+
+        if ($options->isAutoStart() && !$this->isStarted() && !$this->start()) {
+            throw new FacetException("Unable to start the session");
         }
     }
 
@@ -74,9 +79,6 @@ final class Session implements Facet
         }
         if ($value = $options->getReferrerCheck()) {
             $output["referer_check"] = $value;
-        }
-        if ($options->isAutoStart()) {
-            $output["auto_start"] = 1;
         }
         return $output;
     }
