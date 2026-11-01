@@ -41,8 +41,8 @@ final class Session implements Facet
     /**
      * Converts parsed options into session ini keys and values
      *
-     * Cookie security flags preserve explicit false values. Other settings use
-     * explicitly configured truthy values, except auto_start,
+     * Cookie security flags preserve explicit false values and cookie lifetime
+     * preserves zero. Other settings use truthy values, except auto_start,
      * which is emitted as integer 1 when enabled.
      *
      * @param SessionOptions $options Parsed session configuration
@@ -142,6 +142,17 @@ final class Session implements Facet
     public function remove(string $key): void
     {
         unset($_SESSION[$key]);
+    }
+
+    /**
+     * Removes every session entry while preserving the active session
+     *
+     * This does not rotate the identifier, expire its cookie, or close the
+     * session. Use cookie()->regenerateID(true) when rotation is also needed.
+     */
+    public function clear(): void
+    {
+        $_SESSION = [];
     }
 
     /**

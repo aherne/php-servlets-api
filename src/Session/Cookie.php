@@ -33,11 +33,12 @@ final class Cookie
     /**
      * Regenerates the identifier while retaining existing session data
      *
+     * @param bool $deleteOldSession Whether to invalidate the old session ID and data
      * @return bool True when PHP regenerates the identifier successfully
      */
-    public function regenerateID(): bool
+    public function regenerateID(bool $deleteOldSession = false): bool
     {
-        return session_regenerate_id();
+        return session_regenerate_id($deleteOldSession);
     }
 
     /**

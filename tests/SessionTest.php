@@ -69,4 +69,29 @@ class SessionTest
     {
         return new Objects($this->object->cookie())->assertInstanceOf(\Lucinda\STDOUT\Session\Cookie::class);
     }
+    /**
+     * Checks that clearing removes all entries while retaining a usable session
+     */
+    public function clear()
+    {
+        if (!$this->object->isStarted()) {
+            $this->object->start();
+        }
+        $sessionID = $this->object->cookie()->getID();
+        $this->object->set("authentication", ["id" => 7]);
+        $this->object->set("application", "cart");
+        $this->object->clear();
+
+        $results = [
+            new Booleans($_SESSION === [])->assertTrue("All session entries are removed"),
+            new Booleans($this->object->isStarted())->assertTrue("Session remains active"),
+            new Strings($this->object->cookie()->getID())->assertEquals($sessionID, "Session ID remains unchanged")
+        ];
+        $this->object->set("after_clear", "usable");
+        $results[] = new Strings($this->object->get("after_clear"))->assertEquals("usable", "Session remains writable");
+        $this->object->remove("after_clear");
+        return $results;
+    }
+        
+
 }
